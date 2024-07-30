@@ -76,7 +76,7 @@ jpa:
 jwt:
   access_expiration_time: 3600000 # 1시간 액세스 토큰 만료 시간 설정
   refresh_expiration_time: 604800016 # 1주일 리프레시 토큰 만료 시간 설정
-  secret: ${SECRET} # JWT 시크릿 키 설정 (환경 변수 사용)
+  secret: uw5YoYHImqUhahQfNWU7VZpPrZ2pQx4kyN6hQkztIiJN/CMfhjnBwcVW3ccDud2e3Dq/xzeCvF4kQ2YUt5Ncpg== # JWT 시크릿 키 설정 (환경 변수 사용)
 
 logging.level:
   root: info # 루트 로깅 레벨 설정
