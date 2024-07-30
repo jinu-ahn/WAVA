@@ -17,11 +17,11 @@ services:
 
   frontend:
     image: evil55/work_frontend:latest
-    container_name: frontend_green
+    container_name: frontend
     ports:
-      - "3001:3001"
+      - "3000:3000"
     environment:
-      - SERVER_DOMAIN=i11c204.ssafy.io:8081
+      - SERVER_DOMAIN=i11c204.p.ssafy.io
       - SERVER_PORT=8081
     networks:
       - app-network

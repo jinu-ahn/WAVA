@@ -17,7 +17,7 @@ services:
 
   frontend:
     image: evil55/work_frontend:latest
-    container_name: frontend_blue
+    container_name: frontend
     ports:
       - "3000:3000"
     environment:
