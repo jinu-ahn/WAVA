@@ -19,7 +19,7 @@ spring:
 server:
   port: 8082 # 로컬 서버 포트 설정
   serverName: local_server # 로컬 서버 이름 설정
-
+  serverAddress: localhost
 ---
 
 # Blue environment
