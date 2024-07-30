@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  backend:
+    image: evil55/work_backend:latest
+    container_name: backend_green
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=green
+      - SERVER_ENV=green
+      - SERVER_URL=43.203.230.248
+    env_file:
+      - .env
+    networks:
+      - app-network
+
+  frontend:
+    image: evil55/work_frontend:latest
+    container_name: frontend_green
+    ports:
+      - "3001:3001"
+    environment:
+      - SERVER_DOMAIN=i11c204.ssafy.io:8081
+      - SERVER_PORT=8081
+    networks:
+      - app-network
+networks:
+  app-network:
+    driver: bridge
+
+

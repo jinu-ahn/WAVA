@@ -9,7 +9,7 @@ services:
     environment:
       - SPRING_PROFILES_ACTIVE=blue
       - SERVER_ENV=blue
-      - SERVER_URL=localhost
+      - SERVER_URL=43.203.230.248
     env_file:
       - .env
     networks:
@@ -21,7 +21,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - SERVER_DOMAIN=i11c204.ssafy.io:8080
+      - SERVER_DOMAIN=i11c204.p.ssafy.io
       - SERVER_PORT=8080
     networks:
       - app-network
