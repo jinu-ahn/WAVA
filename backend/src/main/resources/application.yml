@@ -18,9 +18,9 @@ spring:
       on-profile: local # local 프로파일 활성화
 
 server:
-  port: 8080 # 로컬 서버 포트 설정
+  port: 8083 # 로컬 서버 포트 설정
   address: localhost # 로컬 서버 주소 설정
-  serverName: local_server # 로컬 서버 이름 설정
+  #serverName: local_server # 로컬 서버 이름 설정
 
 ---
 
@@ -32,10 +32,9 @@ spring:
 
 server:
   port: 8080 # blue 환경 서버 포트 설정
-  serverAddress: ${SERVER_URL} # blue 환경 서버 주소 설정 (환경 변수 사용)
-  serverName: blue_server # blue 환경 서버 이름 설정
-  env: blue # blue 환경 설정
-  address: ${SERVER_URL}
+ # serverAddress: ${SERVER_URL} # blue 환경 서버 주소 설정 (환경 변수 사용)
+  ##env: blue # blue 환경 설정
+
 
 ---
 
@@ -47,10 +46,10 @@ spring:
 
 server:
   port: 8081 # green 환경 서버 포트 설정
-  serverAddress: ${SERVER_URL} # green 환경 서버 주소 설정 (환경 변수 사용)
-  serverName: green_server # green 환경 서버 이름 설정
-  env: green # green 환경 설정
-  address: ${SERVER_URL}
+  #serverAddress: ${SERVER_URL} # green 환경 서버 주소 설정 (환경 변수 사용)
+ # serverName: green_server # green 환경 서버 이름 설정
+  #env: green # green 환경 설정
+
 
 ---
 
