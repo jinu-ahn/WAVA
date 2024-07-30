@@ -28,7 +28,7 @@ public class ServerStatusController {
     @Value("${server.serverName}")
     private String serverName;
 
-    @Value("${server.address}")
+    @Value("${server.serverAddress}")
     private String serverAddress;
 
     /**
