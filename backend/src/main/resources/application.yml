@@ -82,13 +82,18 @@ logging.level:
   root: info # 루트 로깅 레벨 설정
   com.worq: debug # com.ssafy 패키지 로깅 레벨 설정
 
+
+
 # S3 settings (commented out)
-# cloud:
-#   aws:
-#     s3:
-#       bucket: ${S3_BUCKET} # S3 버킷 이름 설정 (환경 변수 사용)
-#     credentials:
-#       access-key: ${AWS_ACCESS_KEY_ID} # AWS 액세스 키 (환경 변수 사용)
-#       secret-key: ${AWS_SECRET_ACCESS_KEY} # AWS 시크릿 키 (환경 변수 사용)
-#     region:
-#       static: ${AWS_REGION} # AWS 리전 설정 (환경 변수 사용)
+
+cloud:
+  aws:
+    s3:
+      bucket: ${S3_BUCKET} # S3 버킷 이름 설정 (환경 변수 사용)
+    credentials:
+      access-key: ${AWS_ACCESS_KEY_ID} # AWS 액세스 키 (환경 변수 사용)
+      secret-key: ${AWS_SECRET_ACCESS_KEY} # AWS 시크릿 키 (환경 변수 사용)
+    region:
+      static: ap-northeast-2 # AWS 리전 설정 (환경 변수 사용)
+    stack:
+      auto: false #cloud formation 기능을 사용하지 않기 위함.
