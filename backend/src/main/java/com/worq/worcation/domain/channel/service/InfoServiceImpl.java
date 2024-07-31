@@ -1,10 +1,10 @@
-package com.worq.worcation.domain.channel.info.service;
+package com.worq.worcation.domain.channel.service;
 
-import com.worq.worcation.domain.channel.info.domain.Feed;
-import com.worq.worcation.domain.channel.info.domain.FeedComment;
-import com.worq.worcation.domain.channel.info.dto.InfoRequestDto;
-import com.worq.worcation.domain.channel.info.repository.FeedCommentRepository;
-import com.worq.worcation.domain.channel.info.repository.FeedReository;
+import com.worq.worcation.domain.channel.domain.Feed;
+import com.worq.worcation.domain.channel.domain.FeedComment;
+import com.worq.worcation.domain.channel.dto.FeedRequestDto;
+import com.worq.worcation.domain.channel.repository.FeedCommentRepository;
+import com.worq.worcation.domain.channel.repository.FeedReository;
 import com.worq.worcation.domain.user.domain.User;
 import com.worq.worcation.domain.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -24,7 +24,7 @@ public class InfoServiceImpl implements InfoService {
     private final FeedReository feedReository;
 
     @Override
-    public List<String> CreateFeed(InfoRequestDto requestDto) {
+    public List<String> CreateFeed(FeedRequestDto requestDto, List<String> imgUrls) {
         return List.of();
     }
 

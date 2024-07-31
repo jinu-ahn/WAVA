@@ -1,4 +1,4 @@
-package com.worq.worcation.domain.channel.info.domain;
+package com.worq.worcation.domain.channel.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;

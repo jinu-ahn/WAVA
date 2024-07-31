@@ -1,14 +1,17 @@
-package com.worq.worcation.domain.channel.info.controller;
+package com.worq.worcation.domain.channel.controller;
 
-import com.worq.worcation.domain.channel.info.dto.InfoRequestDto;
-import com.worq.worcation.domain.channel.info.dto.InfoResponseDto;
-import com.worq.worcation.domain.channel.info.service.InfoService;
+import com.worq.worcation.common.s3.service.S3ImageUpLoadService;
+import com.worq.worcation.domain.channel.dto.FeedRequestDto;
+import com.worq.worcation.domain.channel.dto.InfoResponseDto;
+import com.worq.worcation.domain.channel.service.InfoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,17 +21,19 @@ import java.util.Map;
 @Slf4j
 public class InfoController{
     public final InfoService infoService;
+    public final S3ImageUpLoadService s3ImageUpLoadService;
 
     @PostMapping("/create")
     public ResponseEntity<?> createInfo(
             @RequestPart("file") MultipartFile[] files,
-            @RequestPart("info") InfoRequestDto requestDto) {
+            @RequestPart("info")FeedRequestDto feedRequestDto) throws IOException {
 
+        List<String> imgUrls = new ArrayList<>();
         for(MultipartFile file : files){
-
+            imgUrls.add(s3ImageUpLoadService.uploadImage(file));
         }
 
-        List<String> list = infoService.CreateFeed(requestDto);
+        List<String> list = infoService.CreateFeed(feedRequestDto,imgUrls);
 
         return ResponseEntity.ok().build();
     }

@@ -1,6 +1,6 @@
-package com.worq.worcation.domain.channel.info.service;
+package com.worq.worcation.domain.channel.service;
 
-import com.worq.worcation.domain.channel.info.dto.InfoRequestDto;
+import com.worq.worcation.domain.channel.dto.FeedRequestDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.Map;
 @Service
 public interface InfoService {
 
-    List<String> CreateFeed(InfoRequestDto requestDto);
+    List<String> CreateFeed(FeedRequestDto requestDto, List<String> imgUrls);
 
     Map<String, Object> createComment(Long userid, Long feedid, String commentContext);
 }

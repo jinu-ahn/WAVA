@@ -1,4 +1,4 @@
-package com.worq.worcation.domain.channel.info.domain;
+package com.worq.worcation.domain.channel.domain;
 
 import com.worq.worcation.domain.user.domain.User;
 import jakarta.persistence.*;

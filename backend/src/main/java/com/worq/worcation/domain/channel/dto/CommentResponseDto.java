@@ -1,6 +1,6 @@
-package com.worq.worcation.domain.channel.info.dto;
+package com.worq.worcation.domain.channel.dto;
 
-import com.worq.worcation.domain.channel.info.domain.Feed;
+import com.worq.worcation.domain.channel.domain.Feed;
 import com.worq.worcation.domain.user.domain.User;
 import lombok.Builder;
 import lombok.Data;
