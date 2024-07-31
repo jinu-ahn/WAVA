@@ -9,7 +9,7 @@ import java.util.Map;
 @Service
 public interface InfoService {
 
-    List<String> CreateFeed(FeedRequestDto requestDto, List<String> imgUrls);
+    Void CreateFeed(FeedRequestDto requestDto, List<String> imgUrls);
 
     Map<String, Object> createComment(Long userid, Long feedid, String commentContext);
 }

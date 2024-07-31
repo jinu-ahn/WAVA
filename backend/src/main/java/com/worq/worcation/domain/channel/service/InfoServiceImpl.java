@@ -1,8 +1,11 @@
 package com.worq.worcation.domain.channel.service;
 
+import com.worq.worcation.domain.channel.domain.Channel;
 import com.worq.worcation.domain.channel.domain.Feed;
 import com.worq.worcation.domain.channel.domain.FeedComment;
+import com.worq.worcation.domain.channel.domain.Image;
 import com.worq.worcation.domain.channel.dto.FeedRequestDto;
+import com.worq.worcation.domain.channel.repository.ChannelRepository;
 import com.worq.worcation.domain.channel.repository.FeedCommentRepository;
 import com.worq.worcation.domain.channel.repository.FeedReository;
 import com.worq.worcation.domain.user.domain.User;
@@ -10,6 +13,7 @@ import com.worq.worcation.domain.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,10 +26,33 @@ public class InfoServiceImpl implements InfoService {
     private final FeedCommentRepository feedCommentRepository;
     private final UserRepository userRepository;
     private final FeedReository feedReository;
+    private final ChannelRepository channelRepository;
 
     @Override
-    public List<String> CreateFeed(FeedRequestDto requestDto, List<String> imgUrls) {
-        return List.of();
+    public Void CreateFeed(FeedRequestDto requestDto, List<String> imgUrls) {
+        Long feedid = requestDto.getFeedId();
+        String sido = requestDto.getSido();
+        String gugun = requestDto.getGugun();
+        String content = requestDto.getContent();
+        Long channelId = requestDto.getChannelId();
+
+        Channel channel = channelRepository.findById(channelId).get();
+
+
+        Feed feed = Feed.builder()
+                .heart(0L)
+                .content(content)
+                .channel(channel)
+                .createdAt(Instant.now())
+                .build();
+
+        for (String imgUrl : imgUrls){
+            Image image = Image.builder()
+                    .imageUrl(imgUrl)
+                    .feed(feed)
+                    .build();
+        }
+        return null;
     }
 
     @Override

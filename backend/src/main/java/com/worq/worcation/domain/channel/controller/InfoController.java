@@ -29,13 +29,18 @@ public class InfoController{
             @RequestPart("info")FeedRequestDto feedRequestDto) throws IOException {
 
         List<String> imgUrls = new ArrayList<>();
+        try {
         for(MultipartFile file : files){
             imgUrls.add(s3ImageUpLoadService.uploadImage(file));
         }
 
-        List<String> list = infoService.CreateFeed(feedRequestDto,imgUrls);
+        infoService.CreateFeed(feedRequestDto,imgUrls);
 
         return ResponseEntity.ok().build();
+        }catch (Exception e){
+            log.error(e.getMessage());
+            return ResponseEntity.status(400).body("잘못된 요청입니다.");
+        }
     }
 
     @GetMapping("/{userid}")

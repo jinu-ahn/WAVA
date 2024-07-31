@@ -14,4 +14,5 @@ public class FeedRequestDto {
     private String content;
     private String sido;
     private String gugun;
+    private Long channelId;
 }
