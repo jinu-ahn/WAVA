@@ -28,7 +28,7 @@ public class ServerStatusController {
     @Value("${server.serverName}")
     private String serverName;
 
-    @Value("${server.address}")
+    @Value("${server.serverAddress}")
     private String serverAddress;
 
     /**
@@ -69,7 +69,7 @@ public class ServerStatusController {
     }
 
     /**
-     * 현재 서버의 포트를 반환하는 메서드
+     * 현재 서버의 포트를 반환하는 메서드 .
      * @ 작성자   : 이병수
      * @ 작성일   : 2024-07-28
      * @return 현재 서버의 포트 번호

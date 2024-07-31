@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  backend:
+    image: evil55/work_backend:latest
+    container_name: backend_green
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=green
+      - SERVER_ENV=green
+      - SERVER_URL=localhost
+    env_file:
+      - .env
+    networks:
+      - app-network
+
+  frontend:
+    image: evil55/work_frontend:latest
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - SERVER_DOMAIN=localhost
+      - SERVER_PORT=8081
+    networks:
+      - app-network
+networks:
+  app-network:
+    driver: bridge
+
+
