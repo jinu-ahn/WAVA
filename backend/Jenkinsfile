@@ -155,7 +155,7 @@ pipeline {
                             fi
 
 
-                            # .env 파일을 덮어쓰기
+
                             echo "DB_URL=$DB_URL" > .env
                             echo "DB_USER=$DB_USER" >> .env
                             echo "DB_PASSWORD=$DB_PASSWORD" >> .env
@@ -166,7 +166,9 @@ pipeline {
                             echo "S3_BUCKET=$S3_BUCKET" >> .env
 
 
-                            docker-compose --env-file .env -f docker-compose-${TARGET_SERVERNAME}.yml up -d
+
+
+                            docker-compose -f docker-compose-${TARGET_SERVERNAME}.yml up -d
 
                         '''
                     }
