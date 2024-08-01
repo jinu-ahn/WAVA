@@ -173,8 +173,8 @@ pipeline {
                             fi
 
 
-                            # docker-compose -f docker-compose-${TARGET_SERVERNAME}.yml up -d
-                            docker-compose --env-file .env -f docker-compose-${TARGET_SERVERNAME}.yml up -d # nginx(front), back 실행
+                            docker-compose -f docker-compose-${TARGET_SERVERNAME}.yml up -d
+
                         '''
                     }
                 }
