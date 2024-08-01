@@ -184,7 +184,7 @@ pipeline {
             steps {
                 script {
                     def status = sh(script: '''
-                        curl -s  http://${SERVER_URL}:${TARGET_PORT}/infra/hc
+                        curl -s -o /dev/null -w "%{http_code}" http://${SERVER_URL}:${TARGET_PORT}/infra/hc
                     ''', returnStdout: true).trim()
 
                     if (${status} ) {
