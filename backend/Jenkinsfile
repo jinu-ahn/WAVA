@@ -122,6 +122,7 @@ pipeline {
             steps {
                 script {
                     sh '''
+                        cd /home/ubuntu
                         docker-compose -f docker-compose-${TARGET_SERVERNAME}.yml pull
                     '''
                     echo "Docker backend image pulled: ${TARGET_SERVERNAME}/work_backend:latest"
