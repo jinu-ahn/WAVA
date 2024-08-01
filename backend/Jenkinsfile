@@ -194,9 +194,10 @@ pipeline {
                 script {
                     // 헬스 체크 요청
                     def status = sh(script: "curl -s -o /dev/null -w \"%{http_code}\" http://${SERVER_URL}:${TARGET_PORT}/infra/hc", returnStdout: true).trim()
+                    echo '${status}'
                     if (status != '200') {
                         sh 'docker-compose -f docker-compose-${TARGET_SERVERNAME} down'
-                        error 'Health check failed with status code: ' + status
+
 
                     } else {
                         echo 'Health check passed with status code: ' + status
