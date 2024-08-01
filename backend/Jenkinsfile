@@ -165,7 +165,7 @@ pipeline {
                             echo "S3_BUCKET" >> .env
 
 
-                            docker-compose --env-file .env -f docker-compose-{TARGET_SERVERNAME}.yml up -d
+                            docker-compose --env-file .env -f docker-compose-${TARGET_SERVERNAME}.yml up -d
 
                         '''
                     }
