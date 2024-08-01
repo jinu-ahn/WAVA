@@ -183,10 +183,9 @@ pipeline {
         stage('Health Check') {
             steps {
                 script {
-                    sh ```
 
-                    ```
-                    def status = sh(script: "curl -s -o /dev/null -w \"%{http_code}\" http://i11c204.p.ssafy.io:${TARGET_PORT}/infra/hc", returnStdout: true).trim()
+                    def status = sh(script: "curl -s  /dev/null -w \"%{http_code}\" http://i11c204.p.ssafy.io:${TARGET_PORT}/infra/hc", returnStdout: true).trim()
+
 
                 }
             }
