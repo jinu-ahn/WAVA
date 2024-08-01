@@ -1,5 +1,4 @@
-# 1. 빌드 스테이지
-FROM node:lts-alpine AS build-stage
+FROM node:20 as build
 
 # 작업 디렉토리 설정
 WORKDIR /app
@@ -14,23 +13,24 @@ RUN npm install
 COPY . .
 
 # 환경변수 세팅
+
 ARG SERVER_DOMAIN
 ARG SERVER_PORT
 
 RUN echo "REACT_APP_SERVER_ADDRESS=${SERVER_DOMAIN}:${SERVER_PORT}" > .env
 
+
 # 애플리케이션 빌드
 RUN npm run build
 
 # 2. 배포 스테이지
-FROM nginx:alpine AS production-stage
+FROM nginx:alpine
+
 
 # 빌드된 파일을 Nginx html 디렉토리로 복사
 COPY --from=build-stage /app/build /usr/share/nginx/html
-COPY --from=build-stage /app/public /usr/share/nginx/html/public
+COPY --from=build /app/public /usr/share/nginx/html/public
 
-# Nginx 포트 설정
-EXPOSE 80
-
+EXPOSE 3000
 # Nginx 실행 명령 
 CMD ["nginx", "-g", "daemon off;"]
