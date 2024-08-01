@@ -175,7 +175,7 @@ pipeline {
                             echo "AWS_SECRET_ACCESS_KEY=ZpzgJxnasz2DIsEoXABids24lzcxwA6uUP6jggcT" >> .env
                             echo "S3_BUCKET=worqbucket" >> .env
                             if [ "$(docker ps -q -f name=backend_${TARGET_SERVERNAME})" ]; then
-                               docker-compose -f docker-compose-${TARGET_SERVERNAME}.yml down
+                               docker compose -f docker-compose-${TARGET_SERVERNAME}.yml down
 
                             fi
                             docker-compose -f docker-compose-${TARGET_SERVERNAME}.yml up -d
