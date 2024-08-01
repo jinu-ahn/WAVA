@@ -178,7 +178,7 @@ pipeline {
                                docker compose -f docker-compose-${TARGET_SERVERNAME}.yml down
 
                             fi
-                            docker-compose -f docker-compose-${TARGET_SERVERNAME}.yml up -d
+                            docker compose -f docker-compose-${TARGET_SERVERNAME}.yml up -d
 
                         '''
                     }
