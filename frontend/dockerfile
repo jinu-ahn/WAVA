@@ -12,7 +12,7 @@ RUN npm install
 # 소스 복사
 COPY . .
 
-# 환경변수 세팅
+# 환경변수 세팅 
 
 ARG SERVER_DOMAIN
 ARG SERVER_PORT
@@ -28,7 +28,7 @@ FROM nginx:alpine
 
 
 # 빌드된 파일을 Nginx html 디렉토리로 복사
-COPY --from=build-stage /app/build /usr/share/nginx/html
+COPY --from=build /app/build /usr/share/nginx/html
 COPY --from=build /app/public /usr/share/nginx/html/public
 
 EXPOSE 3000
