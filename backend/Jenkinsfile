@@ -12,7 +12,7 @@ pipeline {
         stage('Git Clone') {
             steps {
                 echo "Cloning Git repository..."
-                git branch: 'dev-deploy-test', credentialsId: 'GITLAB_LOGIN', url: 'https://lab.ssafy.com/s11-webmobile1-sub2/S11P12C204'
+                git branch: 'dev-deploy/test', credentialsId: 'GITLAB_LOGIN', url: 'https://lab.ssafy.com/s11-webmobile1-sub2/S11P12C204'
                 echo "Git Clone Completed."
             }
         }
