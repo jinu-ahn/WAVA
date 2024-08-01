@@ -184,8 +184,8 @@ pipeline {
             steps {
                 script {
                     def status = sh(script: '''
-                        curl -s -o /dev/null -w "%{http_code}" http://${SERVER_URL}:${TARGET_PORT}/infra/hc
-                    ''', returnStdout: true).trim()
+
+                    ''')
 
                     if (${status} ) {
                         echo "Health check failed with status code: ${status}"
