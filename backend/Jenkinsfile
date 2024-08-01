@@ -187,7 +187,7 @@ pipeline {
                         curl -s -o /dev/null -w "%{http_code}" http://${SERVER_URL}:${TARGET_PORT}/infra/hc
                     ''', returnStdout: true).trim()
 
-                    if (status != '200') {
+                    if (${status} != '200') {
                         echo "Health check failed with status code: ${status}"
                         sh "docker-compose -f docker-compose-${TARGET_SERVERNAME}.yml down"
                     } else {
