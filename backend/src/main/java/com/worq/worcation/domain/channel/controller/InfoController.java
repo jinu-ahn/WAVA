@@ -1,6 +1,7 @@
 package com.worq.worcation.domain.channel.controller;
 
 import com.worq.worcation.common.s3.service.S3ImageUpLoadService;
+import com.worq.worcation.domain.channel.domain.Feed;
 import com.worq.worcation.domain.channel.dto.FeedRequestDto;
 import com.worq.worcation.domain.channel.dto.FeedResponseDto;
 import com.worq.worcation.domain.channel.dto.InfoResponseDto;
@@ -54,6 +55,37 @@ public class InfoController{
         }
     }
 
+    @GetMapping("/{feedId}")
+    public ResponseEntity<?> viewFeed(@PathVariable("feedId") Long feedId, @RequestParam Long userId) {
+        try {
+            FeedResponseDto feedResponseDto = infoService.viewFeed(feedId,userId);
+            return ResponseEntity.ok(feedResponseDto);
+        }
+        catch (Exception e){
+            return ResponseEntity.status(500).body("잘못된 요청");
+        }
+    }
+
+    @GetMapping("/{feedId}/like")
+    public ResponseEntity<?> likeAdd (@PathVariable("feedId") Long feedId, @RequestParam Long userId){
+        try{
+            infoService.likeAdd(feedId,userId);
+            return ResponseEntity.ok().build();
+        }catch (Exception e){
+            return ResponseEntity.status(400).body("잘못된 요청입니다.");
+        }
+    }
+
+    @DeleteMapping("/{feedId}/dislike")
+    public ResponseEntity<?> dislike (@PathVariable("feedId") Long feedId, @RequestParam Long userId){
+        try{
+            infoService.likeDistract(feedId,userId);
+            return ResponseEntity.ok().build();
+        }catch (Exception e){
+            return ResponseEntity.status(400).body("잘못된 요청입니다.");
+        }
+    }
+
     @PostMapping("/{feedId}/comment")
     public ResponseEntity<?> createComment(@PathVariable("feedId") String feedId, @RequestBody Map<String, String> comment) {
         try {
@@ -70,16 +102,6 @@ public class InfoController{
         }
     }
 
-    @GetMapping("/{feedId}/detail")
-    public ResponseEntity<?> viewFeed(@PathVariable("feedId") Long feedId, @RequestParam Long userid) {
-        try {
-            FeedResponseDto feedResponseDto = infoService.viewFeed(feedId,userid);
-            return ResponseEntity.ok(feedResponseDto);
-        }
-        catch (Exception e){
-            return ResponseEntity.status(500).body("잘못된 요청");
-        }
-    }
 
     @GetMapping("/search")
     public ResponseEntity<List<InfoResponseDto>> searchFeed(@RequestParam String keyword) {

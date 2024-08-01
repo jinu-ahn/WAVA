@@ -1,17 +1,11 @@
 package com.worq.worcation.domain.channel.service;
 
-import com.worq.worcation.domain.channel.domain.Channel;
-import com.worq.worcation.domain.channel.domain.Feed;
-import com.worq.worcation.domain.channel.domain.FeedComment;
-import com.worq.worcation.domain.channel.domain.Image;
+import com.worq.worcation.domain.channel.domain.*;
 import com.worq.worcation.domain.channel.dto.CommentResponseDto;
 import com.worq.worcation.domain.channel.dto.FeedRequestDto;
 import com.worq.worcation.domain.channel.dto.FeedResponseDto;
 import com.worq.worcation.domain.channel.dto.ImageResponseDto;
-import com.worq.worcation.domain.channel.repository.ChannelRepository;
-import com.worq.worcation.domain.channel.repository.FeedCommentRepository;
-import com.worq.worcation.domain.channel.repository.FeedReository;
-import com.worq.worcation.domain.channel.repository.ImageRepository;
+import com.worq.worcation.domain.channel.repository.*;
 import com.worq.worcation.domain.user.domain.User;
 import com.worq.worcation.domain.user.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -29,6 +23,7 @@ public class InfoServiceImpl implements InfoService {
     private final FeedReository feedReository;
     private final ChannelRepository channelRepository;
     private final ImageRepository imageRepository;
+    private final LikeRepository likeRepository;
 
     @Override
     public Void CreateFeed(FeedRequestDto requestDto, List<String> imgUrls) {
@@ -130,5 +125,19 @@ public class InfoServiceImpl implements InfoService {
             return feedResponseDto;
         }
         return null;
+    }
+
+    @Override
+    public void likeAdd(Long feedId, Long userId) {
+        Like like = Like.builder()
+                .user(userRepository.findById(userId).get())
+                .channelInfo(feedReository.findById(feedId).get())
+                .build();
+        likeRepository.save(like);
+    }
+
+    @Override
+    public void likeDistract(Long feedId, Long userId) {
+        likeRepository.delete(likeRepository.findByUser());
     }
 }

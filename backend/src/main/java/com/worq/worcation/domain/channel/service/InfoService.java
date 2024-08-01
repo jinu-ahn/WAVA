@@ -11,8 +11,8 @@ import java.util.Map;
 public interface InfoService {
 
     Void CreateFeed(FeedRequestDto requestDto, List<String> imgUrls);
-
     Map<String, Object> createComment(Long userid, Long feedid, String commentContext);
-
     FeedResponseDto viewFeed(Long feedid, Long userid);
+    void likeAdd(Long feedId, Long userId);
+    void likeDistract(Long feedId, Long userId);
 }

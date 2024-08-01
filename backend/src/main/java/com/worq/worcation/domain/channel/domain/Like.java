@@ -3,12 +3,13 @@ package com.worq.worcation.domain.channel.domain;
 import com.worq.worcation.domain.user.domain.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "`like`", schema = "wava")
 public class Like {
     @Id
