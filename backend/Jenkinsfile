@@ -184,10 +184,10 @@ pipeline {
             steps {
                 script {
                     def status = sh(script: '''
-                        curl -s -o /dev/null -w "%{http_code}" http://${SERVER_URL}:${TARGET_PORT}/infra/hc
+                        curl -s  http://${SERVER_URL}:${TARGET_PORT}/infra/hc
                     ''', returnStdout: true).trim()
 
-                    if (${status} != '200') {
+                    if (${status} ) {
                         echo "Health check failed with status code: ${status}"
                         sh "docker-compose -f docker-compose-${TARGET_SERVERNAME}.yml down"
                     } else {
