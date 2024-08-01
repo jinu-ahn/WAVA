@@ -25,7 +25,7 @@ pipeline {
                         string(credentialsId: 'DB_USER', variable: 'DB_USER'),
                         string(credentialsId: 'DB_PASSWORD', variable: 'DB_PASSWORD'),
                         string(credentialsId: 'SECRET', variable: 'SECRET'),
-                        string(credentialsId: 'SERVER_URL', variable: 'SERVER_URL')
+                        string(credentialsId: 'SERVER_URL', variable: 'SERVER_URL'),
                         string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
                         string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY'),
                         string(credentialsId: 'S3_BUCKET', variable: 'S3_BUCKET')
