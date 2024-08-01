@@ -24,6 +24,16 @@ public class InfoController{
     public final InfoService infoService;
     public final S3ImageUpLoadService s3ImageUpLoadService;
 
+    /**
+     *
+     * @ 작성자   : 최승호
+     * @ 작성일   : 20.08.01
+     * @ 설명     : 피드 생성 요청
+     * @param files
+     * @param feedRequestDto
+     * @return
+     * @throws IOException
+     */
     @PostMapping("/create")
     public ResponseEntity<?> createInfo(
             @RequestPart("file") MultipartFile[] files,
@@ -42,11 +52,6 @@ public class InfoController{
             log.error(e.getMessage());
             return ResponseEntity.status(400).body("잘못된 요청입니다.");
         }
-    }
-
-    @GetMapping("/{userid}")
-    public ResponseEntity<InfoResponseDto> getFeed(@PathVariable("userid") String userid) {
-        return null;
     }
 
     @PostMapping("/{feedId}/comment")

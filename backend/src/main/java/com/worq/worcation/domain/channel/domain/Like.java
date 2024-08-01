@@ -2,24 +2,26 @@ package com.worq.worcation.domain.channel.domain;
 
 import com.worq.worcation.domain.user.domain.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "`like`", schema = "worQ")
+@Table(name = "`like`", schema = "wava")
 public class Like {
-
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "like_id", nullable = false)
     private Long id;
 
-    @MapsId("userId")
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @MapsId("channelInfoId")
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "channel_info_id", nullable = false)
     private Feed channelInfo;

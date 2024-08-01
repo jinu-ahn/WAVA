@@ -30,15 +30,14 @@
         private Date start;
         @Column(name = "worcation_end_date")
         private Date end;
-        @Column(name = "worcation_start_date")
-        private String sido;
         @Column(name = "worcation_sido")
-        private String gugun;
+        private String sido;
         @Column(name = "worcation_sigungu")
+        private String gugun;
+        @Column(name = "worcation_job")
         private String job;
         @Column(name = "worcation_type")
         private String type;
-
         public Worcation() {
         }
 
