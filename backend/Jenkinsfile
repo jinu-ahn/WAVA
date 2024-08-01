@@ -166,7 +166,14 @@ pipeline {
                             echo "S3_BUCKET=$S3_BUCKET" >> .env
 
 
-
+                            echo "DB_URL=jdbc:mysql://i11c204.p.ssafy.io/wava" > .env
+                            echo "DB_USER=work" >> .env
+                            echo "DB_PASSWORD=1Q2W3E4R!!" >> .env
+                            echo "SECRET=uw5YoYHImqUhahQfNWU7VZpPrZ2pQx4kyN6hQkztIiJN/CMfhjnBwcVW3ccDud2e3Dq/xzeCvF4kQ2YUt5Ncpg==" >> .env
+                            echo "SERVER_URL=43.203.230.248" >> .env
+                            echo "AWS_ACCESS_KEY_ID=AKIAYS2NQJX3RYCARFUQ" >> .env
+                            echo "AWS_SECRET_ACCESS_KEY=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" >> .env
+                            echo "S3_BUCKET=worqbucket" >> .env
 
                             docker-compose -f docker-compose-${TARGET_SERVERNAME}.yml up -d
 
