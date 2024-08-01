@@ -1,7 +1,5 @@
 package com.worq.worcation.domain.channel.dto;
 
-import com.worq.worcation.domain.channel.domain.Feed;
-import com.worq.worcation.domain.user.domain.User;
 import lombok.Builder;
 import lombok.Data;
 
@@ -11,8 +9,8 @@ import java.time.Instant;
 @Builder
 public class CommentResponseDto {
     private Long id;
-    private Feed feed;
-    private User user;
+    private Long feedid;
+    private Long userid;
     private String comment;
     private Instant createdAt;
 }

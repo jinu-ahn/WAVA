@@ -11,7 +11,7 @@
 
     import java.util.Date;
 
-    @Entity
+    @Entity(name="worcation_info")
     @Data
     @Builder
     @Getter
@@ -26,12 +26,17 @@
         @OneToOne
         @JoinColumn(name = "user_id")
         private User user;
-
+        @Column(name = "worcation_start_date")
         private Date start;
+        @Column(name = "worcation_end_date")
         private Date end;
+        @Column(name = "worcation_start_date")
         private String sido;
+        @Column(name = "worcation_sido")
         private String gugun;
+        @Column(name = "worcation_sigungu")
         private String job;
+        @Column(name = "worcation_type")
         private String type;
 
         public Worcation() {

@@ -1,6 +1,5 @@
 package com.worq.worcation.domain.plan.service;
 
-import com.worq.worcation.common.jwt.TokenProvider;
 import com.worq.worcation.domain.plan.dao.PlanRepository;
 import com.worq.worcation.domain.plan.domain.Plan;
 import com.worq.worcation.domain.plan.dto.PlanRequestDto;
@@ -54,7 +53,7 @@ public class PlanServiceImpl implements PlanService {
 
     @Override
     public List<PlanResponseDto> viewPlan(Long dashboardId) {
-        List<Plan> plans = planRepository.findByDashboard_id(123123L);
+        List<Plan> plans = planRepository.findByDashboard_id(dashboardId);
         return plans.stream()
                 .map(plan -> PlanResponseDto.builder()
                         .id(plan.getId())

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,7 +39,7 @@ public class PlanController {
         }
     }
     @GetMapping("/view")
-    public ResponseEntity<?> viewPlan(@RequestParam Long dashboardId){
+    public ResponseEntity<?> viewPlan(@AuthenticationPrincipal Long dashboardId){
         try {
             List<PlanResponseDto> response = planService.viewPlan(dashboardId);
             return ResponseEntity.ok(response);

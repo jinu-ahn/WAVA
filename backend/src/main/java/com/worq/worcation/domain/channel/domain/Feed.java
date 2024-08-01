@@ -26,7 +26,7 @@ public class Feed {
     private String content;
 
     @Column(name = "heart")
-    private Long heart;
+    private int heart;
 
     @Column(name = "created_at")
     private Instant createdAt;

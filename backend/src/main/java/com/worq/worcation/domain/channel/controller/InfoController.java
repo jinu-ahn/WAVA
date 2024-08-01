@@ -2,6 +2,7 @@ package com.worq.worcation.domain.channel.controller;
 
 import com.worq.worcation.common.s3.service.S3ImageUpLoadService;
 import com.worq.worcation.domain.channel.dto.FeedRequestDto;
+import com.worq.worcation.domain.channel.dto.FeedResponseDto;
 import com.worq.worcation.domain.channel.dto.InfoResponseDto;
 import com.worq.worcation.domain.channel.service.InfoService;
 import lombok.RequiredArgsConstructor;
@@ -30,13 +31,13 @@ public class InfoController{
 
         List<String> imgUrls = new ArrayList<>();
         try {
-        for(MultipartFile file : files){
-            imgUrls.add(s3ImageUpLoadService.uploadImage(file));
-        }
+            for(MultipartFile file : files){
+                imgUrls.add(s3ImageUpLoadService.uploadImage(file));
+            }
 
-        infoService.CreateFeed(feedRequestDto,imgUrls);
+            infoService.CreateFeed(feedRequestDto,imgUrls);
 
-        return ResponseEntity.ok().build();
+            return ResponseEntity.ok().build();
         }catch (Exception e){
             log.error(e.getMessage());
             return ResponseEntity.status(400).body("잘못된 요청입니다.");
@@ -50,18 +51,29 @@ public class InfoController{
 
     @PostMapping("/{feedId}/comment")
     public ResponseEntity<?> createComment(@PathVariable("feedId") String feedId, @RequestBody Map<String, String> comment) {
-        Long userid = Long.valueOf(comment.get("userid"));
-        Long feedid = Long.valueOf(feedId);
-        String commentContext = comment.get("Comment");
+        try {
+            Long userid = Long.valueOf(comment.get("userid"));
+            Long feedid = Long.valueOf(feedId);
+            String commentContext = comment.get("Comment");
 
-        Map<String, Object> commentMap = infoService.createComment(userid, feedid, commentContext);
+            Map<String, Object> commentMap = infoService.createComment(userid, feedid, commentContext);
 
-        return ResponseEntity.ok(commentMap);
+            return ResponseEntity.ok(commentMap);
+        }
+        catch (Exception e){
+            return ResponseEntity.status(400).body("400에러");
+        }
     }
 
     @GetMapping("/{feedId}/detail")
-    public ResponseEntity<InfoResponseDto> viewComment(@PathVariable("feedId") String feedId, @RequestParam String userid) {
-        return null;
+    public ResponseEntity<?> viewFeed(@PathVariable("feedId") Long feedId, @RequestParam Long userid) {
+        try {
+            FeedResponseDto feedResponseDto = infoService.viewFeed(feedId,userid);
+            return ResponseEntity.ok(feedResponseDto);
+        }
+        catch (Exception e){
+            return ResponseEntity.status(500).body("잘못된 요청");
+        }
     }
 
     @GetMapping("/search")
