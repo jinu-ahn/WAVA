@@ -1,10 +1,10 @@
 package com.worq.worcation.domain.channel.service;
 
 import com.worq.worcation.domain.channel.domain.*;
-import com.worq.worcation.domain.channel.dto.CommentResponseDto;
-import com.worq.worcation.domain.channel.dto.FeedRequestDto;
-import com.worq.worcation.domain.channel.dto.FeedResponseDto;
-import com.worq.worcation.domain.channel.dto.ImageResponseDto;
+import com.worq.worcation.domain.channel.dto.info.CommentResponseDto;
+import com.worq.worcation.domain.channel.dto.info.FeedRequestDto;
+import com.worq.worcation.domain.channel.dto.info.FeedResponseDto;
+import com.worq.worcation.domain.channel.dto.info.ImageResponseDto;
 import com.worq.worcation.domain.channel.repository.*;
 import com.worq.worcation.domain.user.domain.User;
 import com.worq.worcation.domain.user.repository.UserRepository;

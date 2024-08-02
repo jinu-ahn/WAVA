@@ -1,4 +1,4 @@
-package com.worq.worcation.domain.channel.dto;
+package com.worq.worcation.domain.channel.dto.info;
 
 import lombok.Builder;
 import lombok.Data;

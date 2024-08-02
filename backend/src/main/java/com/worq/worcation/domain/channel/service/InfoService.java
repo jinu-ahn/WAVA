@@ -1,7 +1,7 @@
 package com.worq.worcation.domain.channel.service;
 
-import com.worq.worcation.domain.channel.dto.FeedRequestDto;
-import com.worq.worcation.domain.channel.dto.FeedResponseDto;
+import com.worq.worcation.domain.channel.dto.info.FeedRequestDto;
+import com.worq.worcation.domain.channel.dto.info.FeedResponseDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
