@@ -27,27 +27,22 @@ public class InfoServiceImpl implements InfoService {
 
     @Override
     public Void CreateFeed(FeedRequestDto requestDto, List<String> imgUrls) {
-        Long feedid = requestDto.getFeedId();
-        String sido = requestDto.getSido();
-        String gugun = requestDto.getGugun();
-        String content = requestDto.getContent();
-        Long channelId = requestDto.getChannelId();
-
-        Channel channel = channelRepository.findById(channelId).get();
-
-
+        Channel channel = channelRepository.findById(requestDto.getChannelId()).get();
         Feed feed = Feed.builder()
                 .heart(0)
-                .content(content)
+                .content(requestDto.getContent())
                 .channel(channel)
                 .createdAt(Instant.now())
                 .build();
+        feedReository.save(feed);
 
         for (String imgUrl : imgUrls){
             Image image = Image.builder()
                     .imageUrl(imgUrl)
                     .feed(feed)
                     .build();
+
+            imageRepository.save(image);
         }
         return null;
     }
