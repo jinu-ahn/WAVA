@@ -138,6 +138,8 @@ public class InfoServiceImpl implements InfoService {
 
     @Override
     public void likeDistract(Long feedId, Long userId) {
-        likeRepository.delete(likeRepository.findByUser());
+        Optional<Like> likeOptional = likeRepository.findByUserIdAndFeedId(userId, feedId);
+        likeOptional.ifPresent(likeRepository::delete);
     }
+
 }

@@ -1,13 +1,13 @@
 package com.worq.worcation.domain.channel.controller;
 
 import com.worq.worcation.common.s3.service.S3ImageUpLoadService;
-import com.worq.worcation.domain.channel.domain.Feed;
 import com.worq.worcation.domain.channel.dto.FeedRequestDto;
 import com.worq.worcation.domain.channel.dto.FeedResponseDto;
 import com.worq.worcation.domain.channel.dto.InfoResponseDto;
 import com.worq.worcation.domain.channel.service.InfoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -62,7 +62,7 @@ public class InfoController{
             return ResponseEntity.ok(feedResponseDto);
         }
         catch (Exception e){
-            return ResponseEntity.status(500).body("잘못된 요청");
+            return ResponseEntity.status(HttpStatus.CREATED).body("잘못된 요청");
         }
     }
 
