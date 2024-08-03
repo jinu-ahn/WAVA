@@ -22,12 +22,10 @@ public class Channel {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Size(max = 4)
     @NotNull
     @Column(name = "channel_sido", nullable = false, length = 4)
     private String channelSido;
 
-    @Size(max = 4)
     @NotNull
     @Column(name = "channel_sigungu", nullable = false, length = 4)
     private String channelSigungu;

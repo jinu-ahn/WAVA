@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
 
-@Service
+
 public interface InfoService {
 
     Void CreateFeed(FeedRequestDto requestDto, List<String> imgUrls);
@@ -15,4 +15,6 @@ public interface InfoService {
     FeedResponseDto viewFeed(Long feedid, Long userid);
     void likeAdd(Long feedId, Long userId);
     void likeDistract(Long feedId, Long userId);
+
+    int feedCount(Long userId);
 }

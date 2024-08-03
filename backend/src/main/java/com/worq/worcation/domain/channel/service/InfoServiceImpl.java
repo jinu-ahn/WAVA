@@ -8,6 +8,7 @@ import com.worq.worcation.domain.channel.dto.info.ImageResponseDto;
 import com.worq.worcation.domain.channel.repository.*;
 import com.worq.worcation.domain.user.domain.User;
 import com.worq.worcation.domain.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.time.Instant;
 import java.util.*;
 
 @Service
+@Transactional
 @AllArgsConstructor
 public class InfoServiceImpl implements InfoService {
 
@@ -135,6 +137,11 @@ public class InfoServiceImpl implements InfoService {
     public void likeDistract(Long feedId, Long userId) {
         Optional<Like> likeOptional = likeRepository.findByUserIdAndFeedId(userId, feedId);
         likeOptional.ifPresent(likeRepository::delete);
+    }
+
+    @Override
+    public int feedCount(Long userId){
+        return channelRepository.findAllById(userId).size();
     }
 
 }

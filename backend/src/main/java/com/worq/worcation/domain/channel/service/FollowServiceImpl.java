@@ -6,6 +6,7 @@ import com.worq.worcation.domain.channel.repository.ChannelRepository;
 import com.worq.worcation.domain.channel.repository.FollowRepository;
 import com.worq.worcation.domain.user.domain.User;
 import com.worq.worcation.domain.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@Transactional
 public class FollowServiceImpl implements FollowService{
 
     FollowRepository followRepository;
