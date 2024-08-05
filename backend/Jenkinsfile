@@ -110,9 +110,12 @@ pipeline {
                     dir('frontend') {
 
                         sh '''
-                        docker build -t $DOCKER_USERNAME/work_frontend .
-                        docker push $DOCKER_USERNAME/work_frontend:latest
-                     '''
+                            docker build \
+                            --build-arg SERVER_DOMAIN=i11c204.p.ssafy.io \
+                            --build-arg SERVER_PORT=${TARGET_PORT} \
+                            -t $DOCKER_USERNAME/work_frontend:latest .
+                            docker push $DOCKER_USERNAME/work_frontend:latest
+                        '''
                     }
 
                 }

@@ -38,7 +38,7 @@ public class ExceptionHandler {
      * 작성일   : 2024-08-04
      * 설명     : 모든 Exception을 처리하는 메서드
      * @param ex 발생한 Exception 객체
-     * @return HTTP 상태 코드와 ApiResponse를 포함한 응답 객체
+     * @return HTTP 상태 코드와 ApiResponse를 포함한 응답 객체 .
      *
      * 이 메서드는 CustomException을 제외한 모든 예외가 발생했을 때 호출됩니다.
      */
