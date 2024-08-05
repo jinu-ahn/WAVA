@@ -29,9 +29,6 @@ public class PlanServiceImpl implements PlanService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<Plan> getPlansByDashboardid(Long dashboardId) {
-        return planRepository.findByWorcationId(dashboardId);
-    }
 
     @Override
     public PlanResponseDto createPlan(PlanRequestDto planRequestDto, HttpServletRequest request) {
