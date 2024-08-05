@@ -25,6 +25,6 @@ public class Like {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "channel_info_id", nullable = false)
-    private Feed channelInfo;
+    private Feed feed;
 
 }

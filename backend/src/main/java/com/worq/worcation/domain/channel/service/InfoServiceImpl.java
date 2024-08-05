@@ -1,5 +1,6 @@
 package com.worq.worcation.domain.channel.service;
 
+import com.worq.worcation.common.Exception.ResourceNotFoundException;
 import com.worq.worcation.domain.channel.domain.*;
 import com.worq.worcation.domain.channel.dto.info.CommentResponseDto;
 import com.worq.worcation.domain.channel.dto.info.FeedRequestDto;
@@ -29,7 +30,8 @@ public class InfoServiceImpl implements InfoService {
 
     @Override
     public Void CreateFeed(FeedRequestDto requestDto, List<String> imgUrls) {
-        Channel channel = channelRepository.findById(requestDto.getChannelId()).get();
+        Channel channel = channelRepository.findById(requestDto.getChannelId())
+                .orElseThrow(ResourceNotFoundException::new);
         Feed feed = Feed.builder()
                 .heart(0)
                 .content(requestDto.getContent())
@@ -111,7 +113,7 @@ public class InfoServiceImpl implements InfoService {
                 imageResponseDtos.add(imageDtos);
             }
 
-            FeedResponseDto feedResponseDto = FeedResponseDto.builder()
+            return FeedResponseDto.builder()
                     .content(feed.getContent())
                     .heart(feed.getHeart())
                     .id(feed.getId())
@@ -119,7 +121,6 @@ public class InfoServiceImpl implements InfoService {
                     .imageList(imageResponseDtos)
                     .build(); // 체이닝을 수정하여 빌더 패턴이 올바르게 동작하도록 수정
 
-            return feedResponseDto;
         }
         return null;
     }
@@ -127,15 +128,15 @@ public class InfoServiceImpl implements InfoService {
     @Override
     public void likeAdd(Long feedId, Long userId) {
         Like like = Like.builder()
-                .user(userRepository.findById(userId).get())
-                .channelInfo(feedReository.findById(feedId).get())
+                .user(userRepository.findById(userId).orElseThrow(ResourceNotFoundException::new))
+                .feed(feedReository.findById(feedId).orElseThrow(ResourceNotFoundException::new))
                 .build();
         likeRepository.save(like);
     }
 
     @Override
     public void likeDistract(Long feedId, Long userId) {
-        Optional<Like> likeOptional = likeRepository.findByUserIdAndFeedId(userId, feedId);
+        Optional<Like> likeOptional = likeRepository.findByUserIdAndFeed(userId,feedReository.findById(feedId).orElseThrow(ResourceNotFoundException::new));
         likeOptional.ifPresent(likeRepository::delete);
     }
 

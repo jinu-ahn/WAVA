@@ -1,7 +1,7 @@
 package com.worq.worcation.domain.channel.service;
 
+import com.worq.worcation.common.Exception.ResourceNotFoundException;
 import com.worq.worcation.common.response.ApiResponse;
-import com.worq.worcation.common.response.ErrorCode;
 import com.worq.worcation.domain.channel.domain.Channel;
 import com.worq.worcation.domain.channel.dto.info.PersonalResponseDto;
 import com.worq.worcation.domain.channel.repository.ChannelRepository;
@@ -30,11 +30,11 @@ public class PersonalServiceImpl {
         ResponseEntity<ApiResponse<PersonalResponseDto>> response = ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(PersonalResponseDto.builder()
                 .id(channel.getId())
                 .userId(userId)
-                .nickName(userRepository.findById(userId).get().getNickName())
+                .nickName(userRepository.findById(userId).orElseThrow(ResourceNotFoundException::new).getNickName())
                 .sido(channel.getChannelSido())
                 .sigungu(channel.getChannelSigungu())
                 .description(channel.getChannelDescription())
-                .profileImage(userRepository.findById(userId).get().getProfileImg())
+                .profileImage(userRepository.findById(userId).orElseThrow(ResourceNotFoundException::new).getProfileImg())
                 .follow(followService.getFollowings(channel.getId()).size())
                 .follower(followService.getFollowers(channel.getId()).size())
                 .feedCount(infoService.feedCount(userId))

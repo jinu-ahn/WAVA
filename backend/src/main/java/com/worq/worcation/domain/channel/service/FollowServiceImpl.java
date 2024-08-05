@@ -1,5 +1,6 @@
 package com.worq.worcation.domain.channel.service;
 
+import com.worq.worcation.common.Exception.ResourceNotFoundException;
 import com.worq.worcation.domain.channel.domain.Follow;
 import com.worq.worcation.domain.channel.dto.info.FollowInfoDto;
 import com.worq.worcation.domain.channel.repository.ChannelRepository;
@@ -27,13 +28,13 @@ public class FollowServiceImpl implements FollowService{
         Map<String, Object> map = new HashMap<String, Object>();
 
         Follow follow = Follow.builder()
-                .user(userRepository.findById(userId).get())
-                .channel(channelRepository.findById(channelId).get())
+                .user(userRepository.findById(userId).orElseThrow(ResourceNotFoundException::new))
+                .channel(channelRepository.findById(channelId).orElseThrow(ResourceNotFoundException::new))
                 .build();
         followRepository.save(follow);
 
-        int followNum = followRepository.findByUser(userRepository.findById(userId).get()).size();
-        int followerNum = followRepository.findByChannel(channelRepository.findById(channelId).get()).size();
+        int followNum = followRepository.findByUser(userRepository.findById(userId).orElseThrow(ResourceNotFoundException::new)).size();
+        int followerNum = followRepository.findByChannel(channelRepository.findById(channelId).orElseThrow(ResourceNotFoundException::new)).size();
 
         map.put("follow", followNum);
         map.put("folllower", followerNum);
@@ -44,7 +45,7 @@ public class FollowServiceImpl implements FollowService{
     @Override
     public List<FollowInfoDto.UserFollowInfoDto> getFollowers(Long channelId) {
         List<FollowInfoDto.UserFollowInfoDto> followerDtos = new ArrayList<>();
-        List<Follow> followers = followRepository.findByChannel(channelRepository.findById(channelId).get());
+        List<Follow> followers = followRepository.findByChannel(channelRepository.findById(channelId).orElseThrow(ResourceNotFoundException::new));
         for (Follow follow : followers) {
             User user = follow.getUser();
             FollowInfoDto.UserFollowInfoDto dto = FollowInfoDto.UserFollowInfoDto.builder()
@@ -60,7 +61,7 @@ public class FollowServiceImpl implements FollowService{
     @Override
     public List<FollowInfoDto.UserFollowInfoDto> getFollowings(Long userId) {
         List<FollowInfoDto.UserFollowInfoDto> followerDtos = new ArrayList<>();
-        List<Follow> followers = followRepository.findByUser(userRepository.findById(userId).get());
+        List<Follow> followers = followRepository.findByUser(userRepository.findById(userId).orElseThrow(ResourceNotFoundException::new));
         for (Follow follow : followers) {
             User user = follow.getUser();
             FollowInfoDto.UserFollowInfoDto dto = FollowInfoDto.UserFollowInfoDto.builder()
