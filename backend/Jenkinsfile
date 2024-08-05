@@ -1,0 +1,226 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_CREDENTIALS_ID = 'DOCKER_USER' // Docker Hub 자격 증명 ID
+        DOCKER_IMAGE_BACKEND = credentials('work_backend')
+        DOCKER_IMAGE_FRONTEND = credentials('work_frontend')
+        DOCKER_USERNAME = credentials('DOCKER_USERNAME')
+    }
+
+    stages {
+        stage('Git Clone') {
+            steps {
+                echo "Cloning Git repository..."
+                git branch: 'dev-test', credentialsId: 'GITLAB_LOGIN', url: 'https://lab.ssafy.com/s11-webmobile1-sub2/S11P12C204'
+                echo "Git Clone Completed."
+            }
+        }
+
+        stage('Setup Environment and build backend') {
+            steps {
+                script {
+                    withCredentials([
+                        string(credentialsId: 'DB_URL', variable: 'DB_URL'),
+                        string(credentialsId: 'DB_USER', variable: 'DB_USER'),
+                        string(credentialsId: 'DB_PASSWORD', variable: 'DB_PASSWORD'),
+                        string(credentialsId: 'SECRET', variable: 'SECRET'),
+                        string(credentialsId: 'SERVER_URL', variable: 'SERVER_URL'),
+                        string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
+                        string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY'),
+                        string(credentialsId: 'S3_BUCKET', variable: 'S3_BUCKET')
+
+                    ]) {
+
+
+
+                        env.SERVER_URL = "${SERVER_URL}"
+                        echo "Building Backend..."
+                        sh '''
+                            cd backend && chmod +x ./gradlew
+                            ./gradlew clean build
+
+                        '''
+                        echo "Backend build completed"
+                    }
+                }
+            }
+        }
+
+        stage('Get Current Port and Set Target Port') {
+            steps {
+                script {
+		                sh 'docker ps -a'
+                    echo "Get Current Port and Set Target Ports..."
+                    def containerInfo = sh(script: "docker ps -a --filter 'name=back_blue' --format '{{.Ports}}'", returnStdout: true).trim()
+
+                    def currentPort = '8081' // 초기값 설정(맨처음 도커가 실행 되지 않을 때 blue를 띄우기 위해서 작성)
+                    def targetPort = '8080'
+                    def currentServerName = 'green'
+                    def targetServerName = 'blue'
+                    if (containerInfo) {
+                        currentPort = containerInfo.split("->")[0].split(":")[1]
+                        targetPort = currentPort == '8080' ? '8081' : '8080'
+                        currentServerName = currentPort == '8080' ? 'blue' : 'green'
+                        targetServerName  = currentServerName =='blue' ? 'green' : 'blue'
+
+                        echo "docker current running ok..."
+                    }
+                    env.CURRENT_PORT = currentPort
+                    env.TARGET_PORT = targetPort
+                    env.CURRENT_SERVERNAME = currentServerName
+                    env.TARGET_SERVERNAME = targetServerName
+
+
+                    echo "Current port: ${currentPort}, Target port: ${targetPort}"
+                }
+            }
+        }
+
+        stage('Docker Login') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'DOCKER_USER', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]){
+                        sh 'echo "$DOCKER_PASSWORD" | docker login -u $DOCKER_USERNAME --password-stdin'
+                    }
+                    echo "Docker Login completed"
+                }
+            }
+        }
+
+
+
+        stage('Docker build and push backend') {
+            steps {
+                script {
+
+                        sh '''
+                            cd backend
+                            docker build -f Dockerfile -t $DOCKER_USERNAME/work_backend .
+                            docker push $DOCKER_USERNAME/work_backend:latest
+                        '''
+                        echo "Docker backend image build and pushed: $DOCKER_USERNAME/work_backend:latest"
+                }
+            }
+        }
+
+        stage('front build and push') {
+            steps {
+                script {
+                    dir('frontend') {
+
+                        sh '''
+                            docker build \
+                            --build-arg SERVER_DOMAIN=i11c204.p.ssafy.io \
+                            --build-arg SERVER_PORT=${TARGET_PORT} \
+                            -t $DOCKER_USERNAME/work_frontend:latest .
+                            docker push $DOCKER_USERNAME/work_frontend:latest
+                        '''
+                    }
+
+                }
+            }
+        }
+
+        stage('Docker Pull Backend Image') {
+            steps {
+                script {
+                    sh '''
+                        cd /home/ubuntu/myproject
+                        docker-compose -f docker-compose-${TARGET_SERVERNAME}.yml pull
+                    '''
+                    echo "Docker backend image pulled: ${TARGET_SERVERNAME}/work_backend:latest"
+                }
+            }
+        }
+
+
+
+        stage('Deploy with Docker Compose') {
+            steps {
+                script {
+                    withCredentials([
+                        string(credentialsId: 'DB_URL', variable: 'DB_URL'),
+                        string(credentialsId: 'DB_USER', variable: 'DB_USER'),
+                        string(credentialsId: 'DB_PASSWORD', variable: 'DB_PASSWORD'),
+                        string(credentialsId: 'SECRET', variable: 'SECRET'),
+                        string(credentialsId: 'SERVER_URL', variable: 'SERVER_URL'),
+                        string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
+                        string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY'),
+                        string(credentialsId: 'S3_BUCKET', variable: 'S3_BUCKET')
+                    ]) {
+                        sh '''
+                            cd /home/ubuntu/myproject
+
+                            if [ "$(docker ps -q -f name=back_${CURRENT_SERVERNAME})" ]; then
+                               docker-compose -f docker-compose-${CURRENT_SERVERNAME}.yml down
+
+                            fi
+
+
+
+                            echo "DB_URL=$DB_URL" > .env
+                            echo "DB_USER=$DB_USER" >> .env
+                            echo "DB_PASSWORD=$DB_PASSWORD" >> .env
+                            echo "SECRET=$SECRET" >> .env
+                            echo "SERVER_URL=$SERVER_URL" >> .env
+                            echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> .env
+                            echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> .env
+                            echo "S3_BUCKET=$S3_BUCKET" >> .env
+
+
+                            # 타켓서버가 실행 중 또는 exited 되었다면 제거
+                            if [ "$(docker ps -a -q -f name=back_${TARGET_SERVERNAME})" ]; then
+                               docker-compose -f docker-compose-${TARGET_SERVERNAME}.yml down
+
+                            fi
+
+
+                            docker-compose -f docker-compose-${TARGET_SERVERNAME}.yml up -d
+
+                        '''
+                    }
+                }
+            }
+        }
+ //       stage('Health Check') {
+ //           steps {
+ //               script {
+ //                   def status = sh(script: '''
+ //                       curl -s -o http://${SERVER_URL}:${TARGET_PORT}/infra/hc
+ //                   ''', returnStdout: true).trim()
+//
+ //                   if (${status} ) {
+//                        echo "Health check failed with status code: ${status}"
+//                        sh "docker-compose -f docker-compose-${TARGET_SERVERNAME}.yml down"
+//                    } else {
+ //                       echo "Health check passed with status code: ${status}"
+//                    }
+//                }
+ //           }
+ //       }
+
+        stage('Update Nginx Configuration') {
+            steps {
+                script {
+                    sh '''
+                        docker exec -i nginx_server sh -c "echo 'set \\$backserver_url back_${TARGET_SERVERNAME};' > /etc/nginx/conf.d/service_env.inc"
+                        docker exec -i nginx_server sh -c "nginx -s reload"
+                    '''
+                }
+            }
+        }
+
+
+
+
+    }
+
+    post {
+        always {
+            echo "Cleaning workspace..."
+            deleteDir()
+            echo "Workspace cleaned."
+        }
+    }
+}

@@ -7,30 +7,11 @@ export const importantOptions = [
 
 // 필터의 타입 옵션
 export const typeOptions = [
-  { label: "WORK", value: "WORK", color: "bg-red-500" },
-  { label: "REST", value: "REST", color: "bg-blue-500" },
+  { label: "일정 및 업무", value: "WORK", color: "rgb(243, 146, 55)" },
+  { label: "여가 및 휴식", value: "REST", color: "bg-blue-500" },
 ];
 
-// 그래프의 일정 색상
-export const graphWORQBgColor = [
-  "rgba(255, 99, 132, 0.2)",
-  "rgba(54, 162, 235, 0.2)",
-];
+export const graphWORQBgColor = ["rgba(255, 143, 171, 0.2)"];
 
 // 그래프의 일정 보더색상
-export const graphWORQBorderColor = [
-  "rgba(255, 99, 132, 1)",
-  "rgba(54, 162, 235, 1)",
-];
-
-// 그래프의 우선순위 색상
-export const graphImportantBgColor = ["green", "yellow", "perple"];
-
-// 그래프의 우선순위 보더 색상
-export const grpahImportantBorderColor = ["gray", "red", "black"];
-
-// 그래프 스위치 버튼의 색상
-export const graphCategoryButtonColor = {
-  WORK: "bg-secondary hover:opacity-40",
-  important: "bg-primary hover:opacity-40",
-};
+export const graphWORQBorderColor = ["rgba(214, 50, 48, 1)"];

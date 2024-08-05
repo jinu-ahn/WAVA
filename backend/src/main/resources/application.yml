@@ -8,20 +8,18 @@ spring:
 
 server:
   env: blue # 기본 서버 환경 설정
-
 ---
 
-# Local environment
+# Local environment .
 spring:
   config:
     activate:
       on-profile: local # local 프로파일 활성화
 
 server:
-  port: 8080 # 로컬 서버 포트 설정
-  address: localhost # 로컬 서버 주소 설정
+  port: 8082 # 로컬 서버 포트 설정
   serverName: local_server # 로컬 서버 이름 설정
-
+  serverAddress: localhost
 ---
 
 # Blue environment
@@ -35,6 +33,7 @@ server:
   serverAddress: ${SERVER_URL} # blue 환경 서버 주소 설정 (환경 변수 사용)
   serverName: blue_server # blue 환경 서버 이름 설정
   env: blue # blue 환경 설정
+
 
 ---
 
@@ -50,9 +49,10 @@ server:
   serverName: green_server # green 환경 서버 이름 설정
   env: green # green 환경 설정
 
+
 ---
 
-# Common settings for all environments
+# Common settings for all environments/
 spring:
   config:
     activate:
@@ -85,15 +85,20 @@ jwt:
 
 logging.level:
   root: info # 루트 로깅 레벨 설정
-  com.worq: debug # com.ssafy 패키지 로깅 레벨 설정
+  com.wava: debug # com.ssafy 패키지 로깅 레벨 설정
+
+
 
 # S3 settings (commented out)
-# cloud:
-#   aws:
-#     s3:
-#       bucket: ${S3_BUCKET} # S3 버킷 이름 설정 (환경 변수 사용)
-#     credentials:
-#       access-key: ${AWS_ACCESS_KEY_ID} # AWS 액세스 키 (환경 변수 사용)
-#       secret-key: ${AWS_SECRET_ACCESS_KEY} # AWS 시크릿 키 (환경 변수 사용)
-#     region:
-#       static: ${AWS_REGION} # AWS 리전 설정 (환경 변수 사용)
+
+cloud:
+  aws:
+    s3:
+      bucket: ${S3_BUCKET} # S3 버킷 이름 설정 (환경 변수 사용)
+    credentials:
+      access-key: ${AWS_ACCESS_KEY_ID} # AWS 액세스 키 (환경 변수 사용)
+      secret-key: ${AWS_SECRET_ACCESS_KEY} # AWS 시크릿 키 (환경 변수 사용)
+    region:
+      static: ap-northeast-2 # AWS 리전 설정 (환경 변수 사용)
+    stack:
+      auto: false #cloud formation 기능을 사용하지 않기 위함.
