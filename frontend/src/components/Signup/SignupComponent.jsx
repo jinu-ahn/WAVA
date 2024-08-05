@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect} from "react";
 import { register, checkNicknameAvailability } from "../../api/userApi";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -35,6 +35,11 @@ function SignupComponent() {
 
   const [isFormVaild, setIsFormValid] = useState("");
 
+  // useState가 비동기 처리를 하기 때문에 상태가 업데이트된 후에 동작을 하도록 useEffect 사용
+  useEffect(() => {
+    onChangeFormVaild();
+  }, [isEmail, isPassword, isPasswordConfirm, isNickName, isNicknameAvailable]);
+
   const onChangeFormVaild = () => {
     if (
       isEmail &&
@@ -58,9 +63,11 @@ function SignupComponent() {
     if (!emailRegEx.test(currentEmail)) {
       setIsEmail(false);
       setEmailMessage("올바른 이메일 형식이 아닙니다.");
+      onChangeFormVaild();
     } else {
       setIsEmail(true);
       setEmailMessage("올바른 이메일 형식입니다.");
+      onChangeFormVaild();
     }
     onChangeFormVaild();
   };
@@ -73,9 +80,11 @@ function SignupComponent() {
     if (!passwordRegExp.test(currentPassword)) {
       setIsPassword(false);
       setPasswordMessage("8~20자 사이의 숫자 + 영문자로 입력해주세요.");
+      onChangeFormVaild();
     } else {
       setIsPassword(true);
       setPasswordMessage("안전한 비밀번호 입니다.");
+      onChangeFormVaild();
     }
     onChangeFormVaild();
   };
@@ -86,23 +95,30 @@ function SignupComponent() {
     if (password !== currentPasswordConfirm) {
       setIsPasswordConfirm(false);
       setPasswordConfirmMessage("비밀번호가 일치하지 않습니다.");
+      onChangeFormVaild();
     } else {
       setIsPasswordConfirm(true);
       setPasswordConfirmMessage("비밀번호가 일치합니다.");
+      onChangeFormVaild();
     }
     onChangeFormVaild();
   };
 
   const onChangeNickName = (e) => {
     const currentNickName = e.target.value;
+    console.log("current " + currentNickName)
     setNickName(currentNickName);
-    setIsCheckingNickname(true);
-
+    // setIsCheckingNickname(false);
+    console.log("after current " + isNickName)
     if (currentNickName.length === 0) {
       setIsNickName(false);
       setNickNameMessage("이름을 입력해주세요.");
-      setIsCheckingNickname(false);
+      // setIsCheckingNickname(false);
       setIsNicknameAvailable(false);
+      console.log("my " + nickName)
+      console.log("is " + isNickName)
+      console.log("avil " + isNicknameAvailable)
+      onChangeFormVaild();
     } else {
       checkNicknameAvailability(
         currentNickName,
@@ -110,13 +126,16 @@ function SignupComponent() {
           setIsNickName(true);
           setIsNicknameAvailable(true);
           setNickNameMessage("사용 가능한 닉네임입니다.");
-          setIsCheckingNickname(false);
+          // setIsCheckingNickname(true);
+          onChangeFormVaild();
         },
         (error) => {
           setIsNickName(false);
           setIsNicknameAvailable(false);
-          setNickNameMessage(error.response.data.msg);
-          setIsCheckingNickname(false);
+          console.log(error)
+          setNickNameMessage("중복된 닉네임 입니다.");
+          // setIsCheckingNickname(false);
+          onChangeFormVaild();
         }
       );
     }
@@ -349,7 +368,7 @@ function SignupComponent() {
                 className="bg-white focus:outline-none ps-3 drop-shadow-md w-full h-10 border border-gray-400 hover:border-[#1c77c3] mb-3 rounded-lg text-xs"
                 placeholder="변경할 수 없습니다. 신중하게 작성해 주세요."
               />
-              {isCheckingNickname ? (
+              {/* {isCheckingNickname ? (
                 <p className="text-blue-600 text-xs">닉네임 확인 중...</p>
               ) : (
                 <p
@@ -361,7 +380,15 @@ function SignupComponent() {
                 >
                   {nickNameMessage}
                 </p>
-              )}
+              )} */}
+              <p className={`message 
+                    ${isNickName && isNicknameAvailable
+                      ? "text-green-600"
+                      : "text-red-600"
+                    } text-xs`}
+              >
+                  {nickNameMessage}
+              </p>
             </div>
             <label
               className="block text-gray-700 text-sm font-bold mb-2"

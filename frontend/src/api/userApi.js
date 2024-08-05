@@ -34,13 +34,16 @@ async function tokenRegeneration(user, success, fail) {
 // }
 
 async function checkNicknameAvailability(nickname, success, fail) {
-  try {
-    const response = await local.post(`/api/checkNickname`, { nickname });
-    success(response);
-  } catch (error) {
-    fail(error);
-  }
+  await local.post(`user/nickname/check/${nickname}`).then(success).catch(fail);
 }
+// async function checkNicknameAvailability(nickname, success, fail) {
+//   try {
+//     const response = await local.post(`user/nickname/check/${nickname}`);
+//     success(response);
+//   } catch (error) {
+//     fail(error);
+//   }
+// }
 
 export {
   register,
