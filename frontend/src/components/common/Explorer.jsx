@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
 import useDeviceStore from "../../store/deviceStore";
+import { NavLink } from "react-router-dom";
+import {
+  HomeIcon,
+  CalendarDaysIcon,
+  RectangleGroupIcon,
+} from "@heroicons/react/24/outline";
 
 const Explorer = () => {
   const isMobile = useDeviceStore((state) => state.isMobile);
@@ -10,32 +16,45 @@ const Explorer = () => {
     setAnimate(true);
   }, []);
 
+  if (isMobile) {
+    return null;
+  }
   // 대시보드, 채널에서 사용하는 navbar
   return (
     <>
       {/* Explorer 컴포넌트의 너비를 비례적으로 조정 */}
       <div
         className={`relative ${
-          isMobile ? "w-[70px]" : "w-1/12 min-w-[80px] "
+          isMobile ? "w-[42px]" : "w-12 min-w-[48px]"
         } max-w-[110px]`}
       >
-        <div
-          className={`bg-gray-800 text-white h-full p-4 min-h-[500px]  ${
-            animate ? "animate-slideIn" : ""
-          }}`}
-        >
-          <h1
-            className={`text-2xl ${animate ? "animate-dropIn" : ""}`}
-            style={{ fontSize: "1.25rem" }}
-          >
-            홈
-          </h1>
-          <h2
-            className={`text-xl mt-4 ${animate ? "animate-dropIn" : ""}`}
-            style={{ fontSize: "1rem" }}
-          >
-            채널
-          </h2>
+        <div className={`bg-base-300 text-mainTxt h-full min-h-[500px] `}>
+          <NavLink className="hover:text-btnBlue" to="/">
+            <div className="py-3.5 flex justify-center items-center">
+              <HomeIcon
+                className={`size-8 ${animate ? "animate-dropIn" : ""}`}
+              />
+            </div>
+          </NavLink>
+          <NavLink className="hover:text-btnBlue" to="/channel">
+            <div className="py-3.5 flex justify-center items-center">
+              <RectangleGroupIcon
+                stroke="currentColor"
+                className={`size-8  hover:text-btnBlue  ${
+                  animate ? "animate-dropIn" : ""
+                }`}
+              />
+            </div>
+          </NavLink>
+          <NavLink className="hover:text-btnBlue" to="/dashboard">
+            <div className="py-3.5 flex justify-center items-center">
+              <CalendarDaysIcon
+                className={`size-8  hover:text-btnBlue ${
+                  animate ? "animate-dropIn" : ""
+                }`}
+              />
+            </div>
+          </NavLink>
         </div>
       </div>
     </>

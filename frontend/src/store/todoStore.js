@@ -8,6 +8,10 @@ import {
 
 const useTodoStore = create((set) => ({
   events: [],
+  filteredEvents: [],
+  setFilteredEvents: (evts) => {
+    set(() => ({ filteredEvents: evts }));
+  },
   fetchEvents: async () => {
     const events = await getTodoList();
     if (events) {
@@ -40,6 +44,7 @@ const useTodoStore = create((set) => ({
       set((state) => ({
         events: state.events.filter((event) => event.id !== id),
       }));
+      return true;
     } else {
       alert("delete 에러");
       return false;
