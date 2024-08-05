@@ -24,9 +24,9 @@ public class PlanController {
     private PlanService planService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> createPlan(@RequestBody PlanRequestDto planRequestDto, HttpServletRequest request){
+    public ResponseEntity<?> createPlan(@RequestBody PlanRequestDto planRequestDto, @AuthUser User user){
         try {
-            PlanResponseDto response = planService.createPlan(planRequestDto, request);
+            PlanResponseDto response = planService.createPlan(planRequestDto, user);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             log.info(e.getMessage());

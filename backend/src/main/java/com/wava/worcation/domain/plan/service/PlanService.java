@@ -8,7 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface PlanService {
-    PlanResponseDto createPlan(final PlanRequestDto planRequestDto, final HttpServletRequest request);
+    PlanResponseDto createPlan(final PlanRequestDto planRequestDto, final User user);
 
     void deletePlan( Long planId);
 

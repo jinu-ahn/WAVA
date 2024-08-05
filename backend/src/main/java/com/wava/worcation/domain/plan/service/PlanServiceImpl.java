@@ -10,6 +10,7 @@ import com.wava.worcation.domain.worcation.dao.WorcationRepository;
 import com.wava.worcation.domain.worcation.domain.Worcation;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authorization.method.AuthorizeReturnObject;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +21,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class PlanServiceImpl implements PlanService {
 
     @Autowired
@@ -31,10 +33,8 @@ public class PlanServiceImpl implements PlanService {
 
 
     @Override
-    public PlanResponseDto createPlan(PlanRequestDto planRequestDto, HttpServletRequest request) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<User> user = userRepository.findByEmail(email);
-        Worcation worcation = worcationRepository.findByUserId(user.get().getId());
+    public PlanResponseDto createPlan(PlanRequestDto planRequestDto, User user) {
+        Worcation worcation = worcationRepository.findByUserId(user.getId());
         Plan plan = Plan.builder()
                 .taskTitle(planRequestDto.getTitle())
                 .taskContent(planRequestDto.getContent())
@@ -42,7 +42,7 @@ public class PlanServiceImpl implements PlanService {
                 .taskEndTime(planRequestDto.getEnd())
                 .taskImportant(planRequestDto.getImportant())
                 .taskType(planRequestDto.getType())
-                .taskIsFinish(false)
+                .taskIsFinish(planRequestDto.getIsFinish())
                 .worcation(worcation)
                 .build();
 
