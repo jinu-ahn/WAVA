@@ -1,5 +1,6 @@
 package com.wava.worcation.domain.plan.dto;
-
+import com.wava.worcation.domain.plan.domain.PlanType;
+import com.wava.worcation.domain.plan.domain.PlanImportant;
 import com.wava.worcation.domain.plan.domain.PlanType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,7 +18,7 @@ public class PlanResponseDto {
     private String content;
     private String start;
     private String end;
-    private String important;
+    private PlanImportant important;
     private PlanType type;
     private String className; // DTO만 사용
     private Boolean isFinish;
