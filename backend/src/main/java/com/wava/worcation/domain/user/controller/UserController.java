@@ -4,11 +4,8 @@ import com.wava.worcation.common.response.ApiResponse;
 import com.wava.worcation.domain.user.dto.request.LoginRequestDto;
 import com.wava.worcation.domain.user.dto.request.SignUpRequestDto;
 import com.wava.worcation.domain.user.dto.response.LoginResponseDto;
-import com.wava.worcation.domain.user.dto.response.TokenDto;
 import com.wava.worcation.domain.user.dto.response.UserResponseDto;
 import com.wava.worcation.domain.user.service.UserService;
-import com.wava.worcation.domain.worcation.domain.Worcation;
-import com.wava.worcation.domain.worcation.dto.WorcationResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -42,8 +39,8 @@ public class UserController {
     public ResponseEntity<ApiResponse<String>> reissue(HttpServletRequest request,HttpServletResponse response) {
         return userService.reissue(request,response);
     }
-    @PostMapping("/nickname/check")
-    private ResponseEntity<ApiResponse<String>> nickNameCheck(String nickName) {
+    @PostMapping("/nickname/check/{nickName}")
+    private ResponseEntity<ApiResponse<String>> nickNameCheck(@PathVariable(name="nickName") String nickName) {
         return userService.nickNameCheck(nickName);
     }
 }
