@@ -12,7 +12,7 @@ pipeline {
         stage('Git Clone') {
             steps {
                 echo "Cloning Git repository..."
-                git branch: 'dev-deploy/test', credentialsId: 'GITLAB_LOGIN', url: 'https://lab.ssafy.com/s11-webmobile1-sub2/S11P12C204'
+                git branch: 'dev-test', credentialsId: 'GITLAB_LOGIN', url: 'https://lab.ssafy.com/s11-webmobile1-sub2/S11P12C204'
                 echo "Git Clone Completed."
             }
         }
@@ -123,7 +123,7 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        cd /home/ubuntu
+                        cd /home/ubuntu/myproject
                         docker-compose -f docker-compose-${TARGET_SERVERNAME}.yml pull
                     '''
                     echo "Docker backend image pulled: ${TARGET_SERVERNAME}/work_backend:latest"
@@ -147,7 +147,7 @@ pipeline {
                         string(credentialsId: 'S3_BUCKET', variable: 'S3_BUCKET')
                     ]) {
                         sh '''
-                            cd /home/ubuntu
+                            cd /home/ubuntu/myproject
 
                             if [ "$(docker ps -q -f name=back_${CURRENT_SERVERNAME})" ]; then
                                docker-compose -f docker-compose-${CURRENT_SERVERNAME}.yml down
