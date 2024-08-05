@@ -3,6 +3,7 @@ package com.worq.worcation.common.config;
 
 import com.worq.worcation.common.jwt.AuthenticationFilter;
 import com.worq.worcation.common.jwt.TokenProvider;
+import com.worq.worcation.common.util.RedisUtil;
 import com.worq.worcation.domain.user.service.UserDetailsServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -17,16 +18,31 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 @EnableWebSecurity
 @RequiredArgsConstructor
 @Configuration
 public class SecurityConfiguration {
     private final TokenProvider tokenProvider;
-    String[] PERMIT_ALL_ARRAY = {
+    private final RedisUtil redisUtil;
+
+    private final String[] PERMIT_ALL_ARRAY = {
             "/","/user/signup", "/user/login", "/**"
+    };
+
+    private final String[] CORS_API_METHOD = {
+            "GET", "POST", "PATCH", "DELETE"
+    };
+
+    private final String[] CORS_ALLOW_URL = {
+            "http://localhost:3000", "https://i11c204.p.ssafy.io"
     };
 
     @Bean
@@ -35,6 +51,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(Arrays.stream(PERMIT_ALL_ARRAY)
@@ -44,7 +61,7 @@ public class SecurityConfiguration {
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(new AuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new AuthenticationFilter(tokenProvider,redisUtil), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 
@@ -65,5 +82,22 @@ public class SecurityConfiguration {
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    /**
+     * cors 허용
+     * @return
+     */
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOrigins(Arrays.stream(CORS_ALLOW_URL).toList());
+        configuration.setAllowedMethods(Arrays.stream(CORS_API_METHOD).toList());
+        configuration.setAllowedHeaders(Collections.singletonList("*"));
+        configuration.setExposedHeaders(Arrays.asList("*"));
+        configuration.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 }

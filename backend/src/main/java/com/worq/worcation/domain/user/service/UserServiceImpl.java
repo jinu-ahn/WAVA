@@ -2,18 +2,24 @@ package com.worq.worcation.domain.user.service;
 import com.worq.worcation.common.jwt.TokenProvider;
 import com.worq.worcation.common.response.ApiResponse;
 import com.worq.worcation.common.response.ErrorCode;
+import com.worq.worcation.common.util.RedisUtil;
 import com.worq.worcation.domain.user.domain.User;
 import com.worq.worcation.domain.user.dto.request.LoginRequestDto;
 import com.worq.worcation.domain.user.dto.request.SignUpRequestDto;
 import com.worq.worcation.domain.user.dto.response.TokenDto;
 import com.worq.worcation.domain.user.dto.response.UserResponseDto;
 import com.worq.worcation.domain.user.repository.UserRepository;
+import io.jsonwebtoken.JwtException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.ProviderNotFoundException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
@@ -21,6 +27,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -31,6 +38,7 @@ public class UserServiceImpl implements UserService{
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AuthenticationManagerBuilder managerBuilder;
     private final TokenProvider tokenProvider;
+    private final RedisUtil redisUtil;
     /**
      * 유저 회원 가입
      * @param requestDto
@@ -41,7 +49,7 @@ public class UserServiceImpl implements UserService{
     public ResponseEntity<ApiResponse<UserResponseDto>> signUp(@Valid final SignUpRequestDto requestDto) {
         if(emailValidate(requestDto.getEmail())) {
             return ResponseEntity.status(ErrorCode.DUPLICATE_EMAIL.getStatus())
-                                .body(ApiResponse.error(ErrorCode.DUPLICATE_EMAIL));
+                    .body(ApiResponse.error(ErrorCode.DUPLICATE_EMAIL));
         }
         if(phoneNumberValidate(requestDto.getPhone())) {
             return ResponseEntity.status(ErrorCode.DUPLICATE_PHONE_NUMBER.getStatus())
@@ -52,38 +60,39 @@ public class UserServiceImpl implements UserService{
                     .body(ApiResponse.error(ErrorCode.DUPLICATE_NICKNAME));
         }
 
+        String encodedPassword = bCryptPasswordEncoder.encode(requestDto.getPassword());
+
         User user = userRepository.save(User.builder()
-                    .email(requestDto.getEmail())
-                    .phone(requestDto.getPhone())
-                    .password(requestDto.getPassword())
-                    .nickName(requestDto.getNickName())
-                    .sido(requestDto.getSido())
-                    .gugun(requestDto.getGugun())
-                    .gugun(requestDto.getGugun())
-                    .report(0L)
-                    .roles(Collections.singletonList("VISITOR"))
-                    .build());
+                .email(requestDto.getEmail())
+                .phone(requestDto.getPhone())
+                .password(encodedPassword)
+                .nickName(requestDto.getNickName())
+                .sido(requestDto.getSido())
+                .sigungu(requestDto.getSigungu())
+                .report(0L)
+                .roles(Collections.singletonList("VISITOR"))
+                .build());
 
         return ResponseEntity.status(HttpStatus.OK)
-                        .body(ApiResponse.success(UserResponseDto.builder()
-                                .id(user.getId())
-                                .email(user.getEmail())
-                                .phone(user.getPhone())
-                                .nickName(user.getNickName())
-                                .sido(user.getSido())
-                                .gugun(user.getGugun())
-                                .build()));
+                .body(ApiResponse.success(UserResponseDto.builder()
+                        .id(user.getId())
+                        .email(user.getEmail())
+                        .phone(user.getPhone())
+                        .nickName(user.getNickName())
+                        .sido(user.getSido())
+                        .sigungu(user.getSigungu())
+                        .build()));
 
     }
 
     /**
      * 로그인 : 로그인 성공 시 토큰 발급 및 헤어데 토큰 추가
-//     * @param requestDto
-//     * @param response
+     * @param requestDto
+     * @param response
      * @return ResponseEntity
      */
-    @Transactional
     @Override
+    @Transactional
     public ResponseEntity<ApiResponse<TokenDto>> login(@Valid final LoginRequestDto requestDto, HttpServletResponse response) {
         UsernamePasswordAuthenticationToken authenticationToken = new
                 UsernamePasswordAuthenticationToken(requestDto.getEmail(), requestDto.getPassword());
@@ -91,13 +100,51 @@ public class UserServiceImpl implements UserService{
         Authentication authentication = managerBuilder.getObject().authenticate(authenticationToken);
 
         TokenDto tokenDto = tokenProvider.generateToken(authentication);
-        response.setHeader("Authorization",tokenDto.accessToken());
-        response.setHeader("refreshToken",tokenDto.refreshToken());
+        tokenToHeader(tokenDto,response);
 
-        // TODO : Redis 추가 예정
+        redisUtil.setData(requestDto.getEmail(), tokenDto.refreshToken(),tokenDto.refreshTokenExpiresIn());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(tokenDto));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public ResponseEntity<ApiResponse<String>> logout(final HttpServletRequest request) {
+        String token = tokenProvider.resolveToken(request); // 헤더에서 AccessToken 가져오기
+        Authentication authentication = tokenProvider.getAuthentication(token); // 토큰 인증 후 페이로드에서 유저 정보 추출
+        redisUtil.deleteData(authentication.getName()); // 해당 유저의 key 삭제
+        Long accessExpiration = tokenProvider.getAccessExpiration(token);// AccessToken의 남은 시간 가져오기
+        redisUtil.setData(token,"logout",accessExpiration); // 로그아웃을 하더라도 AccessToken의 시간이 남아있으면 인증이 가능하여 블랙리스트로 추가
+        return ResponseEntity.ok(ApiResponse.success("로그아웃 성공"));
+    }
+
+    /**
+     * 토큰 재발급
+     * @param request
+     * @param response
+     * @return
+     */
+    @Override
+    @Transactional(readOnly = true)
+    public ResponseEntity<ApiResponse<String>> reissue(final HttpServletRequest request, final HttpServletResponse response) {
+        String accessToken = tokenProvider.resolveToken(request);
+        tokenProvider.validateToken(accessToken);
+        Authentication authentication = tokenProvider.getAuthentication(accessToken);
+        String refreshToken = redisUtil.getData(authentication.getName());
+
+        if(refreshToken == null)
+            log.info("토큰이 존재하지 않습니다.");
+        if(!Objects.equals(refreshToken, request.getHeader("refreshToken")))
+            log.info("유효하지 않은 토큰입니다.");
+
+        TokenDto tokenDto = tokenProvider.generateToken(authentication);
+        tokenToHeader(tokenDto,response);
+
+        redisUtil.setData(authentication.getName(),tokenDto.refreshToken(),tokenDto.refreshTokenExpiresIn());
+
+        return ResponseEntity.status(HttpStatus.OK)
+                        .body(ApiResponse.success("토큰 재발급 성공"));
     }
 
     private boolean emailValidate(String email) {
@@ -118,5 +165,9 @@ public class UserServiceImpl implements UserService{
             return true;
         }
         return false;
+    }
+    private void tokenToHeader(TokenDto tokenDto, HttpServletResponse response){
+        response.addHeader("Authorization",tokenDto.accessToken());
+        response.addHeader("refreshToken",tokenDto.refreshToken());
     }
 }

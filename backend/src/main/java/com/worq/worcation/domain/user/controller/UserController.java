@@ -6,14 +6,12 @@ import com.worq.worcation.domain.user.dto.request.SignUpRequestDto;
 import com.worq.worcation.domain.user.dto.response.TokenDto;
 import com.worq.worcation.domain.user.dto.response.UserResponseDto;
 import com.worq.worcation.domain.user.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,5 +28,15 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<TokenDto>> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         return userService.login(loginRequestDto, response);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponse<String>> logout(HttpServletRequest request) {
+        return userService.logout(request);
+    }
+
+    @GetMapping("/reissue")
+    public ResponseEntity<ApiResponse<String>> reissue(HttpServletRequest request,HttpServletResponse response) {
+        return userService.reissue(request,response);
     }
 }

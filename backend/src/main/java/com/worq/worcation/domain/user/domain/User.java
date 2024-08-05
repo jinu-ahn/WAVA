@@ -1,5 +1,7 @@
 package com.worq.worcation.domain.user.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worq.worcation.domain.chat.domain.Chat;
 import com.worq.worcation.domain.worcation.domain.Worcation;
 import jakarta.persistence.*;
 import lombok.*;
@@ -39,8 +41,8 @@ public class User implements UserDetails {
     @Column(name = "user_favorite_sido", nullable = false)
     private String sido;
 
-    @Column(name = "user_favorite_gugun", nullable = false)
-    private String gugun;
+    @Column(name = "user_favorite_sigungu", nullable = false)
+    private String sigungu;
 
     @Column(name = "user_photo")
     private String profileImg;
@@ -50,6 +52,9 @@ public class User implements UserDetails {
 
     @ElementCollection
     private List<String> roles;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Chat> chat;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

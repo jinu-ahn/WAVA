@@ -3,11 +3,15 @@ package com.worq.worcation.domain.user.dto.request;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class SignUpRequestDto {
     @NotBlank
     @Email
@@ -22,5 +26,5 @@ public class SignUpRequestDto {
     @NotBlank
     private String sido;
     @NotBlank
-    private String gugun;
+    private String sigungu;
 }

@@ -11,5 +11,5 @@ public class UserResponseDto {
     private String nickName;
     private String phone;
     private String sido;
-    private String gugun;
+    private String sigungu;
 }

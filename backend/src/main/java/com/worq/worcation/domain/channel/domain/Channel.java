@@ -1,5 +1,6 @@
 package com.worq.worcation.domain.channel.domain;
 
+import com.worq.worcation.domain.chat.domain.Chat;
 import com.worq.worcation.domain.user.domain.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -7,10 +8,12 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Entity
-@Table(name = "channel", schema = "worQ")
+@Table(name = "channel", schema = "wava")
 public class Channel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,10 +25,12 @@ public class Channel {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Size(max = 4)
     @NotNull
     @Column(name = "channel_sido", nullable = false, length = 4)
     private String channelSido;
 
+    @Size(max = 4)
     @NotNull
     @Column(name = "channel_sigungu", nullable = false, length = 4)
     private String channelSigungu;
@@ -48,4 +53,6 @@ public class Channel {
     @Column(name = "channel_type", nullable = false, length = 4)
     private String channelType;
 
+    @OneToMany(mappedBy = "channel", cascade = CascadeType.REMOVE)
+    private List<Chat> chat;
 }
