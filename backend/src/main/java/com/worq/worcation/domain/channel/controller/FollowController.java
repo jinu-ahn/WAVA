@@ -1,13 +1,16 @@
 package com.worq.worcation.domain.channel.controller;
 
 import com.worq.worcation.domain.channel.dto.info.FollowInfoDto;
+import com.worq.worcation.domain.channel.dto.info.FollowRequestDto;
 import com.worq.worcation.domain.channel.dto.info.FollowResponseDto;
 import com.worq.worcation.domain.channel.service.FollowService;
+import com.worq.worcation.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,11 +24,16 @@ public class FollowController {
 
     private final FollowService followService;
 
+    private final UserRepository userRepository;
+
     @PostMapping
-    public ResponseEntity<FollowResponseDto> follow(@RequestParam Long channelId, @AuthenticationPrincipal Long userId) {
+    public ResponseEntity<FollowResponseDto> follow(@RequestBody FollowRequestDto requestDto, @AuthenticationPrincipal UserDetails userDetails) {
+        Long channelId = requestDto.getChannelId();
+        String email = userDetails.getUsername();
+        Long userId = userRepository.findByEmail(email).get().getId();
         Map<String,Object> map = followService.follow(channelId,userId);
-        FollowResponseDto responseDto = new FollowResponseDto();
-        responseDto.builder()
+        FollowResponseDto responseDto;
+        responseDto =  FollowResponseDto.builder()
                 .channelId(channelId)
                 .followingCount((Integer)map.get("follow"))
                 .followerCount((Integer)map.get("follower"))
@@ -43,11 +51,11 @@ public class FollowController {
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
-    @GetMapping("/{userId}/following")
-    public ResponseEntity<FollowInfoDto> getFollowings(@PathVariable Long userId) {
-        List<FollowInfoDto.UserFollowInfoDto> followList = followService.getFollowings(userId);
+    @GetMapping("/{channelId}/following")
+    public ResponseEntity<FollowInfoDto> getFollowings(@PathVariable Long channelId) {
+        List<FollowInfoDto.UserFollowInfoDto> followList = followService.getFollowings(channelId);
         FollowInfoDto responseDto  = FollowInfoDto.builder()
-                .Id(userId)
+                .Id(channelId)
                 .userList(followList)
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(responseDto);

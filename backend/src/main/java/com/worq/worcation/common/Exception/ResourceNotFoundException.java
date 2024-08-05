@@ -8,7 +8,7 @@ public class ResourceNotFoundException extends RuntimeException {
         super(message, cause);
     }
     public ResourceNotFoundException() {
-
+        super();
     }
     public ResourceNotFoundException(Throwable cause) {
         super(cause);

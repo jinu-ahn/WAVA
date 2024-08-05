@@ -8,39 +8,69 @@ import com.worq.worcation.domain.channel.repository.FollowRepository;
 import com.worq.worcation.domain.user.domain.User;
 import com.worq.worcation.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 @Transactional
 public class FollowServiceImpl implements FollowService{
 
+    private static final Logger log = LoggerFactory.getLogger(FollowServiceImpl.class);
+    @Autowired
     FollowRepository followRepository;
+    @Autowired
     ChannelRepository channelRepository;
+    @Autowired
     UserRepository userRepository;
 
     @Override
     public Map<String, Object> follow(Long channelId, Long userId) {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
 
-        Follow follow = Follow.builder()
-                .user(userRepository.findById(userId).orElseThrow(ResourceNotFoundException::new))
-                .channel(channelRepository.findById(channelId).orElseThrow(ResourceNotFoundException::new))
+        // 채널과 사용자 존재 여부 확인 및 팔로우 객체 생성
+        if (
+                !followRepository.existsByChannelAndUser(
+                    channelRepository.findById(channelId)
+                    .orElseThrow(() -> new ResourceNotFoundException("채널 없음")),
+                    userRepository.findById(userId)
+                    .orElseThrow(() -> new ResourceNotFoundException("유저 없음"))
+                    )
+        ){
+            Follow follow = Follow.builder()
+                .user(userRepository.findById(userId)
+                        .orElseThrow(() -> new ResourceNotFoundException("유저 없음")))
+                .channel(channelRepository.findById(channelId)
+                        .orElseThrow(() -> new ResourceNotFoundException("채널 없음")))
                 .build();
-        followRepository.save(follow);
+            followRepository.save(follow);
+        }
+        else{
+            log.info("존재하지 않음");
+        }
 
-        int followNum = followRepository.findByUser(userRepository.findById(userId).orElseThrow(ResourceNotFoundException::new)).size();
-        int followerNum = followRepository.findByChannel(channelRepository.findById(channelId).orElseThrow(ResourceNotFoundException::new)).size();
 
+        // 팔로우 및 팔로워 수 계산
+        int followNum = Optional.ofNullable(followRepository.findByUser(userRepository.findById(userId)
+                        .orElseThrow(() -> new ResourceNotFoundException("유저 없음"))))
+                .map(List::size)
+                .orElse(0);
+
+        int followerNum = Optional.ofNullable(followRepository.findByChannel(channelRepository.findById(channelId)
+                        .orElseThrow(() -> new ResourceNotFoundException("채널 없음"))))
+                .map(List::size)
+                .orElse(0);
+
+        // map에 결과 저장
         map.put("follow", followNum);
-        map.put("folllower", followerNum);
+        map.put("follower", followerNum);  // 'follower'로 수정
 
         return map;
     }
+
 
     @Override
     public List<FollowInfoDto.UserFollowInfoDto> getFollowers(Long channelId) {
@@ -59,9 +89,10 @@ public class FollowServiceImpl implements FollowService{
     }
 
     @Override
-    public List<FollowInfoDto.UserFollowInfoDto> getFollowings(Long userId) {
+    public List<FollowInfoDto.UserFollowInfoDto> getFollowings(Long channelId) {
         List<FollowInfoDto.UserFollowInfoDto> followerDtos = new ArrayList<>();
-        List<Follow> followers = followRepository.findByUser(userRepository.findById(userId).orElseThrow(ResourceNotFoundException::new));
+        User userInfo = channelRepository.findById(channelId).orElseThrow(()-> new ResourceNotFoundException("채널검색실패")).getUser();
+        List<Follow> followers = followRepository.findByUser(userInfo);
         for (Follow follow : followers) {
             User user = follow.getUser();
             FollowInfoDto.UserFollowInfoDto dto = FollowInfoDto.UserFollowInfoDto.builder()

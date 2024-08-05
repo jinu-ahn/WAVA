@@ -1,6 +1,7 @@
 package com.worq.worcation.common.jwt;
 
 import com.worq.worcation.domain.user.dto.response.TokenDto;
+import com.worq.worcation.domain.user.repository.UserRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -18,7 +19,6 @@ import org.springframework.util.StringUtils;
 
 import java.security.Key;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Collection;
 import java.util.Date;
 import java.util.stream.Collectors;
@@ -33,6 +33,8 @@ import java.util.stream.Collectors;
 public class TokenProvider {
     private final String GRANT_TYPE = "Bearer ";
     private final Key key;
+
+    private UserRepository userRepository;
 
     private final long accessTokenExpTime;
 
@@ -61,6 +63,7 @@ public class TokenProvider {
                 .iterator()
                 .next()
                 .getAuthority();
+
 
         Date now = new Date();
 

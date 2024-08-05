@@ -3,7 +3,6 @@ package com.worq.worcation.domain.channel.service;
 import com.worq.worcation.common.Exception.ResourceNotFoundException;
 import com.worq.worcation.domain.channel.domain.*;
 import com.worq.worcation.domain.channel.dto.info.CommentResponseDto;
-import com.worq.worcation.domain.channel.dto.info.FeedRequestDto;
 import com.worq.worcation.domain.channel.dto.info.FeedResponseDto;
 import com.worq.worcation.domain.channel.dto.info.ImageResponseDto;
 import com.worq.worcation.domain.channel.repository.*;
@@ -11,6 +10,7 @@ import com.worq.worcation.domain.user.domain.User;
 import com.worq.worcation.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -29,12 +29,13 @@ public class InfoServiceImpl implements InfoService {
     private final LikeRepository likeRepository;
 
     @Override
-    public Void CreateFeed(FeedRequestDto requestDto, List<String> imgUrls) {
-        Channel channel = channelRepository.findById(requestDto.getChannelId())
+    public Void CreateFeed(String content, String sido, String sigungu, List<String> imgUrls, UserDetails userDetails) {
+        String userEmail = userDetails.getUsername();
+        Channel channel = channelRepository.findById(userRepository.findByEmail(userEmail).orElseThrow(()->new ResourceNotFoundException("이메일 검색 실패")).getId())
                 .orElseThrow(ResourceNotFoundException::new);
         Feed feed = Feed.builder()
                 .heart(0)
-                .content(requestDto.getContent())
+                .content(content)
                 .channel(channel)
                 .createdAt(Instant.now())
                 .build();
