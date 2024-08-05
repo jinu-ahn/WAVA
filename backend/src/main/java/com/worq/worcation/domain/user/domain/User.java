@@ -1,6 +1,6 @@
 package com.worq.worcation.domain.user.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.worq.worcation.domain.channel.domain.ChannelUser;
 import com.worq.worcation.domain.chat.domain.Chat;
 import com.worq.worcation.domain.worcation.domain.Worcation;
 import jakarta.persistence.*;
@@ -9,7 +9,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Entity
@@ -56,6 +58,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<Chat> chat;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ChannelUser> channelUsers = new HashSet<>();
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return this.roles.stream()
@@ -66,4 +71,5 @@ public class User implements UserDetails {
     public String getUsername() {
         return this.email;
     }
+
 }

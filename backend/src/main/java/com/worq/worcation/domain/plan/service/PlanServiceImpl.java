@@ -4,11 +4,19 @@ import com.worq.worcation.domain.plan.dao.PlanRepository;
 import com.worq.worcation.domain.plan.domain.Plan;
 import com.worq.worcation.domain.plan.dto.PlanRequestDto;
 import com.worq.worcation.domain.plan.dto.PlanResponseDto;
+import com.worq.worcation.domain.user.domain.User;
+import com.worq.worcation.domain.user.repository.UserRepository;
+import com.worq.worcation.domain.worcation.dao.WorcationRepository;
+import com.worq.worcation.domain.worcation.domain.Worcation;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authorization.method.AuthorizeReturnObject;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -16,13 +24,20 @@ public class PlanServiceImpl implements PlanService {
 
     @Autowired
     private PlanRepository planRepository;
+    @Autowired
+    private WorcationRepository worcationRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     public List<Plan> getPlansByDashboardid(Long dashboardId) {
-        return planRepository.findByDashboard_id(dashboardId);
+        return planRepository.findByWorcationId(dashboardId);
     }
 
     @Override
-    public PlanResponseDto createPlan(PlanRequestDto planRequestDto) {
+    public PlanResponseDto createPlan(PlanRequestDto planRequestDto, HttpServletRequest request) {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        Optional<User> user = userRepository.findByEmail(email);
+        Worcation worcation = worcationRepository.findByUserId(user.get().getId());
         Plan plan = Plan.builder()
                 .taskTitle(planRequestDto.getTitle())
                 .taskContent(planRequestDto.getContent())
@@ -30,6 +45,8 @@ public class PlanServiceImpl implements PlanService {
                 .taskEndTime(planRequestDto.getEnd())
                 .taskImportant(planRequestDto.getImportant())
                 .taskType(planRequestDto.getType())
+                .taskIsFinish(false)
+                .worcation(worcation)
                 .build();
 
         Plan savedPlan = planRepository.save(plan);
@@ -42,6 +59,8 @@ public class PlanServiceImpl implements PlanService {
                 .end(savedPlan.getTaskEndTime())
                 .important(savedPlan.getTaskImportant())
                 .type(savedPlan.getTaskType())
+                .className(planRequestDto.getClassName())
+                .isFinish(savedPlan.getTaskIsFinish())
                 .build();
     }
 
@@ -50,10 +69,10 @@ public class PlanServiceImpl implements PlanService {
         planRepository.deleteById(planId);
     }
 
-
     @Override
-    public List<PlanResponseDto> viewPlan(Long dashboardId) {
-        List<Plan> plans = planRepository.findByDashboard_id(dashboardId);
+    public List<PlanResponseDto> viewPlan(User user) {
+        Worcation worcation = worcationRepository.findByUserId(user.getId());
+        List<Plan> plans = planRepository.findByWorcationId(worcation.getId());
         return plans.stream()
                 .map(plan -> PlanResponseDto.builder()
                         .id(plan.getId())
@@ -83,7 +102,7 @@ public class PlanServiceImpl implements PlanService {
                 .taskImportant(planRequestDto.getImportant())
                 .taskType(planRequestDto.getType())
                 .taskIsFinish(planRequestDto.getIsFinish())
-                .dashboard(existingPlan.getDashboard()) // 기존 대시보드 정보 유지
+                .worcation(existingPlan.getWorcation()) // 기존 대시보드 정보 유지
                 .build();
 
         updatedPlan = planRepository.save(updatedPlan);
