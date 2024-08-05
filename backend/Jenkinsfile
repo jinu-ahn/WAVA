@@ -111,8 +111,8 @@ pipeline {
 
                         sh '''
                             docker build \
-                            --build-arg SERVER_DOMAIN=${SERVER_DOMAIN} \
-                            --build-arg SERVER_PORT=${SERVER_PORT} \
+                            --build-arg SERVER_DOMAIN=i11c204.p.ssafy.io \
+                            --build-arg SERVER_PORT=${TARGET_SERVERNAME} \
                             -t $DOCKER_USERNAME/work_frontend:latest .
                             docker push $DOCKER_USERNAME/work_frontend:latest
                         '''
