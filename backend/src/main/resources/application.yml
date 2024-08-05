@@ -10,7 +10,7 @@ server:
   env: blue # 기본 서버 환경 설정
 ---
 
-# Local environment
+# Local environment .
 spring:
   config:
     activate:
