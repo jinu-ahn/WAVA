@@ -7,5 +7,5 @@ import java.util.List;
 
 @Repository
 public interface PlanRepository extends JpaRepository<Plan,Long> {
-    List<Plan> findByDashboard_id(Long dashboardId);
+    List<Plan> findByWorcationId(Long worcationdId);
 }

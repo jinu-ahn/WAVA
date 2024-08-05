@@ -7,7 +7,9 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -17,6 +19,9 @@ import java.util.List;
 @AllArgsConstructor
 
 @Table(name = "channel", schema = "wava")
+@Builder
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Channel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,4 +63,7 @@ public class Channel {
 
     @OneToMany(mappedBy = "channel", cascade = CascadeType.REMOVE)
     private List<Chat> chat;
+
+    @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ChannelUser> channelUsers = new HashSet<>();
 }

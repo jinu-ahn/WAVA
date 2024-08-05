@@ -1,5 +1,6 @@
 package com.wava.worcation.domain.plan.domain;
 
+import com.worq.worcation.domain.worcation.domain.Worcation;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -11,7 +12,7 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "task", schema = "worQ")
+@Table(name = "task", schema = "wava")
 public class Plan {
 
     @Id
@@ -53,7 +54,7 @@ public class Plan {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "task_dashboard_id", nullable = false)
-    private Dashboard dashboard;
+    @JoinColumn(name = "task_worcation_id", nullable = false)
+    private Worcation worcation;
 
 }

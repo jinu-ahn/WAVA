@@ -1,8 +1,9 @@
     // src/main/java/com/worq/worcation/domain/worcation/domain/Worcation.java
-    package com.wava.worcation.domain.worcation.domain;
+    package com.worq.worcation.domain.worcation.domain;
 
-    import com.wava.worcation.domain.user.domain.User;
-    import com.wava.worcation.domain.worcation.dto.WorcationRequestDto;
+    import com.worq.worcation.domain.plan.domain.Plan;
+    import com.worq.worcation.domain.user.domain.User;
+    import com.worq.worcation.domain.worcation.dto.WorcationRequestDto;
     import jakarta.persistence.*;
     import lombok.AllArgsConstructor;
     import lombok.Builder;
@@ -10,8 +11,9 @@
     import lombok.Getter;
 
     import java.util.Date;
+    import java.util.List;
 
-    @Entity (name = "worcation")
+    @Entity
     @Data
     @Builder
     @Getter
@@ -39,6 +41,8 @@
         private String job;
         @Column(name="worcation_type")
         private String type;
+        @OneToMany(mappedBy="worcation",fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+        private List<Plan> plan;
 
         public Worcation() {
         }

@@ -1,7 +1,8 @@
-package com.wava.worcation.domain.user.service;
+package com.worq.worcation.domain.user.service;
 
-import com.wava.worcation.domain.user.domain.User;
-import com.wava.worcation.domain.user.repository.UserRepository;
+import com.worq.worcation.domain.user.domain.User;
+import com.worq.worcation.domain.user.domain.UserAdapter;
+import com.worq.worcation.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,16 +21,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Slf4j
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
+
     @Transactional
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        return userRepository.findByEmail(email)
-                .map(this::createUserDetails)
-                .orElseThrow(() -> new UsernameNotFoundException("아이디 또는 비밀번호 입력 오류"));
-    }
-
-    private UserDetails createUserDetails(User user) {
-        return new org.springframework.security.core.userdetails.User(user.getEmail(),user.getPassword(),user.getAuthorities());
-
+        User user = userRepository.findByEmail(email).orElseThrow(() ->
+                new UsernameNotFoundException("사용자가 존재하지 않습니다."));
+        return new UserAdapter(user);
     }
 }

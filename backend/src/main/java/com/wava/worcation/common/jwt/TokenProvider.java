@@ -1,6 +1,7 @@
-package com.wava.worcation.common.jwt;
+package com.worq.worcation.common.jwt;
 
-import com.wava.worcation.domain.user.dto.response.TokenDto;
+import com.worq.worcation.domain.user.dto.response.TokenDto;
+import com.worq.worcation.domain.user.repository.UserRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -33,6 +34,8 @@ public class TokenProvider {
     private final String GRANT_TYPE = "Bearer ";
     private final Key key;
 
+    private UserRepository userRepository;
+
     private final long accessTokenExpTime;
 
     private final long refreshTokenExpTime;
@@ -60,6 +63,7 @@ public class TokenProvider {
                 .iterator()
                 .next()
                 .getAuthority();
+
 
         Date now = new Date();
 

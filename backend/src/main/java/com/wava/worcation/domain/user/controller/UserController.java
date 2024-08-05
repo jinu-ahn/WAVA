@@ -1,11 +1,14 @@
-package com.wava.worcation.domain.user.controller;
+package com.worq.worcation.domain.user.controller;
 
-import com.wava.worcation.common.response.ApiResponse;
-import com.wava.worcation.domain.user.dto.request.LoginRequestDto;
-import com.wava.worcation.domain.user.dto.request.SignUpRequestDto;
-import com.wava.worcation.domain.user.dto.response.TokenDto;
-import com.wava.worcation.domain.user.dto.response.UserResponseDto;
-import com.wava.worcation.domain.user.service.UserService;
+import com.worq.worcation.common.response.ApiResponse;
+import com.worq.worcation.domain.user.dto.request.LoginRequestDto;
+import com.worq.worcation.domain.user.dto.request.SignUpRequestDto;
+import com.worq.worcation.domain.user.dto.response.LoginResponseDto;
+import com.worq.worcation.domain.user.dto.response.TokenDto;
+import com.worq.worcation.domain.user.dto.response.UserResponseDto;
+import com.worq.worcation.domain.user.service.UserService;
+import com.worq.worcation.domain.worcation.domain.Worcation;
+import com.worq.worcation.domain.worcation.dto.WorcationResponseDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +29,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse<TokenDto>> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
+    public ResponseEntity<ApiResponse<LoginResponseDto>> login(@RequestBody LoginRequestDto loginRequestDto, HttpServletResponse response) {
         return userService.login(loginRequestDto, response);
     }
 
@@ -38,5 +41,9 @@ public class UserController {
     @GetMapping("/reissue")
     public ResponseEntity<ApiResponse<String>> reissue(HttpServletRequest request,HttpServletResponse response) {
         return userService.reissue(request,response);
+    }
+    @PostMapping("/nickname/check")
+    private ResponseEntity<ApiResponse<String>> nickNameCheck(String nickName) {
+        return userService.nickNameCheck(nickName);
     }
 }
