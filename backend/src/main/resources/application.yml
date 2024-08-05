@@ -58,6 +58,10 @@ spring:
     activate:
       on-profile: common # common 프로파일 활성화
 
+server:
+  servlet:
+    context-path: /api
+
   datasource:
     url: ${DB_URL} # 데이터베이스 URL (환경 변수 사용)
     username: ${DB_USER} # 데이터베이스 사용자 이름 (환경 변수 사용)
