@@ -1,4 +1,4 @@
-package com.worq.worcation.common.s3.service;
+package com.wava.worcation.common.s3.service;
 
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.SdkClientException;

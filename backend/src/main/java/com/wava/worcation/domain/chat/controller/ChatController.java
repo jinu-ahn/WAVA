@@ -4,7 +4,6 @@ import com.wava.worcation.common.response.ApiResponse;
 import com.wava.worcation.domain.chat.dto.reqeust.ChatDto;
 import com.wava.worcation.domain.chat.dto.response.ChatResponseDto;
 import com.wava.worcation.domain.chat.service.ChatService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

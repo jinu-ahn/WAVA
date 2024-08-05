@@ -1,6 +1,6 @@
-package com.worq.worcation.domain.channel.service;
+package com.wava.worcation.domain.channel.service;
 
-import com.worq.worcation.domain.channel.dto.info.FollowInfoDto;
+import com.wava.worcation.domain.channel.dto.info.FollowInfoDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

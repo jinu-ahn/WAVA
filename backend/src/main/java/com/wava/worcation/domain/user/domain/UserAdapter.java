@@ -1,4 +1,4 @@
-package com.worq.worcation.domain.user.domain;
+package com.wava.worcation.domain.user.domain;
 
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,9 +11,9 @@ import java.util.stream.Collectors;
 
 @Getter
 public class UserAdapter extends User {
-    private final com.worq.worcation.domain.user.domain.User user;
+    private final com.wava.worcation.domain.user.domain.User user;
 
-    public UserAdapter(com.worq.worcation.domain.user.domain.User user){
+    public UserAdapter(com.wava.worcation.domain.user.domain.User user){
         super(user.getEmail(),user.getPassword(), authorities(user.getRoles()));
         this.user = user;
     }

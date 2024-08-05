@@ -1,11 +1,11 @@
-package com.worq.worcation.domain.channel.service;
+package com.wava.worcation.domain.channel.service;
 
-import com.worq.worcation.common.Exception.ResourceNotFoundException;
-import com.worq.worcation.common.response.ApiResponse;
-import com.worq.worcation.domain.channel.domain.Channel;
-import com.worq.worcation.domain.channel.dto.info.PersonalResponseDto;
-import com.worq.worcation.domain.channel.repository.ChannelRepository;
-import com.worq.worcation.domain.user.repository.UserRepository;
+import com.wava.worcation.common.exception.ResourceNotFoundException;
+import com.wava.worcation.common.response.ApiResponse;
+import com.wava.worcation.domain.channel.domain.Channel;
+import com.wava.worcation.domain.channel.dto.info.PersonalResponseDto;
+import com.wava.worcation.domain.channel.repository.ChannelRepository;
+import com.wava.worcation.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,8 +21,8 @@ public class PersonalServiceImpl {
 
     private final ChannelRepository channelRepository;
     private final UserRepository userRepository;
-    private final FollowService followService;
-    private final InfoService infoService;
+    private final com.wava.worcation.domain.channel.service.FollowService followService;
+    private final com.wava.worcation.domain.channel.service.InfoService infoService;
 
     ResponseEntity<ApiResponse<PersonalResponseDto>> ChannelInfo(Long userId){
         Channel channel = channelRepository.findChannelByUserId(userId);

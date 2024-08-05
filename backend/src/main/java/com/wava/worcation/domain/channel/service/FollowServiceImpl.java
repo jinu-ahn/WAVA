@@ -1,12 +1,12 @@
-package com.worq.worcation.domain.channel.service;
+package com.wava.worcation.domain.channel.service;
 
-import com.worq.worcation.common.Exception.ResourceNotFoundException;
-import com.worq.worcation.domain.channel.domain.Follow;
-import com.worq.worcation.domain.channel.dto.info.FollowInfoDto;
-import com.worq.worcation.domain.channel.repository.ChannelRepository;
-import com.worq.worcation.domain.channel.repository.FollowRepository;
-import com.worq.worcation.domain.user.domain.User;
-import com.worq.worcation.domain.user.repository.UserRepository;
+import com.wava.worcation.common.exception.ResourceNotFoundException;
+import com.wava.worcation.domain.channel.domain.Follow;
+import com.wava.worcation.domain.channel.dto.info.FollowInfoDto;
+import com.wava.worcation.domain.channel.repository.ChannelRepository;
+import com.wava.worcation.domain.channel.repository.FollowRepository;
+import com.wava.worcation.domain.user.domain.User;
+import com.wava.worcation.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ import java.util.*;
 
 @Service
 @Transactional
-public class FollowServiceImpl implements FollowService{
+public class FollowServiceImpl implements com.wava.worcation.domain.channel.service.FollowService {
 
     private static final Logger log = LoggerFactory.getLogger(FollowServiceImpl.class);
     @Autowired

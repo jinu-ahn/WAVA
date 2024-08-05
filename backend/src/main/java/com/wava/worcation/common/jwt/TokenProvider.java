@@ -1,7 +1,7 @@
-package com.worq.worcation.common.jwt;
+package com.wava.worcation.common.jwt;
 
-import com.worq.worcation.domain.user.dto.response.TokenDto;
-import com.worq.worcation.domain.user.repository.UserRepository;
+import com.wava.worcation.domain.user.dto.response.TokenDto;
+import com.wava.worcation.domain.user.repository.UserRepository;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

@@ -1,10 +1,10 @@
-package com.worq.worcation.domain.plan.controller;
+package com.wava.worcation.domain.plan.controller;
 
-import com.worq.worcation.domain.plan.dto.PlanRequestDto;
-import com.worq.worcation.domain.plan.dto.PlanResponseDto;
-import com.worq.worcation.domain.plan.service.PlanService;
-import com.worq.worcation.domain.user.domain.AuthUser;
-import com.worq.worcation.domain.user.domain.User;
+import com.wava.worcation.domain.plan.dto.PlanRequestDto;
+import com.wava.worcation.domain.plan.dto.PlanResponseDto;
+import com.wava.worcation.domain.plan.service.PlanService;
+import com.wava.worcation.domain.user.domain.AuthUser;
+import com.wava.worcation.domain.user.domain.User;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

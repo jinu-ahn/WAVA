@@ -1,10 +1,10 @@
-package com.worq.worcation.domain.channel.controller;
+package com.wava.worcation.domain.channel.controller;
 
-import com.worq.worcation.domain.channel.dto.info.FollowInfoDto;
-import com.worq.worcation.domain.channel.dto.info.FollowRequestDto;
-import com.worq.worcation.domain.channel.dto.info.FollowResponseDto;
-import com.worq.worcation.domain.channel.service.FollowService;
-import com.worq.worcation.domain.user.repository.UserRepository;
+import com.wava.worcation.domain.channel.dto.info.FollowInfoDto;
+import com.wava.worcation.domain.channel.dto.info.FollowRequestDto;
+import com.wava.worcation.domain.channel.dto.info.FollowResponseDto;
+import com.wava.worcation.domain.channel.service.FollowService;
+import com.wava.worcation.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

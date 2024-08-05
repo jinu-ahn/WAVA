@@ -1,4 +1,4 @@
-package com.worq.worcation.domain.user.domain;
+package com.wava.worcation.domain.user.domain;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 

@@ -1,13 +1,13 @@
-package com.worq.worcation.domain.plan.service;
+package com.wava.worcation.domain.plan.service;
 
-import com.worq.worcation.domain.plan.dao.PlanRepository;
-import com.worq.worcation.domain.plan.domain.Plan;
-import com.worq.worcation.domain.plan.dto.PlanRequestDto;
-import com.worq.worcation.domain.plan.dto.PlanResponseDto;
-import com.worq.worcation.domain.user.domain.User;
-import com.worq.worcation.domain.user.repository.UserRepository;
-import com.worq.worcation.domain.worcation.dao.WorcationRepository;
-import com.worq.worcation.domain.worcation.domain.Worcation;
+import com.wava.worcation.domain.plan.dao.PlanRepository;
+import com.wava.worcation.domain.plan.domain.Plan;
+import com.wava.worcation.domain.plan.dto.PlanRequestDto;
+import com.wava.worcation.domain.plan.dto.PlanResponseDto;
+import com.wava.worcation.domain.user.domain.User;
+import com.wava.worcation.domain.user.repository.UserRepository;
+import com.wava.worcation.domain.worcation.dao.WorcationRepository;
+import com.wava.worcation.domain.worcation.domain.Worcation;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;

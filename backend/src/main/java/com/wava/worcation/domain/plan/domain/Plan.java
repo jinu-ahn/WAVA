@@ -1,6 +1,6 @@
 package com.wava.worcation.domain.plan.domain;
 
-import com.worq.worcation.domain.worcation.domain.Worcation;
+import com.wava.worcation.domain.worcation.domain.Worcation;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

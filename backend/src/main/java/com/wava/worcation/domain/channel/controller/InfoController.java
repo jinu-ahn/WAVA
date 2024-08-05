@@ -1,9 +1,9 @@
-package com.worq.worcation.domain.channel.controller;
+package com.wava.worcation.domain.channel.controller;
 
-import com.worq.worcation.common.s3.service.S3ImageUpLoadService;
-import com.worq.worcation.domain.channel.dto.info.FeedResponseDto;
-import com.worq.worcation.domain.channel.dto.info.InfoResponseDto;
-import com.worq.worcation.domain.channel.service.InfoService;
+import com.wava.worcation.common.s3.service.S3ImageUpLoadService;
+import com.wava.worcation.domain.channel.dto.info.FeedResponseDto;
+import com.wava.worcation.domain.channel.dto.info.InfoResponseDto;
+import com.wava.worcation.domain.channel.service.InfoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;

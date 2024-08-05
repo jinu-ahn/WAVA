@@ -1,33 +1,22 @@
-package com.worq.worcation.common.config.websocket;
+package com.wava.worcation.common.config.websocket;
 
-import com.worq.worcation.common.jwt.AuthenticationFilter;
-import com.worq.worcation.common.jwt.TokenProvider;
-import com.worq.worcation.common.response.ApiResponse;
-import com.worq.worcation.common.util.RedisUtil;
-import com.worq.worcation.domain.channel.domain.Channel;
-import com.worq.worcation.domain.channel.domain.ChannelUser;
-import com.worq.worcation.domain.channel.repository.ChannelRepository;
-import com.worq.worcation.domain.channel.repository.ChannelUserRepository;
-import com.worq.worcation.domain.chat.dto.response.ChatResponseDto;
-import com.worq.worcation.domain.chat.service.ChatService;
-import com.worq.worcation.domain.user.domain.User;
-import com.worq.worcation.domain.user.repository.UserRepository;
+import com.wava.worcation.common.jwt.TokenProvider;
+import com.wava.worcation.domain.channel.domain.Channel;
+import com.wava.worcation.domain.channel.domain.ChannelUser;
+import com.wava.worcation.domain.channel.repository.ChannelRepository;
+import com.wava.worcation.domain.channel.repository.ChannelUserRepository;
+import com.wava.worcation.domain.user.domain.User;
+import com.wava.worcation.domain.user.repository.UserRepository;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
-import org.springframework.messaging.MessageDeliveryException;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
-import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.List;
 import java.util.Optional;
 

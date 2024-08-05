@@ -1,10 +1,10 @@
-package com.worq.worcation.domain.channel.controller;
+package com.wava.worcation.domain.channel.controller;
 
-import com.worq.worcation.common.response.ApiResponse;
-import com.worq.worcation.domain.channel.dto.info.PersonalResponseDto;
-import com.worq.worcation.domain.channel.service.PersonalService;
-import com.worq.worcation.domain.user.domain.User;
-import com.worq.worcation.domain.user.dto.response.UserResponseDto;
+import com.wava.worcation.common.response.ApiResponse;
+import com.wava.worcation.domain.channel.dto.info.PersonalResponseDto;
+import com.wava.worcation.domain.channel.service.PersonalService;
+import com.wava.worcation.domain.user.domain.User;
+import com.wava.worcation.domain.user.dto.response.UserResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

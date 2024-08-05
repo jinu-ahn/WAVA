@@ -85,7 +85,7 @@ jwt:
 
 logging.level:
   root: info # 루트 로깅 레벨 설정
-  com.worq: debug # com.ssafy 패키지 로깅 레벨 설정
+  com.wava: debug # com.ssafy 패키지 로깅 레벨 설정
 
 
 

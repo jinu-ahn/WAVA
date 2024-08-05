@@ -1,4 +1,4 @@
-package com.worq.worcation.common.config;
+package com.wava.worcation.common.config;
 
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;

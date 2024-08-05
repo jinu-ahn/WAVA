@@ -1,6 +1,6 @@
-package com.worq.worcation.domain.channel.service;
+package com.wava.worcation.domain.channel.service;
 
-import com.worq.worcation.domain.channel.dto.info.FeedResponseDto;
+import com.wava.worcation.domain.channel.dto.info.FeedResponseDto;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.List;

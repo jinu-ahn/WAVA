@@ -1,6 +1,6 @@
-package com.worq.worcation.domain.user.dto.response;
+package com.wava.worcation.domain.user.dto.response;
 
-import com.worq.worcation.domain.worcation.dto.WorcationResponseDto;
+import com.wava.worcation.domain.worcation.dto.WorcationResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 

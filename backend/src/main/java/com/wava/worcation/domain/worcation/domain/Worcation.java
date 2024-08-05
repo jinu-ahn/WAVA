@@ -1,9 +1,9 @@
     // src/main/java/com/worq/worcation/domain/worcation/domain/Worcation.java
-    package com.worq.worcation.domain.worcation.domain;
+    package com.wava.worcation.domain.worcation.domain;
 
-    import com.worq.worcation.domain.plan.domain.Plan;
-    import com.worq.worcation.domain.user.domain.User;
-    import com.worq.worcation.domain.worcation.dto.WorcationRequestDto;
+    import com.wava.worcation.domain.plan.domain.Plan;
+    import com.wava.worcation.domain.user.domain.User;
+    import com.wava.worcation.domain.worcation.dto.WorcationRequestDto;
     import jakarta.persistence.*;
     import lombok.AllArgsConstructor;
     import lombok.Builder;

@@ -1,8 +1,8 @@
-package com.worq.worcation.domain.user.service;
+package com.wava.worcation.domain.user.service;
 
-import com.worq.worcation.domain.user.domain.User;
-import com.worq.worcation.domain.user.domain.UserAdapter;
-import com.worq.worcation.domain.user.repository.UserRepository;
+import com.wava.worcation.domain.user.domain.User;
+import com.wava.worcation.domain.user.domain.UserAdapter;
+import com.wava.worcation.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;

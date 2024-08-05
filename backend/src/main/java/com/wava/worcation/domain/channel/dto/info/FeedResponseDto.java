@@ -1,4 +1,4 @@
-package com.worq.worcation.domain.channel.dto.info;
+package com.wava.worcation.domain.channel.dto.info;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +16,7 @@ public class FeedResponseDto {
     private int heart;
 //    private Timestamp created_at;
     private Long id;
-    private List<ImageResponseDto> imageList;
+    private List<com.wava.worcation.domain.channel.dto.info.ImageResponseDto> imageList;
     private List<CommentResponseDto> commentList;
 }
 

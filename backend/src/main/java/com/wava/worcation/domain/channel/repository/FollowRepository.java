@@ -1,8 +1,8 @@
-package com.worq.worcation.domain.channel.repository;
+package com.wava.worcation.domain.channel.repository;
 
-import com.worq.worcation.domain.channel.domain.Channel;
-import com.worq.worcation.domain.channel.domain.Follow;
-import com.worq.worcation.domain.user.domain.User;
+import com.wava.worcation.domain.channel.domain.Channel;
+import com.wava.worcation.domain.channel.domain.Follow;
+import com.wava.worcation.domain.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

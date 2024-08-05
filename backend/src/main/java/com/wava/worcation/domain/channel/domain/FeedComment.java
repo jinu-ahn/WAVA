@@ -1,6 +1,6 @@
-package com.worq.worcation.domain.channel.domain;
+package com.wava.worcation.domain.channel.domain;
 
-import com.worq.worcation.domain.user.domain.User;
+import com.wava.worcation.domain.user.domain.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

@@ -1,8 +1,8 @@
-package com.worq.worcation.domain.user.domain;
+package com.wava.worcation.domain.user.domain;
 
-import com.worq.worcation.domain.channel.domain.ChannelUser;
-import com.worq.worcation.domain.chat.domain.Chat;
-import com.worq.worcation.domain.worcation.domain.Worcation;
+import com.wava.worcation.domain.channel.domain.ChannelUser;
+import com.wava.worcation.domain.chat.domain.Chat;
+import com.wava.worcation.domain.worcation.domain.Worcation;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;

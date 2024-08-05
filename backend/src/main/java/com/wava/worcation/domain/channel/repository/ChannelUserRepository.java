@@ -1,6 +1,6 @@
-package com.worq.worcation.domain.channel.repository;
+package com.wava.worcation.domain.channel.repository;
 
-import com.worq.worcation.domain.channel.domain.ChannelUser;
+import com.wava.worcation.domain.channel.domain.ChannelUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
