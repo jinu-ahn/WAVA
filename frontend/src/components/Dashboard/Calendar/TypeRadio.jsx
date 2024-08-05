@@ -9,7 +9,7 @@ function TypeRadio({ selected, setSelected }) {
     <>
       {/* <!-- TYPE 라디오 그룹 --> */}
       <div className="flex flex-col items-center">
-        <span className="label-text mb-2">TYPE</span>
+        <span className="label-text mb-2">분류</span>
         <div className="flex">
           {options.map((option) => (
             <div key={option.value} className="form-control m-2">

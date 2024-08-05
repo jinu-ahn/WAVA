@@ -1,18 +1,29 @@
-import { useState, useEffect } from "react";
+import { useState, useLayoutEffect } from "react";
 import { Dialog, DialogPanel } from "@headlessui/react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Link, useLocation } from "react-router-dom";
+import LoginMenu from "./LoginMenu";
+import LogoutMenu from "./LogoutMenu";
+import MobileLoginMenu from "./MobileLoginMenu";
+import MobileLogoutMenu from "./MobileLogoutMenu";
+import useUserStore from "../../store/userStore";
 
-function Navbar({ children }) {
+function Navbar() {
+  const isLogin = useUserStore((state) => state.isLogin);
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [hiddenNav, setHiddenNav] = useState(false);
   const location = useLocation();
-  useEffect(() => {
-    if (location.pathname === "/dashboard") {
+  useLayoutEffect(() => {
+    if (
+      location.pathname.match("/dashboard") ||
+      location.pathname.match("/channel")
+    ) {
       setHiddenNav(true);
     } else {
       setHiddenNav(false);
     }
+    setMobileMenuOpen(false);
   }, [location]);
 
   if (hiddenNav) return null;
@@ -37,7 +48,8 @@ function Navbar({ children }) {
           </button>
         </div>
         <div className="hidden lg:flex lg:items-center lg:gap-x-12">
-          <Link
+          {isLogin ? <LogoutMenu /> : <LoginMenu />}
+          {/* <Link
             to="/dashboard"
             className="text-sm font-semibold leading-6 text-mainTxt hover:text-mainBlue"
           >
@@ -54,7 +66,7 @@ function Navbar({ children }) {
             className="text-sm font-semibold leading-6 text-mainTxt hover:text-mainBlue"
           >
             로그인
-          </Link>
+          </Link> */}
         </div>
       </nav>
       <Dialog
@@ -78,28 +90,7 @@ function Navbar({ children }) {
           </div>
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10">
-              <div className="space-y-2 py-6">
-                <Link
-                  to="/dashboard"
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-mainTxt hover:bg-gray-50 hover:text-mainBlue"
-                >
-                  대시보드
-                </Link>
-                <Link
-                  to="/channel"
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-mainTxt hover:bg-gray-50 hover:text-mainBlue"
-                >
-                  채널
-                </Link>
-              </div>
-              <div className="py-1">
-                <Link
-                  to="/login"
-                  className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-mainTxt hover:bg-gray-50 hover:text-mainBlue"
-                >
-                  로그인
-                </Link>
-              </div>
+              {isLogin ? <MobileLogoutMenu /> : <MobileLoginMenu />}
             </div>
           </div>
         </DialogPanel>
