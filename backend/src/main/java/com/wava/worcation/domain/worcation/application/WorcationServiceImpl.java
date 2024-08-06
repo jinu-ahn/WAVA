@@ -21,7 +21,7 @@ public class WorcationServiceImpl implements WorcationService {
     @Override
     public ResponseEntity<?> createWorcation(WorcationRequestDto worcationRequestDto, User user) {
         log.info("들어갔나");
-        if (worcationRepository.existsByUserId(user.getId())){
+        if (!worcationRepository.existsByUserId(user.getId())){
             Worcation worcation = Worcation.builder()
                     .user(user)
                     .start(worcationRequestDto.getStart())
