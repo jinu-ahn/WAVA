@@ -108,7 +108,7 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
             List<Image> images = imageRepository.findByFeed(feed);
             List<ImageResponseDto> imageResponseDtos = new ArrayList<>();
             log.info("이미지검색완료{}", images);
-            boolean islike = likeRepository.existsByUserIdAndFeed(user,feed);
+            boolean islike = likeRepository.existsByUserAndFeed(user,feed);
 
             for(Image image : images){
 
@@ -118,7 +118,7 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
                         .build();
                 imageResponseDtos.add(imageDtos);
             }
-
+            log.info("이미지 배열 완료") ;
             return FeedResponseDto.builder()
                     .content(feed.getContent())
                     .heart(feed.getHeart())

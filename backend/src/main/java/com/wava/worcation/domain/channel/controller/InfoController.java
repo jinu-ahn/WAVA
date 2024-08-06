@@ -66,7 +66,7 @@ public class InfoController{
             return ResponseEntity.ok(feedResponseDto);
         }
         catch (Exception e){
-            return ResponseEntity.status(HttpStatus.CREATED).body("잘못된 요청");
+            return ResponseEntity.status(HttpStatus.CREATED).body(e.getMessage());
         }
     }
 
