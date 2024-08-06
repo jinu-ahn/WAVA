@@ -58,7 +58,7 @@ function ChatComponent() {
     const connect = () => {
         const socket = new WebSocket(process.env.REACT_APP_WEBSOCKET_ADDRESS);
         stompClient.current = Stomp.over(socket);
-        stompClient.current.connect({Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtajE1ODRAbmF2ZXIuY29tIiwiYXV0aCI6IlZJU0lUT1IiLCJleHAiOjE3MjI2Nzk2MDV9.g8ZTJn9l2_ysSphyeSHr_2LAQkj2JxEwko0uxr1Q8Xg`}, () => {
+        stompClient.current.connect({Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`}, () => {
             stompClient.current.subscribe(`/sub/chatroom/${channelId}`, (message) => {
                 const newMessage = JSON.parse(message.body);
                 setMessages((prevMessages) => [...prevMessages, newMessage]);
