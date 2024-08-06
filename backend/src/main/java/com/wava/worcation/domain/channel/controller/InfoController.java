@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,12 +33,12 @@ public class InfoController{
             @RequestParam("content") String content,
             @RequestParam("sido") String sido,
             @RequestParam("sigungu") String sigungu,
-            @AuthUser User user) throws IOException {
+            @AuthUser User user) throws Exception {
 
         List<String> imgUrls = new ArrayList<>();
 
         try {
-            if (images.size() < 10 && images.size() > 0) {
+            if (images.size() < 10 && !images.isEmpty()) {
                 for (MultipartFile image : images) {
                     imgUrls.add(s3ImageUpLoadService.uploadImage(image));
                 }

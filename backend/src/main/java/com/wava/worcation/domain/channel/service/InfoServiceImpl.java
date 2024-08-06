@@ -34,7 +34,7 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
     private final com.wava.worcation.domain.channel.repository.ImageRepository imageRepository;
 
     @Override
-    public Void CreateFeed(String content, String sido, String sigungu, List<String> imgUrls, User user) {
+    public void CreateFeed(String content, String sido, String sigungu, List<String> imgUrls, User user) {
         Channel channel = channelRepository.findChannelByUserId(user.getId());
         com.wava.worcation.domain.channel.domain.Feed feed = com.wava.worcation.domain.channel.domain.Feed.builder()
                 .heart(0)
@@ -52,7 +52,6 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
 
             imageRepository.save(image);
         }
-        return;
     }
 
     @Override
