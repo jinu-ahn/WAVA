@@ -1,5 +1,7 @@
 package com.wava.worcation.common.jwt;
 
+import com.wava.worcation.common.exception.CustomException;
+import com.wava.worcation.common.response.ErrorCode;
 import com.wava.worcation.common.util.RedisUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -37,11 +39,9 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = tokenProvider.resolveToken(request);
         if (token != null && tokenProvider.validateToken(token)) {
-            log.info("들어왔니?");
             Authentication authentication = tokenProvider.getAuthentication(token);
             if (redisUtil.getData(token) != null) {
-                // TODO : CustomExcpetion 구현 시 변경 예정
-                throw new ValidationException("로그아웃 된 유저입니다.");
+                throw new CustomException(ErrorCode.BLACK_LIST_TOKEN);
             }
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
