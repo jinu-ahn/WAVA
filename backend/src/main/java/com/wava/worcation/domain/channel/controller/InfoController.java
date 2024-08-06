@@ -4,12 +4,13 @@ import com.wava.worcation.common.s3.service.S3ImageUpLoadService;
 import com.wava.worcation.domain.channel.dto.info.FeedResponseDto;
 import com.wava.worcation.domain.channel.dto.info.InfoResponseDto;
 import com.wava.worcation.domain.channel.service.InfoService;
+import com.wava.worcation.domain.user.domain.AuthUser;
+import com.wava.worcation.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,7 +25,8 @@ import java.util.Map;
 @Slf4j
 public class InfoController{
     public final InfoService infoService;
-    public final S3ImageUpLoadService s3ImageUpLoadService;
+    @Autowired
+    private S3ImageUpLoadService s3ImageUpLoadService;
 
     @PostMapping("/create")
     public ResponseEntity<?> createInfo(
@@ -32,8 +34,7 @@ public class InfoController{
             @RequestParam("content")String content,
             @RequestParam("sido") String sido,
             @RequestParam("sigungu") String sigungu,
-            @AuthenticationPrincipal UserDetails userdetails) throws IOException {
-
+            @AuthUser User user) throws IOException {
 
         List<String> imgUrls = new ArrayList<>();
         try {
@@ -41,7 +42,7 @@ public class InfoController{
                 imgUrls.add(s3ImageUpLoadService.uploadImage(image));
             }
 
-            infoService.CreateFeed(content,sido,sigungu,imgUrls, userdetails);
+            infoService.CreateFeed(content,sido,sigungu,imgUrls, user);
 
             return ResponseEntity.ok().build();
         }catch (Exception e){
