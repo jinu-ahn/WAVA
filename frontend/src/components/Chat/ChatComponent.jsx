@@ -56,7 +56,7 @@ function ChatComponent() {
 
     // 웹소켓 연결 설정
     const connect = () => {
-        const socket = new WebSocket(process.env.REACT_APP_SERVER_ADDRESS);
+        const socket = new WebSocket(process.env.REACT_APP_WEBSOCKET_ADDRESS);
         stompClient.current = Stomp.over(socket);
         stompClient.current.connect({Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtajE1ODRAbmF2ZXIuY29tIiwiYXV0aCI6IlZJU0lUT1IiLCJleHAiOjE3MjI2Nzk2MDV9.g8ZTJn9l2_ysSphyeSHr_2LAQkj2JxEwko0uxr1Q8Xg`}, () => {
             stompClient.current.subscribe(`/sub/chatroom/${channelId}`, (message) => {
