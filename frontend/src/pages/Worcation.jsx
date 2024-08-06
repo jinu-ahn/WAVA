@@ -9,10 +9,13 @@ import Swal from "sweetalert2";
 import { validateWorcation } from "../util/func";
 import SidoGugunSelector from "../components/Worcation/SidoGugunSelector";
 import { useLocation } from "react-router-dom";
+import useUserStore from "../store/userStore";
 
 function WorcationPage() {
   const isMobile = useDeviceStore((state) => state.isMobile);
+  const { setWorcation } = useUserStore();
   const navigate = useNavigate();
+
   const [data, setData] = useState({
     start: new Date(),
     end: new Date(),
@@ -65,22 +68,27 @@ function WorcationPage() {
     e.preventDefault();
     try {
       let result = false;
+      let worcation = null;
       if (validateWorcation(data)) {
         if (location.state === "edit") {
           // 에딧 api 호출
         } else {
           // 등록 api 호출
-          result = await createWorcation(data);
+          ({ result, worcation } = await createWorcation(data));
         }
-
+        console.log(result, worcation);
         if (result === true) {
           // result 반영할것
-          Swal.fire({
+          setWorcation(worcation);
+          await Swal.fire({
             icon: "success",
             title: "완료!",
             showConfirmButton: false,
             width: "300px",
+            timer: 2000,
           });
+          navigate("/");
+          return;
         } else {
           console.log(result);
 

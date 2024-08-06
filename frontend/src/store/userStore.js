@@ -88,6 +88,9 @@ const useUserStore = create(
           console.error("네트워크 에러");
         }
       },
+      setWorcation: (worcation) => {
+        set(() => ({ userInfo: { ...get().userInfo, worcation } }));
+      },
     }),
     {
       name: "userStorage",

@@ -1,9 +1,10 @@
 import React from "react";
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import { register, checkNicknameAvailability } from "../../api/userApi";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import useDeviceStore from "../../store/deviceStore";
+import { errorMonitor } from "ws";
 
 function SignupComponent() {
   const navigate = useNavigate();
@@ -106,18 +107,18 @@ function SignupComponent() {
 
   const onChangeNickName = (e) => {
     const currentNickName = e.target.value;
-    console.log("current " + currentNickName)
+    console.log("current " + currentNickName);
     setNickName(currentNickName);
     // setIsCheckingNickname(false);
-    console.log("after current " + isNickName)
+    console.log("after current " + isNickName);
     if (currentNickName.length === 0) {
       setIsNickName(false);
       setNickNameMessage("이름을 입력해주세요.");
       // setIsCheckingNickname(false);
       setIsNicknameAvailable(false);
-      console.log("my " + nickName)
-      console.log("is " + isNickName)
-      console.log("avil " + isNicknameAvailable)
+      console.log("my " + nickName);
+      console.log("is " + isNickName);
+      console.log("avil " + isNicknameAvailable);
       onChangeFormVaild();
     } else {
       checkNicknameAvailability(
@@ -132,7 +133,7 @@ function SignupComponent() {
         (error) => {
           setIsNickName(false);
           setIsNicknameAvailable(false);
-          console.log(error)
+          console.log(error);
           setNickNameMessage("중복된 닉네임 입니다.");
           // setIsCheckingNickname(false);
           onChangeFormVaild();
@@ -189,14 +190,21 @@ function SignupComponent() {
         navigate("/login");
       },
       (error) => {
+        let text = null;
+        if (error.response?.data?.message) {
+          text = error.response?.data?.message;
+        }
+        if (error.response?.data?.error) {
+          text = error.response?.data?.error;
+        }
         Swal.fire({
           position: "center",
           icon: "error",
           title: "회원가입이 실패하였습니다!",
+          text,
           showConfirmButton: false,
           timer: 1500,
         });
-        console.log(error);
       }
     );
   };
@@ -381,13 +389,15 @@ function SignupComponent() {
                   {nickNameMessage}
                 </p>
               )} */}
-              <p className={`message 
-                    ${isNickName && isNicknameAvailable
-                      ? "text-green-600"
-                      : "text-red-600"
+              <p
+                className={`message 
+                    ${
+                      isNickName && isNicknameAvailable
+                        ? "text-green-600"
+                        : "text-red-600"
                     } text-xs`}
               >
-                  {nickNameMessage}
+                {nickNameMessage}
               </p>
             </div>
             <label
