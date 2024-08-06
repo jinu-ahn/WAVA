@@ -20,7 +20,6 @@ const useUserStore = create(
               console.log(response.status);
               if (response.status === httpStatusCode.OK) {
                 console.log("로그인 성공");
-                console.log(response);
                 let accessToken = response.headers["authorization"];
                 let refreshToken = response.headers["refreshtoken"];
                 set(() => ({ isLogin: true }));
