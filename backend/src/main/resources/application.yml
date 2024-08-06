@@ -53,14 +53,14 @@ server:
 ---
 
 # Common settings for all environments/
+server:
+  servlet:
+    context-path: /api
+
 spring:
   config:
     activate:
       on-profile: common # common 프로파일 활성화
-
-server:
-  servlet:
-    context-path: /api
 
   datasource:
     url: ${DB_URL} # 데이터베이스 URL (환경 변수 사용)
@@ -73,14 +73,14 @@ server:
       host: ${SERVER_URL}
       port: 6379
 
-jpa:
-  show-sql: true # JPA SQL 출력 설정
-  database-platform: org.hibernate.dialect.MySQL8Dialect # JPA 데이터베이스 플랫폼 설정
-  hibernate:
-    ddl-auto: update # Hibernate DDL 자동 설정
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect # Hibernate 방언 설정
+  jpa:
+    show-sql: true # JPA SQL 출력 설정
+    database-platform: org.hibernate.dialect.MySQL8Dialect # JPA 데이터베이스 플랫폼 설정
+    hibernate:
+      ddl-auto: update # Hibernate DDL 자동 설정
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.MySQL8Dialect # Hibernate 방언 설정
 
 jwt:
   access_expiration_time: 3600000 # 1시간 액세스 토큰 만료 시간 설정
