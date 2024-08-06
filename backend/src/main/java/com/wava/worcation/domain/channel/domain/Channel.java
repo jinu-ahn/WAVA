@@ -63,6 +63,9 @@ public class Channel {
     @OneToMany(mappedBy = "channel", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ChannelUser> channelUsers = new HashSet<>();
 
+    @OneToMany(mappedBy = "channel", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Map> maps;
+
     public void memoUpdate(String memo) {
         this.channelMemo = memo;
     }
