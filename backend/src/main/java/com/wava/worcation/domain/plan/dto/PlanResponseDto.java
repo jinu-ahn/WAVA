@@ -20,7 +20,7 @@ public class PlanResponseDto {
     private String end;
     private PlanImportant important;
     private PlanType type;
-    private String className; // DTO만 사용
+    private PlanImportant className; // DTO만 사용
     private Boolean isFinish;
 
 }

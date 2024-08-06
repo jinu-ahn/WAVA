@@ -43,7 +43,7 @@ public class PlanController {
         }
     }
     @GetMapping("/view")
-    public ResponseEntity<?> viewPlan(@AuthenticationPrincipal User user){
+    public ResponseEntity<?> viewPlan(@AuthUser User user){
         try {
             List<PlanResponseDto> response = planService.viewPlan(user);
             return ResponseEntity.ok(response);
@@ -52,7 +52,7 @@ public class PlanController {
         }
     }
     @PatchMapping("/update/{planId}")
-    public ResponseEntity<?> updatePlan(@RequestBody PlanRequestDto planRequestDto,@RequestParam Long planId){
+    public ResponseEntity<?> updatePlan(@RequestBody PlanRequestDto planRequestDto,@PathVariable Long planId){
         try {
             PlanResponseDto response = planService.updatePlan(planRequestDto,planId);
             return ResponseEntity.ok(response);

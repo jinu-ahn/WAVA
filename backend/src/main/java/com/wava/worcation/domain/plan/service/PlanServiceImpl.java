@@ -28,8 +28,6 @@ public class PlanServiceImpl implements PlanService {
     private PlanRepository planRepository;
     @Autowired
     private WorcationRepository worcationRepository;
-    @Autowired
-    private UserRepository userRepository;
 
 
     @Override
@@ -56,7 +54,7 @@ public class PlanServiceImpl implements PlanService {
                 .end(savedPlan.getTaskEndTime())
                 .important(savedPlan.getTaskImportant())
                 .type(savedPlan.getTaskType())
-                .className(planRequestDto.getClassName())
+                .className(savedPlan.getTaskImportant())
                 .isFinish(savedPlan.getTaskIsFinish())
                 .build();
     }
@@ -79,6 +77,8 @@ public class PlanServiceImpl implements PlanService {
                         .end(plan.getTaskEndTime())
                         .important(plan.getTaskImportant())
                         .type(plan.getTaskType())
+                        .className(plan.getTaskImportant())
+                        .isFinish(plan.getTaskIsFinish())
                         .build())
                 .collect(Collectors.toList());
     }
@@ -112,6 +112,7 @@ public class PlanServiceImpl implements PlanService {
                 .end(updatedPlan.getTaskEndTime())
                 .important(updatedPlan.getTaskImportant())
                 .type(updatedPlan.getTaskType())
+                .className(updatedPlan.getTaskImportant())
                 .isFinish(updatedPlan.getTaskIsFinish())
                 .build();
     }
