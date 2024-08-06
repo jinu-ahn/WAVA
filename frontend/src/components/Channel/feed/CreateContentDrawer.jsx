@@ -75,7 +75,7 @@ function CreateContentDrawer({ isOpen, onClose, addItem }) {
     });
     formData.append("content", textContent);
     formData.append("sido", userInfo?.worcation?.sido);
-    formData.append("gugun", userInfo?.worcation?.gugun);
+    formData.append("sigungu", userInfo?.worcation?.sigungu);
     const resp = await createFeedRequest(formData);
     if (resp) {
       // addItem();

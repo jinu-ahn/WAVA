@@ -79,20 +79,22 @@ export function validateEvent(event) {
  * start : date
  * end : date,
  * sido : string,
- * gugun : string,
+ * sigungu : string,
  * job : string,
  * }} data
  * @returns {Boolean<true|false>} - todo 이벤트 목록의 배열을 포함하는 프로미스를 반환합니다.
  */
 export function validateWorcation(data) {
-  const { start, end, sido, gugun, job } = data;
+  const { start, end, sido, sigungu, job } = data;
 
   // 날짜 형식 검사
-  if (!(start instanceof Date) || isNaN(start.getTime())) {
+
+  console.log(start);
+  if (!start || isNaN(Date.parse(start))) {
     console.error("유효하지 않은 시작 날짜입니다.");
     return false;
   }
-  if (!(end instanceof Date) || isNaN(end.getTime())) {
+  if (!end || isNaN(Date.parse(end))) {
     console.error("유효하지 않은 종료 날짜입니다.");
     return false;
   }
@@ -106,7 +108,7 @@ export function validateWorcation(data) {
     console.error("시/도 정보가 유효하지 않습니다.");
     return false;
   }
-  if (typeof gugun !== "string" || gugun.trim() === "") {
+  if (typeof sigungu !== "string" || sigungu.trim() === "") {
     console.error("구/군 정보가 유효하지 않습니다.");
     return false;
   }
