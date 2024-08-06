@@ -31,25 +31,32 @@ public class InfoController{
     @PostMapping("/create")
     public ResponseEntity<?> createInfo(
             @RequestParam("image") List<MultipartFile> images,
-            @RequestParam("content")String content,
+            @RequestParam("content") String content,
             @RequestParam("sido") String sido,
             @RequestParam("sigungu") String sigungu,
             @AuthUser User user) throws IOException {
 
         List<String> imgUrls = new ArrayList<>();
+
         try {
-            for(MultipartFile image : images){
-                imgUrls.add(s3ImageUpLoadService.uploadImage(image));
+            if (images != null && images.size() < 10 && images.size() > 0) {
+                for (MultipartFile image : images) {
+                    imgUrls.add(s3ImageUpLoadService.uploadImage(image));
+                }
+            } else {
+                // 이미지가 없을 때 에러 반환
+                return ResponseEntity.status(400).body("이미지가 필요합니다.");
             }
 
-            infoService.CreateFeed(content,sido,sigungu,imgUrls, user);
+            infoService.CreateFeed(content, sido, sigungu, imgUrls, user);
 
             return ResponseEntity.ok().build();
-        }catch (Exception e){
-            log.error(e.getMessage());
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
             return ResponseEntity.status(400).body("잘못된 요청입니다.");
         }
     }
+
 
     @GetMapping("/{feedId}")
     public ResponseEntity<?> viewFeed(@PathVariable("feedId") Long feedId, @RequestParam Long userId) {
