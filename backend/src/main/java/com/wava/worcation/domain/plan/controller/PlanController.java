@@ -34,7 +34,7 @@ public class PlanController {
         }
     }
     @DeleteMapping("/delete/{planId}")
-    public ResponseEntity<?> deletePlan(@RequestParam Long planId){
+    public ResponseEntity<?> deletePlan(@PathVariable Long planId){
         try {
             planService.deletePlan(planId);
             return ResponseEntity.ok("Success");
