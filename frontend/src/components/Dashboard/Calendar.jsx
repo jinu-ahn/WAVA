@@ -221,15 +221,19 @@ const Calendar = ({ calendarRef }) => {
     }
 
     try {
-      await addEvent(newEvent);
-      await Swal.fire({
-        icon: "success",
-        title: "이벤트 추가 완료",
-        text: "새로운 이벤트가 성공적으로 추가되었습니다.",
-        timer: 1000,
-        showConfirmButton: false,
-      });
-      closeModal();
+      const result = await addEvent(newEvent);
+      if (result) {
+        await Swal.fire({
+          icon: "success",
+          title: "이벤트 추가 완료",
+          text: "새로운 이벤트가 성공적으로 추가되었습니다.",
+          timer: 1000,
+          showConfirmButton: false,
+        });
+        closeModal();
+      } else {
+        throw new Error();
+      }
     } catch (error) {
       await Swal.fire({
         icon: "error",

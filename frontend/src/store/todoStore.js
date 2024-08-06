@@ -33,7 +33,6 @@ const useTodoStore = create((set) => ({
       }));
       return true;
     } else {
-      alert("add 에러");
       return false;
     }
   },
@@ -46,7 +45,7 @@ const useTodoStore = create((set) => ({
       }));
       return true;
     } else {
-      alert("delete 에러");
+      console.error("delete 에러");
       return false;
     }
   },
@@ -61,7 +60,7 @@ const useTodoStore = create((set) => ({
       }));
       return true;
     } else {
-      alert("update 에러");
+      console.error("update 에러");
       return false;
     }
   },
