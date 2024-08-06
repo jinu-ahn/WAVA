@@ -36,7 +36,13 @@ public class S3ImageUpLoadService {
     public String uploadImage(MultipartFile imageFile) throws AmazonServiceException, SdkClientException, IOException {
         // 고유 파일 이름 생성
         String originalFileName = imageFile.getOriginalFilename();
-        String extension = originalFileName.substring(originalFileName.lastIndexOf('.'));
+        String extension = "";
+
+        // originalFileName이 null이 아니고 확장자가 포함되어 있는지 확인
+        if (originalFileName != null && originalFileName.lastIndexOf('.') != -1) {
+            extension = originalFileName.substring(originalFileName.lastIndexOf('.'));
+        }
+
         String fileName = UUID.randomUUID().toString() + extension;
 
         //메타 데이터 생성

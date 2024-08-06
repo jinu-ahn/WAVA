@@ -14,7 +14,7 @@ public class WorcationRequestDto {
     private Date start;
     private Date end;
     private String sido;
-    private String gugun;
+    private String sigungu;
     private String job;
     private String type;
 }

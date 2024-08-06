@@ -36,7 +36,7 @@
         @Column(name="worcation_sido")
         private String sido;
         @Column(name="worcation_sigungu")
-        private String gugun;
+        private String sigungu;
         @Column(name="worcation_job")
         private String job;
         @Column(name="worcation_type")
@@ -57,8 +57,8 @@
             if (worcationRequestDto.getSido() != null) {
                 this.sido = worcationRequestDto.getSido();
             }
-            if (worcationRequestDto.getGugun() != null) {
-                this.gugun = worcationRequestDto.getGugun();
+            if (worcationRequestDto.getSigungu() != null) {
+                this.sigungu = worcationRequestDto.getSigungu();
             }
             if (worcationRequestDto.getJob() != null) {
                 this.job = worcationRequestDto.getJob();

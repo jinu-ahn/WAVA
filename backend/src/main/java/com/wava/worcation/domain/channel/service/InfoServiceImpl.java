@@ -29,10 +29,8 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
     private final com.wava.worcation.domain.channel.repository.LikeRepository likeRepository;
 
     @Override
-    public Void CreateFeed(String content, String sido, String sigungu, List<String> imgUrls, UserDetails userDetails) {
-        String userEmail = userDetails.getUsername();
-        Channel channel = channelRepository.findById(userRepository.findByEmail(userEmail).orElseThrow(()->new ResourceNotFoundException("이메일 검색 실패")).getId())
-                .orElseThrow(ResourceNotFoundException::new);
+    public Void CreateFeed(String content, String sido, String sigungu, List<String> imgUrls, User user) {
+        Channel channel = channelRepository.findChannelByUserId(user.getId());
         com.wava.worcation.domain.channel.domain.Feed feed = com.wava.worcation.domain.channel.domain.Feed.builder()
                 .heart(0)
                 .content(content)

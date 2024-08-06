@@ -26,7 +26,7 @@ public class WorcationResponseDto {
         this.start = worcation.getStart();
         this.end = worcation.getEnd();
         this.sido = worcation.getSido();
-        this.gugun = worcation.getGugun();
+        this.gugun = worcation.getSigungu();
         this.job = worcation.getJob();
         this.type = worcation.getType();
     }
