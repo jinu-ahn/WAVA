@@ -31,6 +31,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -53,15 +54,9 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public ResponseEntity<ApiResponse<UserResponseDto>> signUp(@Valid final SignUpRequestDto requestDto) {
-        if(emailValidate(requestDto.getEmail())) {
-            throw new CustomException(ErrorCode.DUPLICATE_EMAIL);
-        }
-        if(phoneNumberValidate(requestDto.getPhone())) {
-            throw new CustomException(ErrorCode.DUPLICATE_PHONE_NUMBER);
-        }
-        if(nickNameValidate(requestDto.getNickName())) {
-            throw new CustomException(ErrorCode.DUPLICATE_NICKNAME);
-        }
+        emailValidate(requestDto.getEmail()); // 이메일 중복 체크
+        phoneNumberValidate(requestDto.getPhone()); // 전화번호 중복 체크
+        nickNameValidate(requestDto.getNickName()); // 닉네임 중복 체크
 
         String encodedPassword = bCryptPasswordEncoder.encode(requestDto.getPassword());
 
@@ -130,7 +125,7 @@ public class UserServiceImpl implements UserService{
                 .body(ApiResponse.success(LoginResponseDto.builder()
                                 .nickName(userOpt.get().getNickName())
                                 .profile(userOpt.get().getProfileImg())
-                                .isWorcation(worcation != null ? true : false)
+                                .isWorcation(worcation != null)
                                 .worcation(worcationResponseDto)
                                 .build()));
     }
@@ -161,9 +156,9 @@ public class UserServiceImpl implements UserService{
         String refreshToken = redisUtil.getData(authentication.getName());
 
         if(refreshToken == null)
-            log.info("토큰이 존재하지 않습니다.");
+            throw new CustomException(ErrorCode.UNKNOWN_ERROR);
         if(!Objects.equals(refreshToken, request.getHeader("refreshToken")))
-            log.info("유효하지 않은 토큰입니다.");
+            throw new CustomException(ErrorCode.WRONG_TYPE_TOKEN);
 
         TokenDto tokenDto = tokenProvider.generateToken(authentication);
         tokenToHeader(tokenDto,response);
@@ -177,32 +172,27 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public ResponseEntity<ApiResponse<String>> nickNameCheck(String nickName) {
-        if(nickNameValidate(nickName)) {
-            return ResponseEntity.status(ErrorCode.DUPLICATE_NICKNAME.getStatus())
-                    .body(ApiResponse.error(ErrorCode.DUPLICATE_NICKNAME));
-        }
+        nickNameValidate(nickName); // 닉네임 중복 체크
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success("사용가능한 닉네임 입니다."));
     }
 
-    private boolean emailValidate(String email) {
+    private void emailValidate(String email) {
         Optional<User> user = userRepository.findByEmail(email);
         if(user.isPresent()) {
-            return true;
+            throw new CustomException(ErrorCode.DUPLICATE_EMAIL);
         }
-        return false;
     }
-    private boolean phoneNumberValidate(String phone) {
+    private void phoneNumberValidate(String phone) {
         if(userRepository.findByPhone(phone) != null) {
-            return true;
+            throw new CustomException(ErrorCode.DUPLICATE_PHONE_NUMBER);
         }
-        return false;
     }
-    private boolean nickNameValidate(String nickName) {
+    private void nickNameValidate(String nickName) {
         if(userRepository.findByNickName(nickName) != null) {
-            return true;
+            throw new CustomException(ErrorCode.DUPLICATE_NICKNAME);
         }
-        return false;
     }
     private void tokenToHeader(TokenDto tokenDto, HttpServletResponse response){
         response.addHeader("Authorization",tokenDto.accessToken());

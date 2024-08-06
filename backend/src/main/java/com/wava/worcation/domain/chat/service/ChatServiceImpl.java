@@ -59,7 +59,6 @@ public class ChatServiceImpl implements ChatService{
     @Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<List<ChatResponseDto>>> chatLogs(final Long ChannelId) {
         List<Chat> chatLogs = chatRepository.findByChannelId(ChannelId);
-        log.info("size : {}", chatLogs.size());
         List<ChatResponseDto> chatResponseDtoList = new ArrayList<>();
         for (Chat chatLog : chatLogs) {
             chatResponseDtoList.add(
