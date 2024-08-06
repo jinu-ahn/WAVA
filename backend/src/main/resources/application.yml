@@ -36,7 +36,7 @@ server:
   ssl:
     enabled: true
     key-store: classpath:keystore.p12
-    key-store-password: 1Q2W3E4R!!
+    key-store-password: ${DB_PASSWORD}
     key-store-type: PKCS12
 
 ---
@@ -55,7 +55,7 @@ server:
   ssl:
     enabled: true
     key-store: classpath:keystore.p12
-    key-store-password: 1Q2W3E4R!!
+    key-store-password: ${DB_PASSWORD}
     key-store-type: PKCS12
 
 
