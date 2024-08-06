@@ -127,17 +127,17 @@ NOTE: for old browsers, will need to restart watcher after changing a variable
 }
 /* 모바일 끝 */
 
-.상 {
+.HIGH {
   background-color: rgb(58, 90, 64);
   border: 0px;
 }
 
-.중 {
+.MID {
   border: 0px;
   background-color: rgb(88, 129, 87);
 }
 
-.하 {
+.LOW {
   border: 0px;
   background-color: rgb(163, 177, 138);
 }

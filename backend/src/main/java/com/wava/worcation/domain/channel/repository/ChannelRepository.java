@@ -1,6 +1,7 @@
 package com.wava.worcation.domain.channel.repository;
 
 import com.wava.worcation.domain.channel.domain.Channel;
+import com.wava.worcation.domain.channel.enums.ChannelType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -15,4 +16,5 @@ public interface ChannelRepository extends JpaRepository<Channel, Long> {
     Channel findChannelByUserId (long userId);
     List<Object> findByUserId(long userId);
     List<Long> findAllById(Long userId);
+    List<Channel> findByChannelType(String channelType);
 }

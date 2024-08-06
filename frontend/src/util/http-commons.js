@@ -25,6 +25,7 @@ localAxios.interceptors.request.use(
   (config) => {
     // 로컬 스토리지에서 토큰을 읽어오기
     const token = sessionStorage.getItem("accessToken");
+    console.log(token);
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }

@@ -21,8 +21,7 @@ public class WorcationController {
     @PostMapping("/create")
     public ResponseEntity<?> createWorcation(@RequestBody WorcationRequestDto worcationRequestDto, @AuthUser User user) {
         try {
-            WorcationResponseDto response = worcationService.createWorcation(worcationRequestDto, user);
-            return ResponseEntity.ok(response);
+            return worcationService.createWorcation(worcationRequestDto, user);
         } catch (WorcationNotFoundException e) {
             return ResponseEntity.status(400).body("존재하지 않는 워케이션 입니다.");
         } catch (Exception e) {

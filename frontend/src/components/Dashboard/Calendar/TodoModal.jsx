@@ -61,9 +61,9 @@ function TodoModal({
                     }
                     value={child.props.children[1].props.selected}
                   >
-                    <option value="상">High</option>
-                    <option value="중">Medium</option>
-                    <option value="하">Low</option>
+                    <option value="HIGH">High</option>
+                    <option value="MID">Medium</option>
+                    <option value="LOW">Low</option>
                   </select>
                 </div>
               );

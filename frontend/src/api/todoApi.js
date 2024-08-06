@@ -25,15 +25,13 @@ const address = "/plan";
  */
 export const getTodoList = async () => {
   try {
-    const response = local.get(address + "/view");
-
-    if (response.status !== 200) {
+    const response = await local.get(address + "/view");
+    if (response.data?.status !== "OK") {
       console.log(response.message);
       throw new Error(`HTTP 오류! 상태: ${response.status}`);
     }
 
-    const { data } = response;
-    console.log(data);
+    const { data } = response.data;
     return data;
   } catch (error) {
     console.error("todo 목록을 가져오는 중 오류 발생:", error);
@@ -44,25 +42,13 @@ export const getTodoList = async () => {
 // C
 export const createTodoRequest = async (newTodoItem) => {
   try {
-    const response = await local.post(
-      address + "/create",
-      JSON.stringify(newTodoItem)
-    );
+    const response = await local.post(address + "/create", newTodoItem);
 
-    // 테스트코드
-    // let response = { status: 201 };
-
-    if (response.status !== 201) {
+    if (response.data?.status !== "OK") {
       console.log(response.message);
       throw new Error(`HTTP 오류! 상태: ${response.status}`);
     }
-
-    // 더미 코드
-    // newTodoItem.id = nanoid();
-    // return newTodoItem;
-    //
-
-    const data = await response.json();
+    const { data } = response.data;
     return data;
   } catch (e) {
     console.error("todo 항목을 생성하는 중 오류 발생:", e);
@@ -73,9 +59,7 @@ export const createTodoRequest = async (newTodoItem) => {
 // D
 export const deleteTodoRequest = async (todoItem) => {
   try {
-    const response = await local.delete(address + "/delete/" + todoItem?.id);
-
-    // const response = { status: 204 };
+    const response = await local.delete(address + "/delete/" + todoItem);
 
     if (response.status === 204) {
       return true;
@@ -91,9 +75,10 @@ export const deleteTodoRequest = async (todoItem) => {
 // U
 export const updateTodoRequest = async (todoItem) => {
   try {
-    const response = await local.put(
-      address + "update" + todoItem?.id,
-      JSON.stringify(todoItem)
+    console.log(todoItem);
+    const response = await local.patch(
+      address + "/update/" + todoItem?.id,
+      todoItem
     );
 
     // 테스트코드
