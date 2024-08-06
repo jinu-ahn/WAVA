@@ -2,7 +2,7 @@ import { localAxios as local } from "../util/http-commons";
 
 export const createWorcation = async (data) => {
   try {
-    const response = await local.post("/worcation/create");
+    const response = await local.post("/worcation/create", data);
     if (response.status === 201) {
       return true;
     } else {
