@@ -58,11 +58,12 @@ function ChatComponent() {
     const connect = () => {
         const socket = new WebSocket(process.env.REACT_APP_WEBSOCKET_ADDRESS);
         stompClient.current = Stomp.over(socket);
+        console.log(sessionStorage.getItem("accessToken"))
         stompClient.current.connect({Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`}, () => {
             stompClient.current.subscribe(`/sub/chatroom/${channelId}`, (message) => {
                 const newMessage = JSON.parse(message.body);
                 setMessages((prevMessages) => [...prevMessages, newMessage]);
-            });
+            }, {Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`} );
         });
         console.log("방 번호", channelId);
     };
@@ -99,7 +100,7 @@ function ChatComponent() {
                 nickName : nickName,
                 message : inputValue    
             };
-            stompClient.current.send(`/pub/message`, {}, JSON.stringify(messageObj));
+            stompClient.current.send(`/pub/message`, {Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`}, JSON.stringify(messageObj));
             setInputValue("");
             // setName("");
         }
