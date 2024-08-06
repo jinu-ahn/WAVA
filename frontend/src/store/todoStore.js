@@ -14,13 +14,13 @@ const useTodoStore = create((set) => ({
   },
   fetchEvents: async () => {
     const events = await getTodoList();
-    if (events) {
+    if (Array.isArray(events)) {
       set({
         events,
       });
       return true;
     } else {
-      alert("getList 에러");
+      console.log("server error-f");
       return false;
     }
   },

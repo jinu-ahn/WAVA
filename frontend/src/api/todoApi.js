@@ -27,16 +27,13 @@ export const getTodoList = async () => {
   try {
     const response = local.get(address + "/view");
 
-    // // 더미데이터
-    // const response = { data: get_response, status: 200 };
-
     if (response.status !== 200) {
       console.log(response.message);
       throw new Error(`HTTP 오류! 상태: ${response.status}`);
     }
 
-    const data = await response.json();
-    // const { data } = response.data;
+    const { data } = response;
+    console.log(data);
     return data;
   } catch (error) {
     console.error("todo 목록을 가져오는 중 오류 발생:", error);
