@@ -1,8 +1,13 @@
 package com.wava.worcation.domain.user.service;
+import com.wava.worcation.common.exception.CustomException;
 import com.wava.worcation.common.jwt.TokenProvider;
 import com.wava.worcation.common.response.ApiResponse;
 import com.wava.worcation.common.response.ErrorCode;
 import com.wava.worcation.common.util.RedisUtil;
+import com.wava.worcation.domain.channel.domain.Channel;
+import com.wava.worcation.domain.channel.enums.ChannelType;
+import com.wava.worcation.domain.channel.repository.ChannelRepository;
+import com.wava.worcation.domain.channel.repository.ChannelUserRepository;
 import com.wava.worcation.domain.user.domain.User;
 import com.wava.worcation.domain.user.dto.request.LoginRequestDto;
 import com.wava.worcation.domain.user.dto.request.SignUpRequestDto;
@@ -38,6 +43,7 @@ public class UserServiceImpl implements UserService{
     private final AuthenticationManagerBuilder managerBuilder;
     private final TokenProvider tokenProvider;
     private final RedisUtil redisUtil;
+    private final ChannelRepository channelRepository;
 
     /**
      * 유저 회원 가입
@@ -48,16 +54,13 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public ResponseEntity<ApiResponse<UserResponseDto>> signUp(@Valid final SignUpRequestDto requestDto) {
         if(emailValidate(requestDto.getEmail())) {
-            return ResponseEntity.status(ErrorCode.DUPLICATE_EMAIL.getStatus())
-                    .body(ApiResponse.error(ErrorCode.DUPLICATE_EMAIL));
+            throw new CustomException(ErrorCode.DUPLICATE_EMAIL);
         }
         if(phoneNumberValidate(requestDto.getPhone())) {
-            return ResponseEntity.status(ErrorCode.DUPLICATE_PHONE_NUMBER.getStatus())
-                    .body(ApiResponse.error(ErrorCode.DUPLICATE_PHONE_NUMBER));
+            throw new CustomException(ErrorCode.DUPLICATE_PHONE_NUMBER);
         }
         if(nickNameValidate(requestDto.getNickName())) {
-            return ResponseEntity.status(ErrorCode.DUPLICATE_NICKNAME.getStatus())
-                    .body(ApiResponse.error(ErrorCode.DUPLICATE_NICKNAME));
+            throw new CustomException(ErrorCode.DUPLICATE_NICKNAME);
         }
 
         String encodedPassword = bCryptPasswordEncoder.encode(requestDto.getPassword());
@@ -72,6 +75,16 @@ public class UserServiceImpl implements UserService{
                 .report(0L)
                 .roles(Collections.singletonList("VISITOR"))
                 .build());
+
+        channelRepository.save(
+                Channel.builder()
+                        .user(user)
+                        .channelTitle(user.getNickName())
+                        .channelSido(user.getSido())
+                        .channelSigungu(user.getSigungu())
+                        .channelDescription(user.getNickName() + "님의 채널 입니다.")
+                        .channelType(ChannelType.PERSONAL.getCode())
+                        .build());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(UserResponseDto.builder()
