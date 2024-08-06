@@ -5,8 +5,8 @@
  * content:string
  * start:Date
  * end:Date
- * className:"상"|"중"|"하"
- * important:"상"|"중"|"하"
+ * className:"HIGH"|"MID"|"LOW"
+ * important:"HIGH"|"MID"|"LOW"
  * type:"WORK"|"REST"
  * isFinish:boolean
  * }} event 
@@ -32,9 +32,9 @@ export function validateEvent(event) {
 
   if (
     typeof event.important !== "string" ||
-    (event.important !== "상" &&
-      event.important !== "중" &&
-      event.important !== "하")
+    (event.important !== "HIGH" &&
+      event.important !== "MID" &&
+      event.important !== "LOW")
   ) {
     console.error("important");
     return false;
