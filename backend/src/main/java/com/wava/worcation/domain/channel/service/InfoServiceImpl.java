@@ -60,7 +60,7 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
 
         Optional<Feed> feedOp = feedReository.findById(feedId);
         Optional<User> userOp = userRepository.findById(userId);
-
+        log.info("이병수는 살아있다{},{}",feedOp.toString(),userOp.toString());
         if (feedOp.isPresent() && userOp.isPresent()) {
             Feed feed = feedOp.get();
             User user = userOp.get();
