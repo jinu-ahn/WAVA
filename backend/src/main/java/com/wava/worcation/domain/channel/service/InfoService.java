@@ -10,7 +10,7 @@ import java.util.Map;
 public interface InfoService {
 
     Void CreateFeed(String content, String sido, String sigungu, List<String> imgUrls, User user);
-    Map<String, Object> createComment(Long userid, Long feedid, String commentContext);
+    Map<String, Object> createComment(Long userId, Long feedId, String commentContext);
     FeedResponseDto viewFeed(Long feedid, User user);
     void likeAdd(Long feedId, Long userId);
     void likeDistract(Long feedId, Long userId);

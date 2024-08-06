@@ -5,19 +5,14 @@ import com.wava.worcation.domain.plan.domain.Plan;
 import com.wava.worcation.domain.plan.dto.PlanRequestDto;
 import com.wava.worcation.domain.plan.dto.PlanResponseDto;
 import com.wava.worcation.domain.user.domain.User;
-import com.wava.worcation.domain.user.repository.UserRepository;
 import com.wava.worcation.domain.worcation.dao.WorcationRepository;
 import com.wava.worcation.domain.worcation.domain.Worcation;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authorization.method.AuthorizeReturnObject;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -66,8 +61,11 @@ public class PlanServiceImpl implements PlanService {
 
     @Override
     public List<PlanResponseDto> viewPlan(User user) {
+        log.info("유저 아이디{}",user.getId());
         Worcation worcation = worcationRepository.findByUserId(user.getId());
+        log.info(worcation.toString());
         List<Plan> plans = planRepository.findByWorcationId(worcation.getId());
+        log.info("리스트{}",plans.toString());
         return plans.stream()
                 .map(plan -> PlanResponseDto.builder()
                         .id(plan.getId())

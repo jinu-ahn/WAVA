@@ -56,17 +56,17 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
     }
 
     @Override
-    public Map<String, Object> createComment(Long userid, Long feedid, String commentContext) {
+    public Map<String, Object> createComment(Long userId, Long feedId, String commentContext) {
 
-        Optional<com.wava.worcation.domain.channel.domain.Feed> feedOp = feedReository.findById(feedid);
-        Optional<User> userOp = userRepository.findById(userid);
+        Optional<Feed> feedOp = feedReository.findById(feedId);
+        Optional<User> userOp = userRepository.findById(userId);
 
         if (feedOp.isPresent() && userOp.isPresent()) {
-            com.wava.worcation.domain.channel.domain.Feed feed = feedOp.get();
+            Feed feed = feedOp.get();
             User user = userOp.get();
 
 
-        com.wava.worcation.domain.channel.domain.FeedComment feedComment = com.wava.worcation.domain.channel.domain.FeedComment.builder()
+        FeedComment feedComment = FeedComment.builder()
                 .feed(feed)
                 .user(user)
                 .comment(commentContext)
@@ -77,9 +77,9 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
         Map<String, Object> response = new HashMap<>();
 
         response.put("commentId", feedComment.getId());
-        response.put("feedId", feedid);
+        response.put("feedId", feedId);
         response.put("commentContext", commentContext);
-        response.put("userid", userid);
+        response.put("userid", userId);
 
         return response;
     }
@@ -87,11 +87,11 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
     }
 
     @Override
-    public FeedResponseDto viewFeed(Long feedid, User user) {
-        Optional<com.wava.worcation.domain.channel.domain.Feed> feedOp = feedReository.findById(feedid);
+    public FeedResponseDto viewFeed(Long feedId, User user) {
+        Optional<com.wava.worcation.domain.channel.domain.Feed> feedOp = feedReository.findById(feedId);
         if (feedOp.isPresent()) {
             Feed feed = feedOp.get();
-            List<FeedComment> feedComments = feedCommentRepository.findAllByFeedId(feedid);
+            List<FeedComment> feedComments = feedCommentRepository.findAllByFeedId(feedId);
             List<CommentResponseDto> commentResponseDtos = new ArrayList<>();
             log.info("댓글리스트완료{}", feedComments);
             for (FeedComment feedComment : feedComments) {

@@ -91,13 +91,11 @@ public class InfoController{
     }
 
     @PostMapping("/{feedId}/comment")
-    public ResponseEntity<?> createComment(@PathVariable("feedId") String feedId, @RequestBody Map<String, String> comment) {
+    public ResponseEntity<?> createComment(@PathVariable("feedId") Long feedId, @RequestParam("comment") String comment, @AuthUser User user) {
         try {
-            Long userid = Long.valueOf(comment.get("userid"));
-            Long feedid = Long.valueOf(feedId);
-            String commentContext = comment.get("Comment");
+            Long userId = user.getId();
 
-            Map<String, Object> commentMap = infoService.createComment(userid, feedid, commentContext);
+            Map<String, Object> commentMap = infoService.createComment(userId, feedId, comment);
 
             return ResponseEntity.ok(commentMap);
         }
