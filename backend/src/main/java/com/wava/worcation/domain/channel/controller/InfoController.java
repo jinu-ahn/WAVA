@@ -52,7 +52,7 @@ public class InfoController{
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            return ResponseEntity.status(400).body("잘못된 요청입니다.");
+            return ResponseEntity.status(500).body("잘못된 요청입니다.");
         }
     }
 

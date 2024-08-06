@@ -1,6 +1,7 @@
 package com.wava.worcation.domain.channel.service;
 
 import com.wava.worcation.domain.channel.dto.info.FeedResponseDto;
+import com.wava.worcation.domain.channel.dto.info.FeedSortResponseDto;
 import com.wava.worcation.domain.user.domain.User;
 
 import java.util.List;
@@ -14,6 +15,6 @@ public interface InfoService {
     FeedResponseDto viewFeed(Long feedid, User user);
     void likeAdd(Long feedId, User user);
     void likeDistract(Long feedId, User user);
-
+    FeedSortResponseDto sortFeed(Long feedId, User user);
     int feedCount(Long userId);
 }

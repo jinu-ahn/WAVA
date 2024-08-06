@@ -1,12 +1,10 @@
 package com.wava.worcation.domain.channel.service;
 
 import com.wava.worcation.common.exception.ResourceNotFoundException;
-import com.wava.worcation.domain.channel.domain.Channel;
-import com.wava.worcation.domain.channel.domain.Feed;
-import com.wava.worcation.domain.channel.domain.FeedComment;
-import com.wava.worcation.domain.channel.domain.Image;
+import com.wava.worcation.domain.channel.domain.*;
 import com.wava.worcation.domain.channel.dto.info.CommentResponseDto;
 import com.wava.worcation.domain.channel.dto.info.FeedResponseDto;
+import com.wava.worcation.domain.channel.dto.info.FeedSortResponseDto;
 import com.wava.worcation.domain.channel.dto.info.ImageResponseDto;
 import com.wava.worcation.domain.channel.repository.ChannelRepository;
 import com.wava.worcation.domain.channel.repository.LikeRepository;
@@ -133,7 +131,7 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
 
     @Override
     public void likeAdd(Long feedId, User user) {
-        com.wava.worcation.domain.channel.domain.Like like = com.wava.worcation.domain.channel.domain.Like.builder()
+        Like like = Like.builder()
                 .user(user)
                 .feed(feedReository.findById(feedId).orElseThrow(ResourceNotFoundException::new))
                 .build();
@@ -144,6 +142,11 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
     public void likeDistract(Long feedId, User user) {
         Optional<com.wava.worcation.domain.channel.domain.Like> likeOptional = likeRepository.findByUserAndFeed(user,feedReository.findById(feedId).orElseThrow(ResourceNotFoundException::new));
         likeOptional.ifPresent(likeRepository::delete);
+    }
+
+    @Override
+    public FeedSortResponseDto sortFeed(Long feedId, User user) {
+        return null;
     }
 
     @Override

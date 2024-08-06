@@ -38,7 +38,6 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         String token = tokenProvider.resolveToken(request);
         log.info(token);
         if (token != null && tokenProvider.validateToken(token)) {
-            log.info("들어왔니?");
             Authentication authentication = tokenProvider.getAuthentication(token);
             if (redisUtil.getData(token) != null) {
                 // TODO : CustomExcpetion 구현 시 변경 예정
