@@ -33,7 +33,11 @@ server:
   serverAddress: ${SERVER_URL} # blue 환경 서버 주소 설정 (환경 변수 사용)
   serverName: blue_server # blue 환경 서버 이름 설정
   env: blue # blue 환경 설정
-
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-password: 1Q2W3E4R!!
+    key-store-type: PKCS12
 
 ---
 
@@ -48,6 +52,11 @@ server:
   serverAddress: ${SERVER_URL} # green 환경 서버 주소 설정 (환경 변수 사용)
   serverName: green_server # green 환경 서버 이름 설정
   env: green # green 환경 설정
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-password: 1Q2W3E4R!!
+    key-store-type: PKCS12
 
 
 ---
@@ -73,7 +82,9 @@ spring:
       host: ${SERVER_URL}
       port: 6379
 
-  jpa:
+  server:
+  servlet:
+    context-path: /apijpa:
     show-sql: true # JPA SQL 출력 설정
     database-platform: org.hibernate.dialect.MySQL8Dialect # JPA 데이터베이스 플랫폼 설정
     hibernate:

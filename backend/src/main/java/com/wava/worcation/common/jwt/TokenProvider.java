@@ -2,11 +2,14 @@ package com.wava.worcation.common.jwt;
 
 import com.wava.worcation.domain.user.dto.response.TokenDto;
 import com.wava.worcation.domain.user.repository.UserRepository;
+import com.wava.worcation.domain.user.service.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,6 +17,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -34,7 +38,8 @@ public class TokenProvider {
     private final String GRANT_TYPE = "Bearer ";
     private final Key key;
 
-    private UserRepository userRepository;
+    @Autowired
+    private UserDetailsServiceImpl userDetailsServiceImpl;
 
     private final long accessTokenExpTime;
 
@@ -95,17 +100,9 @@ public class TokenProvider {
     public Authentication getAuthentication(String accessToken) throws RuntimeException {
         Claims claims = parseClaims(accessToken);
 
-        if(claims.get("auth") == null) {
-            // TODO : CustomException 구현 후 변경 예정
-            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
-        }
+        UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(claims.getSubject());
 
-        Collection<? extends GrantedAuthority> authorities = Arrays.stream(claims.get("auth").toString().split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-
-        UserDetails principal = new User(claims.getSubject(),"",authorities);
-        return new UsernamePasswordAuthenticationToken(principal,"",authorities);
+        return new UsernamePasswordAuthenticationToken(userDetails, accessToken, userDetails.getAuthorities());
     }
 
     /**

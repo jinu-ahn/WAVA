@@ -38,9 +38,9 @@ public class Plan {
     @Column(name = "task_is_finish", nullable = false)
     private Boolean taskIsFinish = false;
 
-    @Lob
     @Column(name = "task_important")
-    private String taskImportant;
+    @Enumerated(EnumType.STRING)
+    private PlanImportant taskImportant;
 
     @NotNull
     @Enumerated(EnumType.STRING)
