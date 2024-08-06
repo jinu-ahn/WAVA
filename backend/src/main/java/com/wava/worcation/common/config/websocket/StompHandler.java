@@ -55,7 +55,7 @@ public class StompHandler implements ChannelInterceptor {
                 boolean isSubscriber = channelUsers.stream()
                         .anyMatch(channelUser -> channelUser.getUser().getEmail().equals(userEmail));
 
-                if(!isSubscriber && channelUserRepository.countChannelId(roomId) <= 4) {
+                if(!isSubscriber && channelUserRepository.countByChannelId(roomId) <= 4) {
                     Optional<User> userOpt = userRepository.findByEmail(userEmail);
                     Optional<Channel> channelOpt = channelRepository.findById(roomId);
                     channelUserRepository.save(ChannelUser.builder()
