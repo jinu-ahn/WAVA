@@ -71,20 +71,20 @@ public class InfoController{
     }
 
     @GetMapping("/{feedId}/like")
-    public ResponseEntity<?> likeAdd (@PathVariable("feedId") Long feedId, @RequestParam Long userId){
+    public ResponseEntity<?> likeAdd (@PathVariable("feedId") Long feedId, @AuthUser User user){
         try{
-            infoService.likeAdd(feedId,userId);
-            return ResponseEntity.ok().build();
+            infoService.likeAdd(feedId,user);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         }catch (Exception e){
             return ResponseEntity.status(400).body("잘못된 요청입니다.");
         }
     }
 
     @DeleteMapping("/{feedId}/dislike")
-    public ResponseEntity<?> dislike (@PathVariable("feedId") Long feedId, @RequestParam Long userId){
+    public ResponseEntity<?> dislike (@PathVariable("feedId") Long feedId, @AuthUser User user){
         try{
-            infoService.likeDistract(feedId,userId);
-            return ResponseEntity.ok().build();
+            infoService.likeDistract(feedId,user);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         }catch (Exception e){
             return ResponseEntity.status(400).body("잘못된 요청입니다.");
         }

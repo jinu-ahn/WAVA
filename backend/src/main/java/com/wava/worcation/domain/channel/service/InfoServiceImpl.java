@@ -60,7 +60,6 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
 
         Optional<Feed> feedOp = feedReository.findById(feedId);
         Optional<User> userOp = userRepository.findById(userId);
-        log.info("이병수는 살아있다{},{}",feedOp.toString(),userOp.toString());
         if (feedOp.isPresent() && userOp.isPresent()) {
             Feed feed = feedOp.get();
             User user = userOp.get();
@@ -134,17 +133,17 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
     }
 
     @Override
-    public void likeAdd(Long feedId, Long userId) {
+    public void likeAdd(Long feedId, User user) {
         com.wava.worcation.domain.channel.domain.Like like = com.wava.worcation.domain.channel.domain.Like.builder()
-                .user(userRepository.findById(userId).orElseThrow(ResourceNotFoundException::new))
+                .user(user)
                 .feed(feedReository.findById(feedId).orElseThrow(ResourceNotFoundException::new))
                 .build();
         likeRepository.save(like);
     }
 
     @Override
-    public void likeDistract(Long feedId, Long userId) {
-        Optional<com.wava.worcation.domain.channel.domain.Like> likeOptional = likeRepository.findByUserIdAndFeed(userId,feedReository.findById(feedId).orElseThrow(ResourceNotFoundException::new));
+    public void likeDistract(Long feedId, User user) {
+        Optional<com.wava.worcation.domain.channel.domain.Like> likeOptional = likeRepository.findByUserAndFeed(user,feedReository.findById(feedId).orElseThrow(ResourceNotFoundException::new));
         likeOptional.ifPresent(likeRepository::delete);
     }
 
