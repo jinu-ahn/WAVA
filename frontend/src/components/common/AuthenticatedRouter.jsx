@@ -10,7 +10,7 @@ const AuthenticatedRouter = ({ element, worcation, ...rest }) => {
   if (!isLogin) {
     return <Navigate to="/login" />;
   }
-  if (isLogin && worcation) {
+  if (isLogin && !isWorcation) {
     return <Navigate to="/worcation" />;
   }
   return element;
