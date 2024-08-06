@@ -16,9 +16,10 @@ function LoginComponent() {
 
   const userLogin = async () => {
     const user = { email, password };
-    const isWorcation = await useUserStore.getState().loginFunc(user);
+    await useUserStore.getState().loginFunc(user);
+    const isWorcation = useUserStore.getState().userInfo?.worcation;
     if (useUserStore.getState().isLogin) {
-      if (!isWorcation) {
+      if (!!isWorcation) {
         navigate("/");
       } else {
         navigate("/worcation");

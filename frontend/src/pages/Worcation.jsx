@@ -4,7 +4,7 @@ import CustomDatePicker from "../components/common/customDatePicker";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { createWorcation } from "../api/createWorcationApi";
+import { createWorcation, updateWorcation } from "../api/createWorcationApi";
 import Swal from "sweetalert2";
 import { validateWorcation } from "../util/func";
 import SidoSigunguSelector from "../components/Worcation/SidoSigunguSelector";
@@ -69,17 +69,22 @@ function WorcationPage() {
     e.preventDefault();
     try {
       let result = false;
-      let worcation = null;
+      let newWorcationData = null;
       console.log(data);
       if (validateWorcation(data)) {
         if (isEdit) {
           // 에딧 api 호출
+          const worcationId = worcation?.id;
+          ({ result, newWorcationData } = await updateWorcation(
+            data,
+            worcationId
+          ));
         } else {
           // 등록 api 호출
-          ({ result, worcation } = await createWorcation(data));
+          ({ result, newWorcationData } = await createWorcation(data));
         }
         if (result === true) {
-          setWorcation(worcation);
+          setWorcation(newWorcationData);
           await Swal.fire({
             icon: "success",
             title: "완료!",
@@ -91,7 +96,13 @@ function WorcationPage() {
           return;
         } else {
           console.log(result);
-
+          await Swal.fire({
+            icon: "error",
+            title: "에러!",
+            showConfirmButton: false,
+            width: "300px",
+            timer: 2000,
+          });
           return;
         }
       }
