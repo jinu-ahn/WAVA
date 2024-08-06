@@ -33,11 +33,11 @@ server:
   serverAddress: ${SERVER_URL} # blue 환경 서버 주소 설정 (환경 변수 사용)
   serverName: blue_server # blue 환경 서버 이름 설정
   env: blue # blue 환경 설정
-#  ssl:
-#    enabled: false
-#    key-store: classpath:keystore.p12
-#    key-store-password: ${DB_PASSWORD}
-#    key-store-type: PKCS12
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-password: ${DB_PASSWORD}
+    key-store-type: PKCS12
 
 ---
 
@@ -52,11 +52,11 @@ server:
   serverAddress: ${SERVER_URL} # green 환경 서버 주소 설정 (환경 변수 사용)
   serverName: green_server # green 환경 서버 이름 설정
   env: green # green 환경 설정
-#  ssl:
-#    enabled: false
-#    key-store: classpath:keystore.p12
-#    key-store-password: ${DB_PASSWORD}
-#    key-store-type: PKCS12
+  ssl:
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-password: ${DB_PASSWORD}
+    key-store-type: PKCS12
 
 
 ---
