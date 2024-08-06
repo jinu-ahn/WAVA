@@ -55,18 +55,7 @@ const DashboardContent = ({ calendarChange }) => {
 
   // 수정 페이지로 이동
   const handleClick = () => {
-    navigate("/worcation", {
-      state: {
-        type: "edit",
-        data: {
-          sido: "광주광역시",
-          gugun: "광산구",
-          start: new Date(),
-          end: new Date(),
-          job: "무직",
-        },
-      },
-    });
+    navigate("/worcation");
   };
   return (
     <>

@@ -342,7 +342,7 @@ export const get_feedData = {
   ],
 };
 
-export const sigungu = {
+export const sido_sigungu = {
   서울특별시: [
     "강남구",
     "강동구",

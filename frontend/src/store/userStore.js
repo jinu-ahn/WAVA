@@ -20,16 +20,22 @@ const useUserStore = create(
               console.log(response.status);
               if (response.status === httpStatusCode.OK) {
                 console.log("로그인 성공");
-                console.log(response)
+                console.log(response);
                 let accessToken = response.headers["authorization"];
                 let refreshToken = response.headers["refreshtoken"];
                 set(() => ({ isLogin: true }));
                 set(() => ({ isLoginError: false }));
                 set(() => ({ isValidToken: true }));
-                const { nickName, worcation, profile } = response?.data;
+                const { nickName, worcation, profile } = response?.data?.data;
                 set(() => ({ userInfo: { nickName, profile, worcation } }));
                 sessionStorage.setItem("accessToken", accessToken);
                 sessionStorage.setItem("refreshToken", refreshToken);
+
+                if (worcation) {
+                  return true;
+                } else {
+                  return false;
+                }
               }
             },
             async (error) => {
@@ -81,6 +87,9 @@ const useUserStore = create(
         } catch (e) {
           console.error("네트워크 에러");
         }
+      },
+      setWorcation: (worcation) => {
+        set(() => ({ userInfo: { ...get().userInfo, worcation } }));
       },
     }),
     {

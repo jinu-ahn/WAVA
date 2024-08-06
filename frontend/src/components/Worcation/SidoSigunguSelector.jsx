@@ -1,10 +1,10 @@
-import { sigungu } from "../../api/dummy";
+import { sido_sigungu } from "../../api/dummy";
 
-function SidoGugunSelector({
+function SidoSigunguSelector({
   sido,
   sidoChangeHandle,
-  gugun,
-  gugunChangeHandle,
+  sigungu,
+  sigunguChangeHandle,
 }) {
   return (
     <div className="mb-3">
@@ -16,7 +16,7 @@ function SidoGugunSelector({
           tabIndex={0}
           className="dropdown-content select-none menu bg-base-100 rounded-box z-10 w-52 p-2 shadow overflow-y-auto max-h-96 block"
         >
-          {Object.keys(sigungu).map((e) => (
+          {Object.keys(sido_sigungu).map((e) => (
             <li key={e}>
               <button type="button" onClick={() => sidoChangeHandle(e)}>
                 {e}
@@ -27,16 +27,16 @@ function SidoGugunSelector({
       </div>
       <div className="dropdown dropdown-bottom">
         <div tabIndex={0} role="button" className="btn m-1">
-          {gugun ? gugun : "구군 설정"}
+          {sigungu ? sigungu : "구군 설정"}
         </div>
         <ul
           tabIndex={0}
           className="dropdown-content menu bg-base-100 rounded-box z-10 w-52 p-2 shadow overflow-y-auto max-h-96 block"
         >
           {sido !== ""
-            ? sigungu[sido]?.map((e) => (
+            ? sido_sigungu[sido]?.map((e) => (
                 <li key={e}>
-                  <button type="button" onClick={() => gugunChangeHandle(e)}>
+                  <button type="button" onClick={() => sigunguChangeHandle(e)}>
                     {e}
                   </button>
                 </li>
@@ -48,4 +48,4 @@ function SidoGugunSelector({
   );
 }
 
-export default SidoGugunSelector;
+export default SidoSigunguSelector;
