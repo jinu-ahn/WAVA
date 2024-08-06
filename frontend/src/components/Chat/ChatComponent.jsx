@@ -64,7 +64,7 @@ function ChatComponent() {
                 const newMessage = JSON.parse(message.body);
                 setMessages((prevMessages) => [...prevMessages, newMessage]);
             }, {Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`} );
-        });
+        }, (error) => {});
         console.log("방 번호", channelId);
     };
 
