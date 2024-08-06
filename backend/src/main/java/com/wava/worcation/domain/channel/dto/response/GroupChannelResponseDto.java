@@ -8,11 +8,12 @@ import lombok.Setter;
 @Getter
 @Builder
 public class GroupChannelResponseDto {
-    private Long id;
+    private Long channelId;
     private Long userId;
-    private String sido;
-    private String gugun;
-    private String roomTitle;
-    private String description;
+    private String channelSido;
+    private String channelSigungu;
+    private String channelTitle;
+    private String channelDescription;
+    private String channelMemo;
     private int userCount;
 }
