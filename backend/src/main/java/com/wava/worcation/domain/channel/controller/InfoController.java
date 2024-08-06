@@ -59,9 +59,10 @@ public class InfoController{
 
 
     @GetMapping("/{feedId}")
-    public ResponseEntity<?> viewFeed(@PathVariable("feedId") Long feedId, @RequestParam Long userId) {
+    public ResponseEntity<?> viewFeed(@PathVariable("feedId") Long feedId, @AuthUser User user) {
+        log.info("{}",feedId);
         try {
-            FeedResponseDto feedResponseDto = infoService.viewFeed(feedId,userId);
+            FeedResponseDto feedResponseDto = infoService.viewFeed(feedId,user);
             return ResponseEntity.ok(feedResponseDto);
         }
         catch (Exception e){
