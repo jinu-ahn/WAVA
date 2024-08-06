@@ -64,15 +64,16 @@ function WorcationPage() {
   const submitHandle = async (e) => {
     e.preventDefault();
     try {
+      let result = false;
       if (validateWorcation(data)) {
         if (location.state === "edit") {
           // 에딧 api 호출
         } else {
           // 등록 api 호출
-          // const result = await createWorcation(data);
+          result = await createWorcation(data);
         }
 
-        if (true) {
+        if (result === true) {
           // result 반영할것
           Swal.fire({
             icon: "success",
@@ -80,6 +81,8 @@ function WorcationPage() {
             showConfirmButton: false,
             width: "300px",
           });
+        } else {
+          console.log(result);
 
           return;
         }
