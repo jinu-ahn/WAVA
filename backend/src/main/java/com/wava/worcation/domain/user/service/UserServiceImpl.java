@@ -7,7 +7,6 @@ import com.wava.worcation.common.util.RedisUtil;
 import com.wava.worcation.domain.channel.domain.Channel;
 import com.wava.worcation.domain.channel.enums.ChannelType;
 import com.wava.worcation.domain.channel.repository.ChannelRepository;
-import com.wava.worcation.domain.channel.repository.ChannelUserRepository;
 import com.wava.worcation.domain.user.domain.User;
 import com.wava.worcation.domain.user.dto.request.LoginRequestDto;
 import com.wava.worcation.domain.user.dto.request.SignUpRequestDto;
@@ -31,7 +30,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
-import java.util.ConcurrentModificationException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -89,6 +87,7 @@ public class UserServiceImpl implements UserService{
                         .nickName(user.getNickName())
                         .sido(user.getSido())
                         .sigungu(user.getSigungu())
+                        .profile(user.getProfileImg())
                         .build()));
 
     }
@@ -156,7 +155,7 @@ public class UserServiceImpl implements UserService{
         String refreshToken = redisUtil.getData(authentication.getName());
 
         if(refreshToken == null)
-            throw new CustomException(ErrorCode.UNKNOWN_ERROR);
+            throw new CustomException(ErrorCode.UNKNOWN_TOKEN);
         if(!Objects.equals(refreshToken, request.getHeader("refreshToken")))
             throw new CustomException(ErrorCode.WRONG_TYPE_TOKEN);
 

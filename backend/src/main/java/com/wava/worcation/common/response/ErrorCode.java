@@ -17,7 +17,7 @@ public enum ErrorCode {
     CHANNEL_FULL(HttpStatus.FORBIDDEN, "채널 인원이 가득찼습니다."),
     SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "일시적인 오류가 발생했습니다"),
     BLACK_LIST_TOKEN(HttpStatus.FORBIDDEN,"로그아웃 된 유저입니다."),
-    UNKNOWN_ERROR(HttpStatus.valueOf(400), "토큰이 존재하지 않습니다."),
+    UNKNOWN_TOKEN(HttpStatus.valueOf(400), "토큰이 존재하지 않습니다."),
     WRONG_TYPE_TOKEN(HttpStatus.valueOf(401), "잘못된 타입의 토큰입니다."),
     EXPIRED_TOKEN(HttpStatus.valueOf(402), "만료된 토큰입니다."),
     UNSUPPORTED_TOKEN(HttpStatus.valueOf(403), "지원되지 않는 토큰입니다."),

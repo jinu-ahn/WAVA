@@ -3,13 +3,11 @@ package com.wava.worcation.common.jwt;
 import com.wava.worcation.common.exception.CustomException;
 import com.wava.worcation.common.response.ErrorCode;
 import com.wava.worcation.domain.user.dto.response.TokenDto;
-import com.wava.worcation.domain.user.repository.UserRepository;
 import com.wava.worcation.domain.user.service.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -136,7 +134,7 @@ public class TokenProvider {
         } catch (UnsupportedJwtException e) {
             throw  new JwtException(ErrorCode.UNSUPPORTED_TOKEN.getMessage());
         } catch (IllegalArgumentException e) {
-            throw new JwtException(ErrorCode.UNKNOWN_ERROR.getMessage());
+            throw new JwtException(ErrorCode.UNKNOWN_TOKEN.getMessage());
         }
     }
 
