@@ -61,7 +61,7 @@ server:
 
 ---
 
-# Common settings for all environments/
+# Common settings for all environments
 server:
   servlet:
     context-path: /api
@@ -82,9 +82,7 @@ spring:
       host: ${SERVER_URL}
       port: 6379
 
-  server:
-  servlet:
-    context-path: /apijpa:
+  jpa:
     show-sql: true # JPA SQL 출력 설정
     database-platform: org.hibernate.dialect.MySQL8Dialect # JPA 데이터베이스 플랫폼 설정
     hibernate:
@@ -98,13 +96,10 @@ jwt:
   refresh_expiration_time: 604800016 # 1주일 리프레시 토큰 만료 시간 설정
   secret: ${SECRET} # JWT 시크릿 키 설정 (환경 변수 사용)
 
-logging.level:
-  root: info # 루트 로깅 레벨 설정
-  com.wava: debug # com.ssafy 패키지 로깅 레벨 설정
-
-
-
-# S3 settings (commented out)
+logging:
+  level:
+    root: info # 루트 로깅 레벨 설정
+    com.wava: debug # com.wava 패키지 로깅 레벨 설정
 
 cloud:
   aws:
@@ -116,4 +111,4 @@ cloud:
     region:
       static: ap-northeast-2 # AWS 리전 설정 (환경 변수 사용)
     stack:
-      auto: false #cloud formation 기능을 사용하지 않기 위함.
+      auto: false # cloud formation 기능을 사용하지 않기 위함
