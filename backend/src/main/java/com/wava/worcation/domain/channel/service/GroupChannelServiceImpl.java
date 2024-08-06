@@ -1,24 +1,27 @@
 package com.wava.worcation.domain.channel.service;
 
 
+import com.wava.worcation.common.exception.CustomException;
 import com.wava.worcation.common.jwt.TokenProvider;
 import com.wava.worcation.common.response.ApiResponse;
+import com.wava.worcation.common.response.ErrorCode;
 import com.wava.worcation.domain.channel.domain.Channel;
 import com.wava.worcation.domain.channel.domain.ChannelUser;
 import com.wava.worcation.domain.channel.dto.request.GroupChannelRequestDto;
 import com.wava.worcation.domain.channel.dto.response.GroupChannelResponseDto;
+import com.wava.worcation.domain.channel.dto.response.GroupDetailResponseDto;
 import com.wava.worcation.domain.channel.enums.ChannelType;
 import com.wava.worcation.domain.channel.repository.ChannelRepository;
 import com.wava.worcation.domain.channel.repository.ChannelUserRepository;
 import com.wava.worcation.domain.user.domain.User;
+import com.wava.worcation.domain.user.dto.response.UserResponseDto;
 import com.wava.worcation.domain.user.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,6 +89,7 @@ public class GroupChannelServiceImpl implements GroupChannelService {
      * @return 모든 모임채널 정보
      */
     @Override
+    @Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> showAllGroupChannel() {
         List<Channel> channelList = channelRepository.findByChannelType(ChannelType.GROUP.getCode());
         List<GroupChannelResponseDto> groupChannelResponseDtoList = new ArrayList<>();
@@ -103,21 +107,37 @@ public class GroupChannelServiceImpl implements GroupChannelService {
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(groupChannelResponseDtoList));
     }
 
-
     /**
-     *
-     * @ 작성자   : 이병수
-     * @ 작성일   : 2024-08-05
-     * @ 설명     :
+     * 채널 상세 보기
      * @param channelId
-     * @param token
-     * @return
+     * @return 채널 상세 정보 및 채널에 가입한 유저정보
      */
     @Override
-    public ResponseEntity<ApiResponse<GroupChannelResponseDto>> getGroupChannelDetail(String channelId, String token) {
-        Authentication authentication = tokenProvider.getAuthentication(token);
-        User userOpt  = userRepository.findByEmail(authentication.getName()).orElseThrow() ;
-//        channelRepository.
-        return null;
+    @Transactional(readOnly = true)
+    public ResponseEntity<ApiResponse<GroupDetailResponseDto>> getGroupDetail(final Long channelId) {
+        Channel channel = channelRepository.findById(channelId).orElseThrow(
+                () -> new CustomException(ErrorCode.CHANNEL_NOT_FOUND)
+        );
+
+        List<UserResponseDto> userResponseDtoList = channelUserRepository.findByChannelId(channelId)
+                .stream()
+                .map(user -> UserResponseDto.builder()
+                        .id(user.getUser().getId())
+                        .email(user.getUser().getEmail())
+                        .phone(user.getUser().getPhone())
+                        .nickName(user.getUser().getNickName())
+                        .sido(user.getUser().getSido())
+                        .sigungu(user.getUser().getSigungu())
+                        .profile(user.getUser().getProfileImg())
+                        .build())
+                .toList();
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.success(GroupDetailResponseDto.builder()
+                        .channelId(channel.getId())
+                        .channelTitle(channel.getChannelTitle())
+                        .channelDescription(channel.getChannelDescription())
+                        .user(userResponseDtoList)
+                        .build()));
     }
 }

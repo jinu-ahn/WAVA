@@ -3,10 +3,10 @@ package com.wava.worcation.domain.channel.controller;
 import com.wava.worcation.common.response.ApiResponse;
 import com.wava.worcation.domain.channel.dto.request.GroupChannelRequestDto;
 import com.wava.worcation.domain.channel.dto.response.GroupChannelResponseDto;
+import com.wava.worcation.domain.channel.dto.response.GroupDetailResponseDto;
 import com.wava.worcation.domain.channel.service.GroupChannelService;
 import com.wava.worcation.domain.user.domain.AuthUser;
 import com.wava.worcation.domain.user.domain.User;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -50,12 +50,9 @@ public class GroupChannelController {
     }
 
     @GetMapping ("/detail/{channelId}")
-    public ResponseEntity<ApiResponse<GroupChannelResponseDto>> getGroupChannelDetail (@PathVariable("channelId") String channelId, HttpServletRequest request) {
-        String token = request.getHeader("Authorization").substring(7);
-        return groupChannelServcice.getGroupChannelDetail(channelId,token);
+    public ResponseEntity<ApiResponse<GroupDetailResponseDto>> getGroupChannelDetail (@PathVariable("channelId") Long channelId) {
+        return groupChannelServcice.getGroupDetail(channelId);
     }
-
-
 
 
 
