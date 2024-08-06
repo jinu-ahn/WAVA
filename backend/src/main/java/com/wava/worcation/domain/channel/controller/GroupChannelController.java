@@ -1,6 +1,7 @@
 package com.wava.worcation.domain.channel.controller;
 
 import com.wava.worcation.common.response.ApiResponse;
+import com.wava.worcation.domain.channel.domain.Channel;
 import com.wava.worcation.domain.channel.dto.request.GroupChannelRequestDto;
 import com.wava.worcation.domain.channel.dto.response.GroupChannelResponseDto;
 import com.wava.worcation.domain.channel.dto.response.GroupDetailResponseDto;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/channel")
@@ -54,6 +56,9 @@ public class GroupChannelController {
         return groupChannelServcice.getGroupDetail(channelId);
     }
 
-
+    @PatchMapping ("/update/{channelId}")
+    public ResponseEntity<ApiResponse<GroupChannelResponseDto>> updateMemo (@PathVariable("channelId") Long channelId, @RequestBody Map<String,String> memo) {
+        return groupChannelServcice.updateMemo(channelId,memo.get("memo"));
+    }
 
 }

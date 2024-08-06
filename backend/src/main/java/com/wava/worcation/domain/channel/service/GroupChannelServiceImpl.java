@@ -67,12 +67,13 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                          .build());
 
          GroupChannelResponseDto groupChannelResponseDto = GroupChannelResponseDto.builder()
-                 .id(channel.getId())
+                 .channelId(channel.getId())
                  .userId(channel.getUser().getId())
-                 .description(channel.getChannelDescription())
-                 .roomTitle(channel.getChannelTitle())
-                 .sido(channel.getChannelSido())
-                 .gugun(channel.getChannelSigungu())
+                 .channelDescription(channel.getChannelDescription())
+                 .channelTitle(channel.getChannelTitle())
+                 .channelSido(channel.getChannelSido())
+                 .channelSigungu(channel.getChannelSigungu())
+                 .channelMemo(channel.getChannelMemo())
                  .userCount(channelUserRepository.countByChannelId(channel.getId()))
                  .build();
 
@@ -95,12 +96,13 @@ public class GroupChannelServiceImpl implements GroupChannelService {
         List<GroupChannelResponseDto> groupChannelResponseDtoList = new ArrayList<>();
         for (Channel channel : channelList) {
             groupChannelResponseDtoList.add(GroupChannelResponseDto.builder()
-                    .id(channel.getId())
+                    .channelId(channel.getId())
                     .userId(channel.getUser().getId())
-                    .description(channel.getChannelDescription())
-                    .roomTitle(channel.getChannelTitle())
-                    .sido(channel.getChannelSido())
-                    .gugun(channel.getChannelSigungu())
+                    .channelDescription(channel.getChannelDescription())
+                    .channelTitle(channel.getChannelTitle())
+                    .channelSido(channel.getChannelSido())
+                    .channelSigungu(channel.getChannelSigungu())
+                    .channelMemo(channel.getChannelMemo())
                     .userCount(channelUserRepository.countByChannelId(channel.getId()))
                     .build());
         }
@@ -138,6 +140,28 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                         .channelTitle(channel.getChannelTitle())
                         .channelDescription(channel.getChannelDescription())
                         .user(userResponseDtoList)
+                        .build()));
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<ApiResponse<GroupChannelResponseDto>> updateMemo(Long channelId, String memo) {
+        Channel channel = channelRepository.findById(channelId).orElseThrow(
+                () -> new CustomException(ErrorCode.CHANNEL_NOT_FOUND)
+        );
+
+        channel.memoUpdate(memo);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.success(GroupChannelResponseDto.builder()
+                        .channelId(channel.getId())
+                        .userId(channel.getUser().getId())
+                        .channelDescription(channel.getChannelDescription())
+                        .channelTitle(channel.getChannelTitle())
+                        .channelSido(channel.getChannelSido())
+                        .channelSigungu(channel.getChannelSigungu())
+                        .channelMemo(channel.getChannelMemo())
+                        .userCount(channelUserRepository.countByChannelId(channel.getId()))
                         .build()));
     }
 }
