@@ -1,21 +1,26 @@
 package com.wava.worcation.domain.channel.service;
 
 import com.wava.worcation.common.exception.ResourceNotFoundException;
-import com.wava.worcation.domain.channel.domain.*;
+import com.wava.worcation.domain.channel.domain.Channel;
+import com.wava.worcation.domain.channel.domain.Feed;
+import com.wava.worcation.domain.channel.domain.FeedComment;
+import com.wava.worcation.domain.channel.domain.Image;
 import com.wava.worcation.domain.channel.dto.info.CommentResponseDto;
 import com.wava.worcation.domain.channel.dto.info.FeedResponseDto;
 import com.wava.worcation.domain.channel.dto.info.ImageResponseDto;
-import com.wava.worcation.domain.channel.repository.*;
+import com.wava.worcation.domain.channel.repository.ChannelRepository;
+import com.wava.worcation.domain.channel.repository.LikeRepository;
 import com.wava.worcation.domain.user.domain.User;
 import com.wava.worcation.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.*;
 
+@Slf4j
 @Service
 @Transactional
 @AllArgsConstructor
@@ -23,10 +28,10 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
 
     private final com.wava.worcation.domain.channel.repository.FeedCommentRepository feedCommentRepository;
     private final UserRepository userRepository;
-    private final com.wava.worcation.domain.channel.repository.FeedReository feedReository;
     private final ChannelRepository channelRepository;
+    private final LikeRepository likeRepository;
+    private final com.wava.worcation.domain.channel.repository.FeedReository feedReository;
     private final com.wava.worcation.domain.channel.repository.ImageRepository imageRepository;
-    private final com.wava.worcation.domain.channel.repository.LikeRepository likeRepository;
 
     @Override
     public Void CreateFeed(String content, String sido, String sigungu, List<String> imgUrls, User user) {
@@ -82,15 +87,14 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
     }
 
     @Override
-    public FeedResponseDto viewFeed(Long feedid, Long userid) {
+    public FeedResponseDto viewFeed(Long feedid, User user) {
         Optional<com.wava.worcation.domain.channel.domain.Feed> feedOp = feedReository.findById(feedid);
-
         if (feedOp.isPresent()) {
-            com.wava.worcation.domain.channel.domain.Feed feed = feedOp.get();
-
-            List<com.wava.worcation.domain.channel.domain.FeedComment> feedComments = feedCommentRepository.findByFeedId(feedid);
+            Feed feed = feedOp.get();
+            List<FeedComment> feedComments = feedCommentRepository.findAllByFeedId(feedid);
             List<CommentResponseDto> commentResponseDtos = new ArrayList<>();
-            for (com.wava.worcation.domain.channel.domain.FeedComment feedComment : feedComments) {
+            log.info("댓글리스트완료{}", feedComments);
+            for (FeedComment feedComment : feedComments) {
                 CommentResponseDto comment = CommentResponseDto.builder()
                         .comment(feedComment.getComment())
                         .createdAt(feedComment.getCreatedAt())
@@ -100,9 +104,12 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
                         .build();
                 commentResponseDtos.add(comment);
             }
-
+            log.info("댓글입력완료{}", feedOp);
             List<Image> images = imageRepository.findByFeed(feed);
             List<ImageResponseDto> imageResponseDtos = new ArrayList<>();
+            log.info("이미지검색완료{}", images);
+            boolean islike = likeRepository.existsByUserIdAndFeed(user,feed);
+
             for(Image image : images){
 
                 ImageResponseDto imageDtos = ImageResponseDto.builder()
@@ -118,7 +125,9 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
                     .id(feed.getId())
                     .commentList(commentResponseDtos)
                     .imageList(imageResponseDtos)
-                    .build(); // 체이닝을 수정하여 빌더 패턴이 올바르게 동작하도록 수정
+                    .likedCount(feed.getHeart())
+                    .isLiked(islike)
+                    .build();
 
         }
         return null;

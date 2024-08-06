@@ -18,5 +18,7 @@ public class FeedResponseDto {
     private Long id;
     private List<com.wava.worcation.domain.channel.dto.info.ImageResponseDto> imageList;
     private List<CommentResponseDto> commentList;
+    private boolean isLiked;
+    private int likedCount;
 }
 

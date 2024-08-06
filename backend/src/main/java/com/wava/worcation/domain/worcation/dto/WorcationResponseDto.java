@@ -15,7 +15,7 @@ public class WorcationResponseDto {
     private Date start;
     private Date end;
     private String sido;
-    private String gugun;
+    private String sigungu;
     private String job;
     private String type;
 
@@ -26,7 +26,7 @@ public class WorcationResponseDto {
         this.start = worcation.getStart();
         this.end = worcation.getEnd();
         this.sido = worcation.getSido();
-        this.gugun = worcation.getSigungu();
+        this.sigungu = worcation.getSigungu();
         this.job = worcation.getJob();
         this.type = worcation.getType();
     }
