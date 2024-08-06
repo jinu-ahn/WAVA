@@ -4,6 +4,8 @@ import com.wava.worcation.common.response.ApiResponse;
 import com.wava.worcation.domain.channel.dto.request.GroupChannelRequestDto;
 import com.wava.worcation.domain.channel.dto.response.GroupChannelResponseDto;
 import com.wava.worcation.domain.channel.service.GroupChannelService;
+import com.wava.worcation.domain.user.domain.AuthUser;
+import com.wava.worcation.domain.user.domain.User;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -28,10 +30,8 @@ public class GroupChannelController {
      * @return
      */
     @GetMapping
-    public ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> showAllGroupChannel (HttpServletRequest request) {
-        String token = request.getHeader("Authorization").substring(7);
-        return groupChannelServcice.showAllGroupChannel(token);
-
+    public ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> showAllGroupChannel () {
+        return groupChannelServcice.showAllGroupChannel();
     }
 
 
@@ -44,9 +44,8 @@ public class GroupChannelController {
      * @return
      */
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse<GroupChannelResponseDto>> createGroupChannel (@RequestBody GroupChannelRequestDto groupChannelRequestDto, HttpServletRequest request) {
-        String token = request.getHeader("Authorization").substring(7);
-        return groupChannelServcice.createGroupChannel(groupChannelRequestDto,token);
+    public ResponseEntity<ApiResponse<GroupChannelResponseDto>> createGroupChannel (@RequestBody GroupChannelRequestDto groupChannelRequestDto, @AuthUser User user) {
+        return groupChannelServcice.createGroupChannel(groupChannelRequestDto,user);
 
     }
 
