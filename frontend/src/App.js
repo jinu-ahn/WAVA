@@ -15,6 +15,7 @@ import FeedAroundPage from "./pages/Channel/Feed/FeedAroundPage";
 import FeedPersonalPage from "./pages/Channel/Feed/FeedPersonalPage";
 
 import ChatPage from "./pages/ChatPage";
+import AuthenticatedRouter from "./components/common/AuthenticatedRouter";
 
 function App() {
   const { user } = useAuthStore();
@@ -28,19 +29,35 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route path="/worcation" element={<WorcationPage />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route path="/chat" element={<ChatPage/>} />
+            <Route
+              path="/worcation"
+              element={<AuthenticatedRouter element={<WorcationPage />} />}
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <AuthenticatedRouter
+                  worcation={true}
+                  element={<DashboardPage />}
+                />
+              }
+            />
+            <Route path="/chat" element={<ChatPage />} />
             <Route path="/channel" element={<ChannelPageLayout />}>
               {/* 그룹 시작 */}
               <Route
                 path="/channel/group/:groupId"
+                // element={<AuthenticatedRouter element={<GroupChannelPage />} />}
                 element={<GroupChannelPage />}
               />
               {/* 그룹 끝 */}
 
               {/* 피드 시작 / 둘러보기, 개인 피드 */}
-              <Route path="/channel/feed" element={<FeedAroundPage />} />
+              <Route
+                path="/channel/feed"
+                // element={<AuthenticatedRouter element={<FeedAroundPage />} />}
+                element={<FeedAroundPage />}
+              />
               <Route
                 path="/channel/feed/:userId"
                 element={<FeedPersonalPage />}
