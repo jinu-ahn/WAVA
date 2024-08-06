@@ -56,7 +56,7 @@ function ChatComponent() {
 
     // 웹소켓 연결 설정
     const connect = () => {
-        const socket = new WebSocket("ws://localhost:8080/ws");
+        const socket = new WebSocket(process.env.REACT_APP_WEBSOCKET_ADDRESS);
         stompClient.current = Stomp.over(socket);
         stompClient.current.connect({Authorization: `Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJtajE1ODRAbmF2ZXIuY29tIiwiYXV0aCI6IlZJU0lUT1IiLCJleHAiOjE3MjI2Nzk2MDV9.g8ZTJn9l2_ysSphyeSHr_2LAQkj2JxEwko0uxr1Q8Xg`}, () => {
             stompClient.current.subscribe(`/sub/chatroom/${channelId}`, (message) => {
@@ -109,7 +109,7 @@ function ChatComponent() {
     return (
         <>
             <div className="flex flex-col items-end me-3">
-                <div className="bg-blue-400 w-1/3 flex flex-col rounded-t-lg overflow-y-auto min-h-screen max-h-screen">
+                <div className="bg-blue-400 w-1/4 flex flex-col rounded-t-lg overflow-y-auto min-h-screen max-h-screen">
                     {messages.map((item, index) => (
                         <div key={index} className="m-4">
                             {nickName}
