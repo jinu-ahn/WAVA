@@ -24,9 +24,9 @@ public class PlanController {
     private PlanService planService;
 
     @PostMapping("/create")
-    public ResponseEntity<?> createPlan(@RequestBody PlanRequestDto planRequestDto, HttpServletRequest request){
+    public ResponseEntity<?> createPlan(@RequestBody PlanRequestDto planRequestDto, @AuthUser User user){
         try {
-            PlanResponseDto response = planService.createPlan(planRequestDto, request);
+            PlanResponseDto response = planService.createPlan(planRequestDto, user);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             log.info(e.getMessage());
@@ -34,7 +34,7 @@ public class PlanController {
         }
     }
     @DeleteMapping("/delete/{planId}")
-    public ResponseEntity<?> deletePlan(@RequestParam Long planId){
+    public ResponseEntity<?> deletePlan(@PathVariable Long planId){
         try {
             planService.deletePlan(planId);
             return ResponseEntity.ok("Success");
@@ -43,7 +43,7 @@ public class PlanController {
         }
     }
     @GetMapping("/view")
-    public ResponseEntity<?> viewPlan(@AuthenticationPrincipal User user){
+    public ResponseEntity<?> viewPlan(@AuthUser User user){
         try {
             List<PlanResponseDto> response = planService.viewPlan(user);
             return ResponseEntity.ok(response);
@@ -52,7 +52,7 @@ public class PlanController {
         }
     }
     @PatchMapping("/update/{planId}")
-    public ResponseEntity<?> updatePlan(@RequestBody PlanRequestDto planRequestDto,@RequestParam Long planId){
+    public ResponseEntity<?> updatePlan(@RequestBody PlanRequestDto planRequestDto,@PathVariable Long planId){
         try {
             PlanResponseDto response = planService.updatePlan(planRequestDto,planId);
             return ResponseEntity.ok(response);

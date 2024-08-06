@@ -10,6 +10,7 @@ import com.wava.worcation.domain.worcation.dao.WorcationRepository;
 import com.wava.worcation.domain.worcation.domain.Worcation;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authorization.method.AuthorizeReturnObject;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,21 +21,18 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class PlanServiceImpl implements PlanService {
 
     @Autowired
     private PlanRepository planRepository;
     @Autowired
     private WorcationRepository worcationRepository;
-    @Autowired
-    private UserRepository userRepository;
 
 
     @Override
-    public PlanResponseDto createPlan(PlanRequestDto planRequestDto, HttpServletRequest request) {
-        String email = SecurityContextHolder.getContext().getAuthentication().getName();
-        Optional<User> user = userRepository.findByEmail(email);
-        Worcation worcation = worcationRepository.findByUserId(user.get().getId());
+    public PlanResponseDto createPlan(PlanRequestDto planRequestDto, User user) {
+        Worcation worcation = worcationRepository.findByUserId(user.getId());
         Plan plan = Plan.builder()
                 .taskTitle(planRequestDto.getTitle())
                 .taskContent(planRequestDto.getContent())
@@ -42,7 +40,7 @@ public class PlanServiceImpl implements PlanService {
                 .taskEndTime(planRequestDto.getEnd())
                 .taskImportant(planRequestDto.getImportant())
                 .taskType(planRequestDto.getType())
-                .taskIsFinish(false)
+                .taskIsFinish(planRequestDto.getIsFinish())
                 .worcation(worcation)
                 .build();
 
@@ -56,7 +54,7 @@ public class PlanServiceImpl implements PlanService {
                 .end(savedPlan.getTaskEndTime())
                 .important(savedPlan.getTaskImportant())
                 .type(savedPlan.getTaskType())
-                .className(planRequestDto.getClassName())
+                .className(savedPlan.getTaskImportant())
                 .isFinish(savedPlan.getTaskIsFinish())
                 .build();
     }
@@ -79,6 +77,8 @@ public class PlanServiceImpl implements PlanService {
                         .end(plan.getTaskEndTime())
                         .important(plan.getTaskImportant())
                         .type(plan.getTaskType())
+                        .className(plan.getTaskImportant())
+                        .isFinish(plan.getTaskIsFinish())
                         .build())
                 .collect(Collectors.toList());
     }
@@ -112,6 +112,7 @@ public class PlanServiceImpl implements PlanService {
                 .end(updatedPlan.getTaskEndTime())
                 .important(updatedPlan.getTaskImportant())
                 .type(updatedPlan.getTaskType())
+                .className(updatedPlan.getTaskImportant())
                 .isFinish(updatedPlan.getTaskIsFinish())
                 .build();
     }
