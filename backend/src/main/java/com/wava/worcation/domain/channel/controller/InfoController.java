@@ -39,7 +39,7 @@ public class InfoController{
         List<String> imgUrls = new ArrayList<>();
 
         try {
-            if (images != null && images.size() < 10 && images.size() > 0) {
+            if (images.size() < 10 && images.size() > 0) {
                 for (MultipartFile image : images) {
                     imgUrls.add(s3ImageUpLoadService.uploadImage(image));
                 }

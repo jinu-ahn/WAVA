@@ -52,7 +52,7 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
 
             imageRepository.save(image);
         }
-        return null;
+        return;
     }
 
     @Override
