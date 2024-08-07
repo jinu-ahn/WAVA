@@ -14,26 +14,27 @@ const useTodoStore = create((set) => ({
   },
   fetchEvents: async () => {
     const events = await getTodoList();
-    if (events) {
+    if (Array.isArray(events)) {
       set({
         events,
       });
       return true;
     } else {
-      alert("getList 에러");
+      console.log("server error-f");
       return false;
     }
   },
 
   addEvent: async (newTodo) => {
     const event = await createTodoRequest(newTodo);
+    console.log(event);
     if (event) {
       set((state) => ({
         events: [...state.events, event],
       }));
       return true;
     } else {
-      alert("add 에러");
+      console.log("add에러");
       return false;
     }
   },
@@ -46,7 +47,7 @@ const useTodoStore = create((set) => ({
       }));
       return true;
     } else {
-      alert("delete 에러");
+      console.error("delete 에러");
       return false;
     }
   },
@@ -54,14 +55,15 @@ const useTodoStore = create((set) => ({
   updateEvent: async (todoItem) => {
     const rst = await updateTodoRequest(todoItem);
     if (rst) {
+      const idNum = Number(todoItem.id);
       set((state) => ({
         events: state.events.map((event) =>
-          event.id === todoItem?.id ? todoItem : event
+          Number(event.id) === idNum ? todoItem : event
         ),
       }));
       return true;
     } else {
-      alert("update 에러");
+      console.error("update 에러");
       return false;
     }
   },

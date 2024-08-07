@@ -18,7 +18,7 @@ function ChatComponent() {
     const [messages, setMessages] = useState([]);
     // 메시지 입력 상태
     const [inputValue, setInputValue] = useState('');
-    const [name, setName] = useState('');
+    const [nickName, setNickName] = useState('');
     // STOMP 클라이언트를 위한 ref. 웹소켓 연결을 유지하기 위해 사용
     const stompClient = useRef(null);
     // 채팅 메시지 목록의 끝을 참조하는 ref. 이를 이용해 새 메시지가 추가될 때 스크롤을 이동
@@ -31,7 +31,11 @@ function ChatComponent() {
         setInputValue(event.target.value);
     };
 
-    const nickName = useUserStore((state) => state.userInfo?.nickName);
+    const getUserNickName = () => {
+        const userObjectString = localStorage.getItem('userStorage');
+        const userObject = JSON.parse(userObjectString);
+        setNickName(userObject.state.userInfo.nickName);
+    }
 
     // const handleNameChange = (event) => {
     //     setName(event.target.value);
@@ -40,6 +44,8 @@ function ChatComponent() {
     useEffect(() => {
         connect();
         fetchMessages();
+        getUserNickName();
+        console.log("my", nickName)
         // 컴포넌트 언마운트 시 웹소켓 연결 해제
         return () => disconnect();
     }, [channelId]);
@@ -58,12 +64,13 @@ function ChatComponent() {
     const connect = () => {
         const socket = new WebSocket(process.env.REACT_APP_WEBSOCKET_ADDRESS);
         stompClient.current = Stomp.over(socket);
+        console.log(sessionStorage.getItem("accessToken"))
         stompClient.current.connect({Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`}, () => {
             stompClient.current.subscribe(`/sub/chatroom/${channelId}`, (message) => {
                 const newMessage = JSON.parse(message.body);
                 setMessages((prevMessages) => [...prevMessages, newMessage]);
-            });
-        });
+            }, {Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`} );
+        }, (error) => {});
         console.log("방 번호", channelId);
     };
 
@@ -73,6 +80,7 @@ function ChatComponent() {
         if (stompClient.current) {
             stompClient.current.disconnect();
         }
+        setNickName("");
     };
 
 
@@ -80,6 +88,7 @@ function ChatComponent() {
     const fetchMessages = () => {
         fetchChat(channelId,
             (response) => {
+                console.log("response", response)
                 console.log("메시지 목록", response.data);
                 setMessages(response.data.data)
             },
@@ -93,16 +102,29 @@ function ChatComponent() {
     // 새 메시지를 보내는 함수
     const sendMessage = () => {
         if (stompClient.current && inputValue) {
-            console.log(name)
+
+            const currentDate = new Date();
+
+            const year = currentDate.getFullYear();
+            const month = currentDate.getMonth() + 1;
+            const day = currentDate.getDate();
+            const hours = currentDate.getHours();
+            const minutes = currentDate.getMinutes();
+            const seconds = currentDate.getSeconds();
+
+            const formattedDate = `${year}.${String(month).padStart(2, '0')}.${String(day).padStart(2, '0')} ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+
             const messageObj = {
                 channelId : 1,
-                nickName : nickName,
+                nickName: nickName,
+                registTime: formattedDate,
                 message : inputValue    
             };
-            stompClient.current.send(`/pub/message`, {}, JSON.stringify(messageObj));
+            stompClient.current.send(`/pub/message`, {Authorization: `Bearer ${sessionStorage.getItem("accessToken")}`}, JSON.stringify(messageObj));
             setInputValue("");
             // setName("");
         }
+        console.log(nickName)
     };
 
 
@@ -112,9 +134,8 @@ function ChatComponent() {
                 <div className="bg-blue-400 w-1/4 flex flex-col rounded-t-lg overflow-y-auto min-h-screen max-h-screen">
                     {messages.map((item, index) => (
                         <div key={index} className="m-4">
-                            {nickName}
+                            {/* {item.registTime} */}
                             {
-                                
                                 item.nickName === nickName
                                 ? <MyMessageComponent item={item} index={index} />
                                 : <OtherMessageComponent item={item} index={index} />

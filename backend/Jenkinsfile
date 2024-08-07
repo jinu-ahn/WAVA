@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_CREDENTIALS_ID = 'DOCKER_USER' // Docker Hub 자격 증명 ID
+        DOCKER_CREDENTIALS_ID = 'DOCKER_USER' // Docker  Hub 자격 증명 ID
         DOCKER_IMAGE_BACKEND = credentials('work_backend')
         DOCKER_IMAGE_FRONTEND = credentials('work_frontend')
         DOCKER_USERNAME = credentials('DOCKER_USERNAME')

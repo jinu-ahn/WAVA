@@ -1,12 +1,10 @@
 package com.wava.worcation.domain.channel.service;
 
 import com.wava.worcation.common.exception.ResourceNotFoundException;
-import com.wava.worcation.domain.channel.domain.Channel;
-import com.wava.worcation.domain.channel.domain.Feed;
-import com.wava.worcation.domain.channel.domain.FeedComment;
-import com.wava.worcation.domain.channel.domain.Image;
+import com.wava.worcation.domain.channel.domain.*;
 import com.wava.worcation.domain.channel.dto.info.CommentResponseDto;
 import com.wava.worcation.domain.channel.dto.info.FeedResponseDto;
+import com.wava.worcation.domain.channel.dto.info.FeedSortResponseDto;
 import com.wava.worcation.domain.channel.dto.info.ImageResponseDto;
 import com.wava.worcation.domain.channel.repository.ChannelRepository;
 import com.wava.worcation.domain.channel.repository.LikeRepository;
@@ -34,7 +32,7 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
     private final com.wava.worcation.domain.channel.repository.ImageRepository imageRepository;
 
     @Override
-    public Void CreateFeed(String content, String sido, String sigungu, List<String> imgUrls, User user) {
+    public void CreateFeed(String content, String sido, String sigungu, List<String> imgUrls, User user) {
         Channel channel = channelRepository.findChannelByUserId(user.getId());
         com.wava.worcation.domain.channel.domain.Feed feed = com.wava.worcation.domain.channel.domain.Feed.builder()
                 .heart(0)
@@ -52,21 +50,19 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
 
             imageRepository.save(image);
         }
-        return null;
     }
 
     @Override
-    public Map<String, Object> createComment(Long userid, Long feedid, String commentContext) {
+    public Map<String, Object> createComment(Long userId, Long feedId, String commentContext) {
 
-        Optional<com.wava.worcation.domain.channel.domain.Feed> feedOp = feedReository.findById(feedid);
-        Optional<User> userOp = userRepository.findById(userid);
-
+        Optional<Feed> feedOp = feedReository.findById(feedId);
+        Optional<User> userOp = userRepository.findById(userId);
         if (feedOp.isPresent() && userOp.isPresent()) {
-            com.wava.worcation.domain.channel.domain.Feed feed = feedOp.get();
+            Feed feed = feedOp.get();
             User user = userOp.get();
 
 
-        com.wava.worcation.domain.channel.domain.FeedComment feedComment = com.wava.worcation.domain.channel.domain.FeedComment.builder()
+        FeedComment feedComment = FeedComment.builder()
                 .feed(feed)
                 .user(user)
                 .comment(commentContext)
@@ -77,9 +73,9 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
         Map<String, Object> response = new HashMap<>();
 
         response.put("commentId", feedComment.getId());
-        response.put("feedId", feedid);
+        response.put("feedId", feedId);
         response.put("commentContext", commentContext);
-        response.put("userid", userid);
+        response.put("userid", userId);
 
         return response;
     }
@@ -87,11 +83,11 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
     }
 
     @Override
-    public FeedResponseDto viewFeed(Long feedid, User user) {
-        Optional<com.wava.worcation.domain.channel.domain.Feed> feedOp = feedReository.findById(feedid);
+    public FeedResponseDto viewFeed(Long feedId, User user) {
+        Optional<com.wava.worcation.domain.channel.domain.Feed> feedOp = feedReository.findById(feedId);
         if (feedOp.isPresent()) {
             Feed feed = feedOp.get();
-            List<FeedComment> feedComments = feedCommentRepository.findAllByFeedId(feedid);
+            List<FeedComment> feedComments = feedCommentRepository.findAllByFeedId(feedId);
             List<CommentResponseDto> commentResponseDtos = new ArrayList<>();
             log.info("댓글리스트완료{}", feedComments);
             for (FeedComment feedComment : feedComments) {
@@ -108,7 +104,7 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
             List<Image> images = imageRepository.findByFeed(feed);
             List<ImageResponseDto> imageResponseDtos = new ArrayList<>();
             log.info("이미지검색완료{}", images);
-            boolean islike = likeRepository.existsByUserIdAndFeed(user,feed);
+            boolean islike = likeRepository.existsByUserAndFeed(user,feed);
 
             for(Image image : images){
 
@@ -118,7 +114,7 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
                         .build();
                 imageResponseDtos.add(imageDtos);
             }
-
+            log.info("이미지 배열 완료") ;
             return FeedResponseDto.builder()
                     .content(feed.getContent())
                     .heart(feed.getHeart())
@@ -134,18 +130,23 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
     }
 
     @Override
-    public void likeAdd(Long feedId, Long userId) {
-        com.wava.worcation.domain.channel.domain.Like like = com.wava.worcation.domain.channel.domain.Like.builder()
-                .user(userRepository.findById(userId).orElseThrow(ResourceNotFoundException::new))
+    public void likeAdd(Long feedId, User user) {
+        Like like = Like.builder()
+                .user(user)
                 .feed(feedReository.findById(feedId).orElseThrow(ResourceNotFoundException::new))
                 .build();
         likeRepository.save(like);
     }
 
     @Override
-    public void likeDistract(Long feedId, Long userId) {
-        Optional<com.wava.worcation.domain.channel.domain.Like> likeOptional = likeRepository.findByUserIdAndFeed(userId,feedReository.findById(feedId).orElseThrow(ResourceNotFoundException::new));
+    public void likeDistract(Long feedId, User user) {
+        Optional<com.wava.worcation.domain.channel.domain.Like> likeOptional = likeRepository.findByUserAndFeed(user,feedReository.findById(feedId).orElseThrow(ResourceNotFoundException::new));
         likeOptional.ifPresent(likeRepository::delete);
+    }
+
+    @Override
+    public FeedSortResponseDto sortFeed(Long feedId, User user) {
+        return null;
     }
 
     @Override

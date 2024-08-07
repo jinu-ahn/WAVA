@@ -36,7 +36,7 @@ const Calendar = ({ calendarRef }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [isFinish, setIsFinish] = useState(false);
-  const [important, setImportant] = useState("하"); // 상 중 하
+  const [important, setImportant] = useState("LOW"); // 상 중 하
   const [type, setType] = useState("WORK"); // WORK, REST
   // Todo Item Info 끝
 
@@ -75,19 +75,20 @@ const Calendar = ({ calendarRef }) => {
         break;
     }
     switch (eventsTypeFilter.important) {
-      case "상":
-        filtered = filtered?.filter((el) => el?.important === "상");
+      case "HIGH":
+        filtered = filtered?.filter((el) => el?.important === "HIGH");
         break;
-      case "중":
-        filtered = filtered?.filter((el) => el?.important === "중");
+      case "MID":
+        filtered = filtered?.filter((el) => el?.important === "MID");
         break;
-      case "하":
-        filtered = filtered?.filter((el) => el?.important === "하");
+      case "LOW":
+        filtered = filtered?.filter((el) => el?.important === "LOW");
         break;
       case "ALL":
       default:
         break;
     }
+    console.log(events);
     if (Array.isArray(filtered)) {
       setFilteredEvents(filtered);
     }
@@ -119,7 +120,7 @@ const Calendar = ({ calendarRef }) => {
     setEnd(new Date());
     setIsFinish(false);
     setContent("");
-    setImportant("하");
+    setImportant("LOW");
   };
 
   // 달력에 뜨는 이벤트 커스텀
@@ -221,15 +222,19 @@ const Calendar = ({ calendarRef }) => {
     }
 
     try {
-      await addEvent(newEvent);
-      await Swal.fire({
-        icon: "success",
-        title: "이벤트 추가 완료",
-        text: "새로운 이벤트가 성공적으로 추가되었습니다.",
-        timer: 1000,
-        showConfirmButton: false,
-      });
-      closeModal();
+      const result = await addEvent(newEvent);
+      if (result) {
+        await Swal.fire({
+          icon: "success",
+          title: "이벤트 추가 완료",
+          text: "새로운 이벤트가 성공적으로 추가되었습니다.",
+          timer: 1000,
+          showConfirmButton: false,
+        });
+        closeModal();
+      } else {
+        throw new Error();
+      }
     } catch (error) {
       await Swal.fire({
         icon: "error",
@@ -368,7 +373,7 @@ const Calendar = ({ calendarRef }) => {
         }
         customButtons={{
           todoCreate: {
-            text: "일정 등록",
+            text: "등록",
             click: openModal,
           },
           filtersButton: renderFiltersButton(),
@@ -476,9 +481,9 @@ const Calendar = ({ calendarRef }) => {
                       value={important}
                       onChange={(e) => setImportant(e.target.value)}
                     >
-                      <option value="상">상</option>
-                      <option value="중">중</option>
-                      <option value="하">하</option>
+                      <option value="HIGH">상</option>
+                      <option value="MID">중</option>
+                      <option value="LOW">하</option>
                     </select>
                   </>
                 ) : (

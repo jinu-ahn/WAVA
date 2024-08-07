@@ -1,35 +1,39 @@
 import useDeviceStore from "../store/deviceStore";
 import { useNavigate } from "react-router-dom";
 import CustomDatePicker from "../components/common/customDatePicker";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { createWorcation } from "../api/createWorcationApi";
+import { createWorcation, updateWorcation } from "../api/createWorcationApi";
 import Swal from "sweetalert2";
 import { validateWorcation } from "../util/func";
-import SidoGugunSelector from "../components/Worcation/SidoGugunSelector";
+import SidoSigunguSelector from "../components/Worcation/SidoSigunguSelector";
 import { useLocation } from "react-router-dom";
+import useUserStore from "../store/userStore";
 
 function WorcationPage() {
   const isMobile = useDeviceStore((state) => state.isMobile);
+  const worcation = useUserStore((state) => state.userInfo?.worcation);
+  const { setWorcation } = useUserStore();
   const navigate = useNavigate();
+  const [isEdit, setIsEdit] = useState(null);
+
   const [data, setData] = useState({
     start: new Date(),
     end: new Date(),
     sido: "",
-    gugun: "",
+    sigungu: "",
     job: "",
   });
 
-  const location = useLocation();
-
-  useEffect(() => {
-    const state = location.state || {}; // type==="edit" 이면 수정
-    // 시도 변경 함수
-    if (state?.type === "edit") {
-      setData(state?.data);
+  useLayoutEffect(() => {
+    if (worcation) {
+      setIsEdit(true);
+      setData(worcation);
+    } else {
+      setIsEdit(false);
     }
-  }, [location.state]);
+  }, [worcation]);
 
   const dataChangeHandle = (type, value) => {
     setData((state) => ({ ...state, [type]: value }));
@@ -43,16 +47,16 @@ function WorcationPage() {
     if (elem) {
       elem?.blur();
     }
-    setData((state) => ({ ...state, gugun: "", sido: e }));
+    setData((state) => ({ ...state, sigungu: "", sido: e }));
   };
 
   // // 구군 변경 함수
-  const gugunChangeHandle = (e) => {
+  const sigunguChangeHandle = (e) => {
     const elem = document.activeElement;
     if (elem) {
       elem?.blur();
     }
-    setData((state) => ({ ...state, gugun: e }));
+    setData((state) => ({ ...state, sigungu: e }));
   };
 
   // // 직업 변경 함수
@@ -64,23 +68,41 @@ function WorcationPage() {
   const submitHandle = async (e) => {
     e.preventDefault();
     try {
+      let result = false;
+      let newWorcationData = null;
+      console.log(data);
       if (validateWorcation(data)) {
-        if (location.state === "edit") {
+        if (isEdit) {
           // 에딧 api 호출
+          const worcationId = worcation?.id;
+          ({ result, newWorcationData } = await updateWorcation(
+            data,
+            worcationId
+          ));
         } else {
           // 등록 api 호출
-          // const result = await createWorcation(data);
+          ({ result, newWorcationData } = await createWorcation(data));
         }
-
-        if (true) {
-          // result 반영할것
-          Swal.fire({
+        if (result === true) {
+          setWorcation(newWorcationData);
+          await Swal.fire({
             icon: "success",
             title: "완료!",
             showConfirmButton: false,
             width: "300px",
+            timer: 2000,
           });
-
+          navigate("/");
+          return;
+        } else {
+          console.log(result);
+          await Swal.fire({
+            icon: "error",
+            title: "에러!",
+            showConfirmButton: false,
+            width: "300px",
+            timer: 2000,
+          });
           return;
         }
       }
@@ -122,7 +144,7 @@ function WorcationPage() {
         `}
         >
           {
-            location?.state?.type === "edit" ? (
+            isEdit ? (
               // 하단 수정 페이지 컨텐츠
               <>
                 <span className="text-black">
@@ -169,11 +191,11 @@ function WorcationPage() {
             }
           `}
           >
-            <SidoGugunSelector
+            <SidoSigunguSelector
               sido={data.sido}
-              gugun={data.gugun}
+              sigungu={data.sigungu}
               sidoChangeHandle={sidoChangeHandle}
-              gugunChangeHandle={gugunChangeHandle}
+              sigunguChangeHandle={sigunguChangeHandle}
             />
 
             <div>

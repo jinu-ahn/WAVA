@@ -10,6 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface LikeRepository extends JpaRepository<Like, Long>  {
-    Optional<Like>  findByUserIdAndFeed(Long userId, Feed feed);
-    boolean existsByUserIdAndFeed(User user, Feed feed);
+    Optional<Like>  findByUserAndFeed(User user, Feed feed);
+    boolean existsByUserAndFeed(User user, Feed feed);
 }

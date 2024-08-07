@@ -4,7 +4,6 @@ import { get_response } from "./dummy";
 
 // api 함수용 파일
 const address = "/plan";
-// const server_address = "https://1b66ee69-95f1-4301-8969-9e0144076d1d.mock.pstmn.io" + "/plan";
 /**
  * 예시 api 함수 :
  * 서버에서 todo 이벤트 목록을 가져옵니다.
@@ -26,17 +25,12 @@ const address = "/plan";
  */
 export const getTodoList = async () => {
   try {
-    // const response = local.get(address + "/view");
-
-    // 더미데이터
-    const response = { data: get_response, status: 200 };
-
-    if (response.status !== 200) {
+    const response = await local.get(address + "/view");
+    if (response.data?.status !== "OK") {
       console.log(response.message);
       throw new Error(`HTTP 오류! 상태: ${response.status}`);
     }
 
-    // const data = await response.json();
     const { data } = response.data;
     return data;
   } catch (error) {
@@ -48,23 +42,14 @@ export const getTodoList = async () => {
 // C
 export const createTodoRequest = async (newTodoItem) => {
   try {
-    // const response = await local.post(address+'/create',JSON.stringify(newTodoItem))
+    const response = await local.post(address + "/create", newTodoItem);
 
-    // 테스트코드
-    let response = { status: 201 };
-
-    if (response.status !== 201) {
+    if (response.data?.status !== "OK") {
       console.log(response.message);
       throw new Error(`HTTP 오류! 상태: ${response.status}`);
     }
-
-    // 더미 코드
-    newTodoItem.id = nanoid();
-    return newTodoItem;
-    //
-
-    // const data = await response.json();
-    // return data;
+    const { data } = response.data;
+    return data;
   } catch (e) {
     console.error("todo 항목을 생성하는 중 오류 발생:", e);
     return false;
@@ -74,9 +59,7 @@ export const createTodoRequest = async (newTodoItem) => {
 // D
 export const deleteTodoRequest = async (todoItem) => {
   try {
-    // const response = await local.delete(address+"/delete/"+todoItem?.id)
-
-    const response = { status: 204 };
+    const response = await local.delete(address + "/delete/" + todoItem);
 
     if (response.status === 204) {
       return true;
@@ -92,10 +75,14 @@ export const deleteTodoRequest = async (todoItem) => {
 // U
 export const updateTodoRequest = async (todoItem) => {
   try {
-    // const response = await local.put(address+"update"+todoItem?.id,JSON.stringify(todoItem))
+    console.log(todoItem);
+    const response = await local.patch(
+      address + "/update/" + todoItem?.id,
+      todoItem
+    );
 
     // 테스트코드
-    const response = { status: 200 };
+    // const response = { status: 200 };
 
     if (response.status === 200) {
       return true;

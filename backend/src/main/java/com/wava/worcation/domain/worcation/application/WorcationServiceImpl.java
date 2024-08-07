@@ -7,6 +7,8 @@ import com.wava.worcation.domain.worcation.dto.WorcationRequestDto;
 import com.wava.worcation.domain.worcation.dto.WorcationResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,21 +19,23 @@ public class WorcationServiceImpl implements WorcationService {
     private WorcationRepository worcationRepository;
 
     @Override
-    public WorcationResponseDto createWorcation(WorcationRequestDto worcationRequestDto, User user) {
+    public ResponseEntity<?> createWorcation(WorcationRequestDto worcationRequestDto, User user) {
         log.info("들어갔나");
-        Worcation worcation = Worcation.builder()
-                .user(user)
-                .start(worcationRequestDto.getStart())
-                .end(worcationRequestDto.getEnd())
-                .sido(worcationRequestDto.getSido())
-                .sigungu(worcationRequestDto.getSigungu())
-                .job(worcationRequestDto.getJob())
-                .type(worcationRequestDto.getType())
-                .build();
-
-        log.info("워케이션 유저{}", worcation.getUser());
-        Worcation savedWorcation = worcationRepository.save(worcation);
-        return new WorcationResponseDto(savedWorcation);
+        if (!worcationRepository.existsByUserId(user.getId())){
+            Worcation worcation = Worcation.builder()
+                    .user(user)
+                    .start(worcationRequestDto.getStart())
+                    .end(worcationRequestDto.getEnd())
+                    .sido(worcationRequestDto.getSido())
+                    .sigungu(worcationRequestDto.getSigungu())
+                    .job(worcationRequestDto.getJob())
+                    .type(worcationRequestDto.getType())
+                    .build();
+            Worcation savedWorcation = worcationRepository.save(worcation);
+            return ResponseEntity.ok().body(new WorcationResponseDto(savedWorcation));
+        }
+        else {return ResponseEntity.status(HttpStatus.CONFLICT).body("중복");
+        }
     }
 
     @Override

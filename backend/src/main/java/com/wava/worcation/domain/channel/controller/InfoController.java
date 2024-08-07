@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -34,12 +33,12 @@ public class InfoController{
             @RequestParam("content") String content,
             @RequestParam("sido") String sido,
             @RequestParam("sigungu") String sigungu,
-            @AuthUser User user) throws IOException {
+            @AuthUser User user) throws Exception {
 
         List<String> imgUrls = new ArrayList<>();
 
         try {
-            if (images != null && images.size() < 10 && images.size() > 0) {
+            if (images.size() < 10 && !images.isEmpty()) {
                 for (MultipartFile image : images) {
                     imgUrls.add(s3ImageUpLoadService.uploadImage(image));
                 }
@@ -53,7 +52,7 @@ public class InfoController{
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             log.error(e.getMessage(), e);
-            return ResponseEntity.status(400).body("잘못된 요청입니다.");
+            return ResponseEntity.status(500).body("잘못된 요청입니다.");
         }
     }
 
@@ -66,38 +65,36 @@ public class InfoController{
             return ResponseEntity.ok(feedResponseDto);
         }
         catch (Exception e){
-            return ResponseEntity.status(HttpStatus.CREATED).body("잘못된 요청");
+            return ResponseEntity.status(HttpStatus.CREATED).body(e.getMessage());
         }
     }
 
     @GetMapping("/{feedId}/like")
-    public ResponseEntity<?> likeAdd (@PathVariable("feedId") Long feedId, @RequestParam Long userId){
+    public ResponseEntity<?> likeAdd (@PathVariable("feedId") Long feedId, @AuthUser User user){
         try{
-            infoService.likeAdd(feedId,userId);
-            return ResponseEntity.ok().build();
+            infoService.likeAdd(feedId,user);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         }catch (Exception e){
             return ResponseEntity.status(400).body("잘못된 요청입니다.");
         }
     }
 
     @DeleteMapping("/{feedId}/dislike")
-    public ResponseEntity<?> dislike (@PathVariable("feedId") Long feedId, @RequestParam Long userId){
+    public ResponseEntity<?> dislike (@PathVariable("feedId") Long feedId, @AuthUser User user){
         try{
-            infoService.likeDistract(feedId,userId);
-            return ResponseEntity.ok().build();
+            infoService.likeDistract(feedId,user);
+            return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         }catch (Exception e){
             return ResponseEntity.status(400).body("잘못된 요청입니다.");
         }
     }
 
     @PostMapping("/{feedId}/comment")
-    public ResponseEntity<?> createComment(@PathVariable("feedId") String feedId, @RequestBody Map<String, String> comment) {
+    public ResponseEntity<?> createComment(@PathVariable("feedId") Long feedId, @RequestParam("comment") String comment, @AuthUser User user) {
         try {
-            Long userid = Long.valueOf(comment.get("userid"));
-            Long feedid = Long.valueOf(feedId);
-            String commentContext = comment.get("Comment");
+            Long userId = user.getId();
 
-            Map<String, Object> commentMap = infoService.createComment(userid, feedid, commentContext);
+            Map<String, Object> commentMap = infoService.createComment(userId, feedId, comment);
 
             return ResponseEntity.ok(commentMap);
         }
