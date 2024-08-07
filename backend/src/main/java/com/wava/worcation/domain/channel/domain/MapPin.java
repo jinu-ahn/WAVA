@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Map {
+public class MapPin {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pin_id")
