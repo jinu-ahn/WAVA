@@ -104,6 +104,7 @@ function FeedAroundPage() {
       <div className="flex flex-col flex-1">
         <FeedSearchBar searchHandle={searchHandle} />
         <ContentItemGrid
+          loadMore={null}
           contents={contents}
           onSelectContent={handleSelectContent}
         />

@@ -9,10 +9,10 @@ const ContentItemGrid = ({ loadMore, onSelectContent, contents, loading }) => {
   });
 
   useEffect(() => {
-    if (inView) {
+    if (loadMore && inView) {
       loadMore();
     }
-  }, [inView]);
+  }, [inView, loadMore]);
 
   return (
     <>
