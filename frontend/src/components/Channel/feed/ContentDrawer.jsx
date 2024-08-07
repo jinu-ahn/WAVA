@@ -25,14 +25,13 @@ import {
   deleteLikeFeedRequest,
   readOneFeedDetailRequest,
 } from "../../../api/channelFeedApi";
-import { nanoid } from "nanoid";
 
 const ContentDrawer = ({
   isOpen,
   onClose,
   onEdit,
   onDelete,
-  onLike,
+  originChangeHandle,
   feedId,
 }) => {
   const isMobile = useDeviceStore((state) => state.isMobile);
@@ -83,7 +82,7 @@ const ContentDrawer = ({
   const handleAuthorClick = () => {
     if (feedContent && feedContent?.nickName) {
       navigate(`/channel/feed/${feedContent.nickName}`);
-      onClose();
+      handleCloseReset();
     }
   };
 
@@ -127,7 +126,7 @@ const ContentDrawer = ({
       if (result.isConfirmed) {
         console.log(feedContent);
         onDelete(feedContent?.id);
-        onClose();
+        handleCloseReset();
         Swal.fire("컨텐츠가 성공적으로 삭제되었습니다.", "", "success");
       }
     });
@@ -185,6 +184,7 @@ const ContentDrawer = ({
       console.log(e);
     } finally {
       // 내부 로직
+      // handleLike(feedId, isLiked);
       setIsFecthing(false);
       const newLikedState = !isLiked;
       setIsLiked(newLikedState);
@@ -192,7 +192,7 @@ const ContentDrawer = ({
         ...prev,
         heart: newLikedState ? (prev.heart || 0) + 1 : (prev.heart || 1) - 1,
       }));
-      onLike(editedContent.id, newLikedState);
+      originChangeHandle(editedContent.id, "like", newLikedState);
     }
   };
 
@@ -200,10 +200,9 @@ const ContentDrawer = ({
     if (isFetching) return;
     try {
       setIsFecthing(true);
-      const resp = await createCommentFeedRequest(9, {
+      const resp = await createCommentFeedRequest(feedId, {
         comment: writedComment,
       });
-      console.log(resp);
       const newComment = {
         id: resp?.commentId,
         userId: resp?.userId,
@@ -215,6 +214,12 @@ const ContentDrawer = ({
         ...state,
         comment: [...state.comment, newComment],
       }));
+      setEditedContent((state) => ({
+        ...state,
+        comment: [...state.comment, newComment],
+      }));
+      originChangeHandle(editedContent.id, "comment");
+
       setWritedComment("");
     } catch (e) {
       console.log(e);
@@ -223,6 +228,18 @@ const ContentDrawer = ({
     }
   };
 
+  const handleCloseReset = () => {
+    setIsEditing(false);
+    setEditedContent(null);
+    setImages([]);
+    setCurrentIndex(0);
+    setIsLiked(false);
+    setFeedContent(null);
+    setWritedComment("");
+
+    setIsFecthing(false);
+    onClose();
+  };
   return (
     <div className="drawer drawer-end z-20">
       <input
@@ -237,7 +254,7 @@ const ContentDrawer = ({
           style={{ backgroundColor: isOpen ? "#0003" : "transparent" }}
           onClick={() => {
             setIsEditing(false);
-            onClose();
+            handleCloseReset();
           }}
         />
         <div
@@ -248,7 +265,7 @@ const ContentDrawer = ({
           <button
             onClick={() => {
               setIsEditing(false);
-              onClose();
+              handleCloseReset();
             }}
             className="self-start mb-4 p-2 rounded-full hover:bg-gray-200 transition-colors"
           >

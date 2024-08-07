@@ -8,6 +8,7 @@ import {
   readFeedContentRequest,
   readFeedInfoRequest,
 } from "../../../api/channelFeedApi";
+import NoContent from "../../../components/Channel/feed/NoContent";
 
 function FeedPersonalPage() {
   const { userId } = useParams(); // URL에서 userId를 가져옵니다
@@ -22,20 +23,26 @@ function FeedPersonalPage() {
 
   const [pages, setPages] = useState(1);
   const [maxPage, setMaxPage] = useState(-1);
+
+  const [isNoContent, setIsNoContent] = useState(false);
+
   const location = useLocation();
+
   useEffect(() => {
     const getData = async () => {
       try {
         setLoading(true);
         const feedInfoResp = await readFeedInfoRequest(userId);
+        console.log(feedInfoResp);
         const feedContResp = await readFeedContentRequest(userId);
-        // 1페이지 컨텐츠 있는지 서버 붙었을때 테스트 할 것
-        if (feedContResp?.data?.data) {
+        if (feedContResp?.data?.data?.length > 0) {
           console.log(feedContResp?.data?.data);
           setMaxPage(feedContResp?.data?.totalPages);
           setContents(feedContResp.data.data);
+        } else {
+          setIsNoContent(true);
         }
-        if (feedInfoResp) setUserInfo(feedInfoResp);
+        if (feedInfoResp?.data) setUserInfo(feedInfoResp?.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -71,16 +78,23 @@ function FeedPersonalPage() {
     );
   };
 
-  const handleLike = (contentId, isLiked) => {
-    // API 호출을 통해 서버에 좋아요 상태 업데이트
-    // 예: api.updateLike(contentId, isLiked)
-    //     .then(() => {
-    //       // 필요한 경우 로컬 상태 업데이트
-    //     })
-    //     .catch(error => {
-    //       console.error("Failed to update like:", error);
-    //       // 에러 처리 로직
-    //     });
+  const handleChange = (contentId, type, status) => {
+    if (type === "like") {
+      const add = status ? 1 : -1;
+      setContents((s) =>
+        s.map((feed) =>
+          feed.id === contentId ? { ...feed, likes: feed.likes + add } : feed
+        )
+      );
+    } else if (type === "comment") {
+      setContents((s) =>
+        s.map((feed) =>
+          feed.id === contentId
+            ? { ...feed, commentsCount: feed.commentsCount + 1 }
+            : feed
+        )
+      );
+    }
   };
 
   const addItem = () => {
@@ -112,6 +126,8 @@ function FeedPersonalPage() {
             setUserInfo={setUserInfo}
             openCreateDrawer={() => setIsCreateDrawerOpen(true)}
           />
+
+          {isNoContent && <NoContent />}
           <ContentItemGrid
             loadMore={loadMore}
             loading={loading}
@@ -123,7 +139,7 @@ function FeedPersonalPage() {
             onClose={handleCloseDrawer}
             onEdit={handleEditContent}
             onDelete={handleDeleteContent}
-            onLike={handleLike}
+            originChangeHandle={handleChange}
             feedId={selectedFeedId}
           />
           <CreateContentDrawer
