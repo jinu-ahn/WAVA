@@ -31,7 +31,6 @@ public class PersonalController {
     public ResponseEntity<ApiResponse<?>> personalFeed(@PathVariable String nickName,
                                                      @RequestParam(defaultValue = "0") int page,
                                                      @AuthUser User user) {
-        log.info("여긴 들어왔니?");
         try {
             // 페이지 네이션된 피드를 검색
             Page<FeedSortResponseDto> feedSortResponse = personalService.personalFeed(page, nickName, user);
@@ -60,8 +59,8 @@ public class PersonalController {
 //    @PostMapping("/profile")
 //    public ResponseEntity<ApiResponse<?>> changeProfile(@RequestParam("file") MultipartFile file) {
 //        if (file.isEmpty()) {
-//            return ResponseEntity.badRequest().body(new ApiResponse<>(false, "파일이 비어있습니다."));
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error());
 //        }
 //    }
-//    return null;
+//    return ResponseEntity;
 }

@@ -11,6 +11,7 @@ import com.wava.worcation.domain.user.domain.User;
 import com.wava.worcation.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 @Transactional
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PersonalServiceImpl implements PersonalService {
 
     private final ChannelRepository channelRepository;
@@ -38,6 +40,7 @@ public class PersonalServiceImpl implements PersonalService {
     public ResponseEntity<ApiResponse<PersonalResponseDto>> ChannelInfo(String nickName){
         Long userId = userRepository.findByNickName(nickName).getId();
         Channel channel = channelRepository.findChannelByUserId(userId);
+        int feedcount = infoService.feedCount(userId);
 
         ResponseEntity<ApiResponse<PersonalResponseDto>> response = ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(PersonalResponseDto.builder()
                 .id(channel.getId())
@@ -49,7 +52,7 @@ public class PersonalServiceImpl implements PersonalService {
                 .profileImage(userRepository.findById(userId).orElseThrow(ResourceNotFoundException::new).getProfileImg())
                 .follow(followService.getFollowings(channel.getId()).size())
                 .follower(followService.getFollowers(channel.getId()).size())
-                .feedCount(infoService.feedCount(userId))
+                .feedCount(feedcount)
                 .build()
         ));
 
@@ -70,8 +73,8 @@ public class PersonalServiceImpl implements PersonalService {
             return FeedSortResponseDto.builder()
                     .id(feed.getId())
                     .userid(userRepository.findByNickName(nickName).getId())
-                    .heart(feed.getHeart())
-                    .image(imageUrl)
+                    .likes(feed.getHeart())
+                    .imageUrl(imageUrl)
                     .commentsCount(commentsCount)
                     .isLiked(isLiked)
                     .likedCount(likedCount)

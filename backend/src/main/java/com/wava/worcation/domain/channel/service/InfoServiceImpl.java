@@ -178,8 +178,8 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
             return FeedSortResponseDto.builder()
                     .id(feed.getId())
                     .content(feed.getContent())
-                    .heart(feed.getHeart())
-                    .image(imageUrl)
+                    .likes(feed.getHeart())
+                    .imageUrl(imageUrl)
                     .commentsCount(commentsCount)
                     .isLiked(isLiked)
                     .likedCount(likedCount)
@@ -189,7 +189,8 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
 
     @Override
     public int feedCount(Long userId){
-        return channelRepository.findAllById(userId).size();
+        User user = userRepository.findById(userId).orElseThrow(ResourceNotFoundException::new);
+        return channelRepository.countByUserId(user.getId());
     }
 
 }
