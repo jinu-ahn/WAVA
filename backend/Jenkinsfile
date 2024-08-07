@@ -148,6 +148,7 @@ pipeline {
                         string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
                         string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY'),
                         string(credentialsId: 'S3_BUCKET', variable: 'S3_BUCKET')
+                        string(credentialsId: 'OPENVIDU_SECRET', variable: 'OPENVIDU_SECRET')
                     ]) {
                         sh '''
                             cd /home/ubuntu/myproject
@@ -167,6 +168,7 @@ pipeline {
                             echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> .env
                             echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> .env
                             echo "S3_BUCKET=$S3_BUCKET" >> .env
+                            echo "OPENVIDU_SECRET=$OPENVIDU_SECRET" >> .env
 
 
                             # 타켓서버가 실행 중 또는 exited 되었다면 제거

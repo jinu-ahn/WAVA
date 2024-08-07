@@ -57,6 +57,9 @@ public class Channel {
     @Column(name = "channel_type", nullable = false, length = 4)
     private String channelType;
 
+    @Column(name ="channel_session_id")
+    private String channelSessionId;
+
     @OneToMany(mappedBy = "channel", cascade = CascadeType.REMOVE)
     private List<Chat> chat;
 
@@ -65,6 +68,7 @@ public class Channel {
 
     @OneToMany(mappedBy = "channel", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<MapPin> pins;
+
 
     public void memoUpdate(String memo) {
         this.channelMemo = memo;

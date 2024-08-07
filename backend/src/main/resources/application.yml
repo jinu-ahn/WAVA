@@ -70,7 +70,6 @@ spring:
   config:
     activate:
       on-profile: common # common 프로파일 활성화
-
   datasource:
     url: ${DB_URL} # 데이터베이스 URL (환경 변수 사용)
     username: ${DB_USER} # 데이터베이스 사용자 이름 (환경 변수 사용)
@@ -112,3 +111,7 @@ cloud:
       static: ap-northeast-2 # AWS 리전 설정 (환경 변수 사용)
     stack:
       auto: false # cloud formation 기능을 사용하지 않기 위함
+
+openvidu:
+  url: https://i11c204.p.ssafy.io:4443
+  secret: ${OPENVIDU_SECRET}

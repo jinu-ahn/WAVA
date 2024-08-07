@@ -13,9 +13,9 @@ import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
 import FeedAroundPage from "./pages/Channel/Feed/FeedAroundPage";
 import FeedPersonalPage from "./pages/Channel/Feed/FeedPersonalPage";
-
 import ChatPage from "./pages/ChatPage";
 import AuthenticatedRouter from "./components/common/AuthenticatedRouter";
+import VideoChat from "./pages/Channel/Group/VideoChat";
 
 function App() {
   const { user } = useAuthStore();
@@ -43,6 +43,7 @@ function App() {
               }
             />
             <Route path="/chat" element={<ChatPage />} />
+            <Route path="/video-chat" element={<VideoChat />} />
             <Route path="/channel" element={<ChannelPageLayout />}>
               {/* 그룹 시작 */}
               <Route

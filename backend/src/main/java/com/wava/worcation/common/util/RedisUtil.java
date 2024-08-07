@@ -49,4 +49,6 @@ public class RedisUtil {
         redisTemplate.opsForValue()
                 .append(key, value);
     }
+
+
 }

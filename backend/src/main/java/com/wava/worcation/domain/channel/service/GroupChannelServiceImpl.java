@@ -3,6 +3,7 @@ package com.wava.worcation.domain.channel.service;
 
 import com.wava.worcation.common.exception.CustomException;
 import com.wava.worcation.common.jwt.TokenProvider;
+import com.wava.worcation.common.openvidu.service.OpenViduService;
 import com.wava.worcation.common.response.ApiResponse;
 import com.wava.worcation.common.response.ErrorCode;
 import com.wava.worcation.domain.channel.domain.Channel;
@@ -35,6 +36,7 @@ public class GroupChannelServiceImpl implements GroupChannelService {
     private final UserRepository userRepository;
     private final TokenProvider tokenProvider;
     private final ChannelUserRepository channelUserRepository;
+    private final OpenViduService openViduService;
 
     /**
      *
@@ -48,7 +50,7 @@ public class GroupChannelServiceImpl implements GroupChannelService {
      */
     @Override
     @Transactional
-    public ResponseEntity<ApiResponse<GroupChannelResponseDto>> createGroupChannel(GroupChannelRequestDto groupChannelRequestDto, User user) {
+    public ResponseEntity<ApiResponse<GroupChannelResponseDto>> createGroupChannel(GroupChannelRequestDto groupChannelRequestDto, User user) throws Exception {
         Channel channel = Channel.builder()
                 .user(user)
                 .channelDescription(groupChannelRequestDto.getDescription())
@@ -56,6 +58,7 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                 .channelType(ChannelType.GROUP.getCode())    //C001 : 그룹 ,  C002 : 피드
                 .channelSido(groupChannelRequestDto.getSido())
                 .channelSigungu(groupChannelRequestDto.getGugun())
+                .channelSessionId(openViduService.createSession().getBody().getData())
                 .build();
 
          channelRepository.save(channel);
