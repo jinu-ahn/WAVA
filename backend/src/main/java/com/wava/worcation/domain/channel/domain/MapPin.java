@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -37,4 +38,7 @@ public class MapPin {
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinColumn(name="channel_id")
     private Channel channel;
+
+    @OneToMany(mappedBy = "map_pin", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Companion> companions;
 }
