@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,7 +46,6 @@ public class MapPinServiceImpl implements MapPinService {
                 .pinOrder(mapPinRequestDto.getPinOrder())
                 .visitDate(mapPinRequestDto.getVisitDate())
                 .build());
-        log.info(mapPin.toString());
         List<UserResponseDto> userResponseList = mapPinRequestDto.getUser()
                 .stream()
                 .map(user -> {
@@ -83,6 +83,29 @@ public class MapPinServiceImpl implements MapPinService {
                 .build();
     }
 
+    @Override
+    public MapPinResponseDto updatePin(Long pinId, MapPinRequestDto mapPinRequestDto) {
+        MapPin mapPin = mapPinRepository.findById(pinId).orElseThrow(
+                () -> new CustomException(ErrorCode.NOT_FOUND_MAP_PIN)
+        );
+
+        mapPin.update(mapPinRequestDto);
+        log.info("update");
+        // 1. 현재 등록된 유저 ID 리스트 조회
+        List<Long> existingUserIds = companionRepository.findByMapPinId(pinId)
+                .stream()
+                .map(user -> user.getUser().getId())
+                .toList();
+
+        // 2. mapPinRequestDto에서 현재 등록되어 있지 않은 유저 필터링
+        List<CompanionRequestDto> newUsers = mapPinRequestDto.getUser()
+                .stream()
+//                .filter(user -> user.getUserId())
+                .toList();
+
+        return null;
+    }
+
     private Channel validateChannel(final Long channelId){
         Channel channel = channelRepository.findById(channelId).orElseThrow(
                 () -> new CustomException(ErrorCode.CHANNEL_NOT_FOUND)
@@ -92,6 +115,6 @@ public class MapPinServiceImpl implements MapPinService {
 
     private void isPinOrder(final Long channelId, final Long pinId) {
         if(mapPinRepository.existsByPinOrderAndChannelId(pinId,channelId))
-            throw new CustomException(ErrorCode.INVALID_PIN_ORDER);
+            throw new CustomException(ErrorCode.DUPLICATE_PIN_ORDER);
     }
 }

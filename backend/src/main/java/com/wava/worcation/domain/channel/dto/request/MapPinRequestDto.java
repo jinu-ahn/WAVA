@@ -1,15 +1,15 @@
 package com.wava.worcation.domain.channel.dto.request;
 
 import com.wava.worcation.domain.user.domain.User;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
 public class MapPinRequestDto {
     private Long channelId;
