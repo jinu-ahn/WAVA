@@ -80,6 +80,13 @@ const useUserStore = create(
               }
             },
             (error) => {
+              console.log("로그아웃 - 세션 없음");
+              set(() => ({ isLogin: false }));
+              set(() => ({ isLoginError: false }));
+              set(() => ({ isValidToken: false }));
+              sessionStorage.removeItem("accessToken");
+              sessionStorage.removeItem("refreshToken");
+              localStorage.removeItem("userStorage");
               console.log(error);
             }
           );
