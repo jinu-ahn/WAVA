@@ -100,7 +100,6 @@ export const readOneFeedDetailRequest = async (id) => {
 
 // 피드에 코멘트 작성
 export const createCommentFeedRequest = async (id, data) => {
-  // return true;
   return await handleRequest(() =>
     local.post(`${address}/feed/${id}/comment`, data)
   );
