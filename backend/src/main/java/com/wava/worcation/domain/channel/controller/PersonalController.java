@@ -60,7 +60,7 @@ public class PersonalController {
     }
 
     @PostMapping("/profile")
-    public ResponseEntity<ApiResponse<?>> changeProfile(@RequestParam("file") MultipartFile file, @AuthUser User user){
+    public ResponseEntity<ApiResponse<?>> changeProfile(@RequestParam("image") MultipartFile file, @AuthUser User user){
         try {
             if (file.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(HttpStatus.BAD_REQUEST,"잘못된 요청"));
