@@ -12,14 +12,15 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FeedResponseDto {
+    private Long userId;
     private String content;
     private int heart;
-    private String nickNake;
+    private String nickName;
     private String profile;
 //    private Timestamp created_at;
     private Long id;
-    private List<com.wava.worcation.domain.channel.dto.info.ImageResponseDto> imageList;
-    private List<CommentResponseDto> commentList;
+    private List<com.wava.worcation.domain.channel.dto.info.ImageResponseDto> image;
+    private List<CommentResponseDto> comment;
     private boolean isLiked;
     private int likedCount;
 }

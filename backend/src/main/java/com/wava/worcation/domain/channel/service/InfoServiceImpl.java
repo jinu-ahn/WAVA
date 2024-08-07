@@ -125,11 +125,12 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
                     .content(feed.getContent())
                     .heart(feed.getHeart())
                     .id(feed.getId())
-                    .commentList(commentResponseDtos)
-                    .imageList(imageResponseDtos)
+                    .userId(feed.getChannel().getUser().getId())
+                    .comment(commentResponseDtos)
+                    .image(imageResponseDtos)
                     .likedCount(feed.getHeart())
                     .isLiked(islike)
-                    .nickNake(feed.getChannel().getUser().getNickName())
+                    .nickName(feed.getChannel().getUser().getNickName())
                     .profile(feed.getChannel().getUser().getProfileImg())
                     .build();
 
