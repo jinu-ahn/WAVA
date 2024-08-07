@@ -1,8 +1,5 @@
 package com.wava.worcation.domain.channel.dto.info;
 
-import com.wava.worcation.domain.channel.repository.FeedCommentRepository;
-import com.wava.worcation.domain.channel.repository.ImageRepository;
-import com.wava.worcation.domain.channel.repository.LikeRepository;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,11 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FeedSortResponseDto {
 
-    FeedCommentRepository feedCommentRepository;
-    LikeRepository likeRepository;
-    ImageRepository imageRepository;
-
     private Long id; // 피드 아이디
+    private Long userid;//유저 아이디
     private String content; // 피드 내용
     private Integer heart; // 좋아요 수
     private String image; // 이미지 리스트
