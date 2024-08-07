@@ -1,14 +1,16 @@
 package com.wava.worcation.domain.channel.controller;
 
+import com.wava.worcation.common.response.ApiResponse;
 import com.wava.worcation.common.s3.service.S3ImageUpLoadService;
 import com.wava.worcation.domain.channel.dto.info.FeedResponseDto;
-import com.wava.worcation.domain.channel.dto.info.InfoResponseDto;
+import com.wava.worcation.domain.channel.dto.info.FeedSortResponseDto;
 import com.wava.worcation.domain.channel.service.InfoService;
 import com.wava.worcation.domain.user.domain.AuthUser;
 import com.wava.worcation.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -62,7 +64,12 @@ public class InfoController{
         log.info("{}",feedId);
         try {
             FeedResponseDto feedResponseDto = infoService.viewFeed(feedId,user);
+            if (feedResponseDto != null) {
             return ResponseEntity.ok(feedResponseDto);
+            }
+            else{
+                return ResponseEntity.status(404).build();
+            }
         }
         catch (Exception e){
             return ResponseEntity.status(HttpStatus.CREATED).body(e.getMessage());
@@ -104,9 +111,35 @@ public class InfoController{
     }
 
 
-    @GetMapping("/search")
-    public ResponseEntity<List<InfoResponseDto>> searchFeed(@RequestParam String keyword) {
-        return null;
+    @GetMapping("/{nickname}/search")
+    public ResponseEntity<ApiResponse<?>> searchFeed(@PathVariable String nickname,
+                                                     @RequestParam(defaultValue = "0") int page,
+                                                     @RequestParam String content,
+                                                     @AuthUser User user) {
+        try {
+            // 페이지 네이션된 피드를 검색
+            Page<FeedSortResponseDto> feedSortResponse = infoService.searchfeed(page, nickname, content, user);
+
+            // 페이지 네이션 정보 계산
+            boolean hasMore = feedSortResponse.hasNext();
+            int totalPages = feedSortResponse.getTotalPages();
+
+            // 응답 데이터 준비
+            Map<String, Object> responseData = Map.of(
+                    "hasMore", hasMore,
+                    "currentPage", page,
+                    "totalPages", totalPages,
+                    "data", feedSortResponse.getContent()
+            );
+
+            // 성공적인 응답 반환
+            return ResponseEntity.ok(ApiResponse.success(responseData));
+        } catch (Exception e) {
+            // 예외 처리 및 실패 응답 반환
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()));
+        }
     }
+
 
 }

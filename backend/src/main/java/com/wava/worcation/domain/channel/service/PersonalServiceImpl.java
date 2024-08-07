@@ -16,15 +16,15 @@ import org.springframework.stereotype.Service;
 @Transactional
 @Service
 @RequiredArgsConstructor
-public class PersonalServiceImpl {
-
+public class PersonalServiceImpl implements PersonalService {
 
     private final ChannelRepository channelRepository;
     private final UserRepository userRepository;
     private final com.wava.worcation.domain.channel.service.FollowService followService;
     private final com.wava.worcation.domain.channel.service.InfoService infoService;
 
-    ResponseEntity<ApiResponse<PersonalResponseDto>> ChannelInfo(Long userId){
+    @Override
+    public ResponseEntity<ApiResponse<PersonalResponseDto>> ChannelInfo(Long userId){
         Channel channel = channelRepository.findChannelByUserId(userId);
 
         ResponseEntity<ApiResponse<PersonalResponseDto>> response = ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(PersonalResponseDto.builder()

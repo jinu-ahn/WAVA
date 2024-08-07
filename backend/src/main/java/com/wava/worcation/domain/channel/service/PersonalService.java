@@ -5,6 +5,5 @@ import com.wava.worcation.domain.channel.dto.info.PersonalResponseDto;
 import org.springframework.http.ResponseEntity;
 
 public interface PersonalService {
-
-    ResponseEntity<ApiResponse<PersonalResponseDto>> ChannelInfo(Long userId);
+    public ResponseEntity<ApiResponse<PersonalResponseDto>> ChannelInfo(Long userId);
 }

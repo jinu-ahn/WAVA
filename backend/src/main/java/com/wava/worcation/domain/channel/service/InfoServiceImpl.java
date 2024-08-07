@@ -7,12 +7,17 @@ import com.wava.worcation.domain.channel.dto.info.FeedResponseDto;
 import com.wava.worcation.domain.channel.dto.info.FeedSortResponseDto;
 import com.wava.worcation.domain.channel.dto.info.ImageResponseDto;
 import com.wava.worcation.domain.channel.repository.ChannelRepository;
+import com.wava.worcation.domain.channel.repository.FeedReository;
+import com.wava.worcation.domain.channel.repository.ImageRepository;
 import com.wava.worcation.domain.channel.repository.LikeRepository;
 import com.wava.worcation.domain.user.domain.User;
 import com.wava.worcation.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -28,8 +33,8 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
     private final UserRepository userRepository;
     private final ChannelRepository channelRepository;
     private final LikeRepository likeRepository;
-    private final com.wava.worcation.domain.channel.repository.FeedReository feedReository;
-    private final com.wava.worcation.domain.channel.repository.ImageRepository imageRepository;
+    private final ImageRepository imageRepository;
+    private final FeedReository feedReository;
 
     @Override
     public void CreateFeed(String content, String sido, String sigungu, List<String> imgUrls, User user) {
@@ -126,7 +131,9 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
                     .build();
 
         }
-        return null;
+        else{
+            return null;
+        }
     }
 
     @Override
@@ -145,8 +152,10 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
     }
 
     @Override
-    public FeedSortResponseDto sortFeed(Long feedId, User user) {
-        return null;
+    public Page<FeedSortResponseDto> searchfeed(int pages, String nickname, String content, User user) {
+        Pageable pageable = PageRequest.of(pages, 20);
+        Page<Feed> feedPage = feedReository.findByContentContaining(content,pageable);
+        return feedPage.map(feed -> new FeedSortResponseDto(feed,user));
     }
 
     @Override
