@@ -8,6 +8,7 @@ import {
   readFeedContentRequest,
   readFeedInfoRequest,
 } from "../../../api/channelFeedApi";
+import NoContent from "../../../components/Channel/feed/NoContent";
 
 function FeedPersonalPage() {
   const { userId } = useParams(); // URL에서 userId를 가져옵니다
@@ -22,20 +23,26 @@ function FeedPersonalPage() {
 
   const [pages, setPages] = useState(1);
   const [maxPage, setMaxPage] = useState(-1);
+
+  const [isNoContent, setIsNoContent] = useState(false);
+
   const location = useLocation();
+
   useEffect(() => {
     const getData = async () => {
       try {
         setLoading(true);
         const feedInfoResp = await readFeedInfoRequest(userId);
+        console.log(feedInfoResp);
         const feedContResp = await readFeedContentRequest(userId);
-        // 1페이지 컨텐츠 있는지 서버 붙었을때 테스트 할 것
-        if (feedContResp?.data?.data) {
+        if (feedContResp?.data?.data?.length > 0) {
           console.log(feedContResp?.data?.data);
           setMaxPage(feedContResp?.data?.totalPages);
           setContents(feedContResp.data.data);
+        } else {
+          setIsNoContent(true);
         }
-        if (feedInfoResp) setUserInfo(feedInfoResp);
+        if (feedInfoResp?.data) setUserInfo(feedInfoResp?.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -119,6 +126,8 @@ function FeedPersonalPage() {
             setUserInfo={setUserInfo}
             openCreateDrawer={() => setIsCreateDrawerOpen(true)}
           />
+
+          {isNoContent && <NoContent />}
           <ContentItemGrid
             loadMore={loadMore}
             loading={loading}

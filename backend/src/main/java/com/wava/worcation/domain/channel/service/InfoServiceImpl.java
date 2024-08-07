@@ -189,8 +189,7 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
 
     @Override
     public int feedCount(Long userId){
-        User user = userRepository.findById(userId).orElseThrow(ResourceNotFoundException::new);
-        return channelRepository.countByUserId(user.getId());
+        return feedRepository.countByChannelId(channelRepository.findChannelByUserId(userId).getId());
     }
 
 }

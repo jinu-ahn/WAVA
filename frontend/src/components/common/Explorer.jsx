@@ -28,16 +28,22 @@ const Explorer = () => {
           isMobile ? "w-[42px]" : "w-12 min-w-[48px]"
         } max-w-[110px]`}
       >
-        <div className={`bg-base-300 text-mainTxt h-full min-h-[500px] `}>
-          <NavLink className="hover:text-btnBlue" to="/">
-            <div className="py-3.5 flex justify-center items-center">
+        <div className={`bg-base-300 text-mainTxt h-full min-h-[500px]`}>
+          <NavLink className="hover:text-btnBlue " to="/">
+            <div
+              className="py-3.5 flex justify-center items-center tooltip tooltip-right  z-[11]"
+              data-tip="Home"
+            >
               <HomeIcon
                 className={`size-8 ${animate ? "animate-dropIn" : ""}`}
               />
             </div>
           </NavLink>
           <NavLink className="hover:text-btnBlue" to="/channel">
-            <div className="py-3.5 flex justify-center items-center">
+            <div
+              className="py-3.5 flex justify-center items-center tooltip tooltip-right  z-[11]"
+              data-tip="Channels"
+            >
               <RectangleGroupIcon
                 stroke="currentColor"
                 className={`size-8  hover:text-btnBlue  ${
@@ -47,7 +53,10 @@ const Explorer = () => {
             </div>
           </NavLink>
           <NavLink className="hover:text-btnBlue" to="/dashboard">
-            <div className="py-3.5 flex justify-center items-center">
+            <div
+              className="py-3.5 flex justify-center items-center tooltip tooltip-right  z-[11]"
+              data-tip="dashboard"
+            >
               <CalendarDaysIcon
                 className={`size-8  hover:text-btnBlue ${
                   animate ? "animate-dropIn" : ""

@@ -82,7 +82,7 @@ const ContentDrawer = ({
   const handleAuthorClick = () => {
     if (feedContent && feedContent?.nickName) {
       navigate(`/channel/feed/${feedContent.nickName}`);
-      onClose();
+      handleCloseReset();
     }
   };
 
@@ -126,7 +126,7 @@ const ContentDrawer = ({
       if (result.isConfirmed) {
         console.log(feedContent);
         onDelete(feedContent?.id);
-        onClose();
+        handleCloseReset();
         Swal.fire("컨텐츠가 성공적으로 삭제되었습니다.", "", "success");
       }
     });
@@ -203,7 +203,6 @@ const ContentDrawer = ({
       const resp = await createCommentFeedRequest(feedId, {
         comment: writedComment,
       });
-      console.log(resp);
       const newComment = {
         id: resp?.commentId,
         userId: resp?.userId,
@@ -229,6 +228,18 @@ const ContentDrawer = ({
     }
   };
 
+  const handleCloseReset = () => {
+    setIsEditing(false);
+    setEditedContent(null);
+    setImages([]);
+    setCurrentIndex(0);
+    setIsLiked(false);
+    setFeedContent(null);
+    setWritedComment("");
+
+    setIsFecthing(false);
+    onClose();
+  };
   return (
     <div className="drawer drawer-end z-20">
       <input
@@ -243,7 +254,7 @@ const ContentDrawer = ({
           style={{ backgroundColor: isOpen ? "#0003" : "transparent" }}
           onClick={() => {
             setIsEditing(false);
-            onClose();
+            handleCloseReset();
           }}
         />
         <div
@@ -254,7 +265,7 @@ const ContentDrawer = ({
           <button
             onClick={() => {
               setIsEditing(false);
-              onClose();
+              handleCloseReset();
             }}
             className="self-start mb-4 p-2 rounded-full hover:bg-gray-200 transition-colors"
           >

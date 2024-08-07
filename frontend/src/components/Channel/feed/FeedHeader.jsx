@@ -82,7 +82,7 @@ const FeedHeader = ({ openCreateDrawer, userId, setUserInfo, userInfo }) => {
                   isMobile ? "text-xl" : "text-2xl"
                 } font-bold mr-2`}
               >
-                {userInfo?.nickname || " "}
+                {userInfo?.nickName || " "}
               </h1>
             </div>
             <button
@@ -134,14 +134,18 @@ const FeedHeader = ({ openCreateDrawer, userId, setUserInfo, userInfo }) => {
               className="mr-4 hover:underline"
             >
               팔로잉{" "}
-              <span className="font-semibold">{userInfo?.follow || "-"}</span>
+              <span className="font-semibold">
+                {Number.isInteger(userInfo?.follow) ? userInfo?.follow : "-"}
+              </span>
             </button>
             <button
               onClick={() => openFollowDrawer("followers")}
               className="mr-4 hover:underline"
             >
               팔로워{" "}
-              <span className="font-semibold">{userInfo?.follower || "-"}</span>
+              <span className="font-semibold">
+                {Number.isInteger(userInfo?.follow) ? userInfo?.follow : "-"}
+              </span>
             </button>
             <span>
               게시물{" "}

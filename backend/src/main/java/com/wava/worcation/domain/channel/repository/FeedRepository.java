@@ -14,4 +14,5 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
 
     Page<Feed> findByContentContaining(String content, Pageable pageable);
     Page<Feed> findByChannel(Channel channel, Pageable pageable);
+    int countByChannelId(Long channelId);
 }
