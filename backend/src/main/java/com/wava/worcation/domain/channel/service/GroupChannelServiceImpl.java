@@ -38,6 +38,7 @@ public class GroupChannelServiceImpl implements GroupChannelService {
     private final ChannelUserRepository channelUserRepository;
     private final OpenViduService openViduService;
 
+
     /**
      *
      * @ 작성자   : user
@@ -51,6 +52,7 @@ public class GroupChannelServiceImpl implements GroupChannelService {
     @Override
     @Transactional
     public ResponseEntity<ApiResponse<GroupChannelResponseDto>> createGroupChannel(GroupChannelRequestDto groupChannelRequestDto, User user) throws Exception {
+
         Channel channel = Channel.builder()
                 .user(user)
                 .channelDescription(groupChannelRequestDto.getDescription())
@@ -77,6 +79,7 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                  .channelSido(channel.getChannelSido())
                  .channelSigungu(channel.getChannelSigungu())
                  .channelMemo(channel.getChannelMemo())
+                 .channelSessionId(channel.getChannelSessionId())
                  .userCount(channelUserRepository.countByChannelId(channel.getId()))
                  .build();
 
@@ -142,6 +145,7 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                         .channelId(channel.getId())
                         .channelTitle(channel.getChannelTitle())
                         .channelDescription(channel.getChannelDescription())
+                        .channelSessionId(channel.getChannelSessionId())
                         .user(userResponseDtoList)
                         .build()));
     }

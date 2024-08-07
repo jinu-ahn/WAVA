@@ -34,16 +34,14 @@ public class OpenViduController {
     }
 
     /**
-     * 주어진 OpenVidu 세션에 대해 새로운 토큰을 생성 함수
+     * 화상 채팅 참여 누를 시 토큰 생성 후 REDIS에 저장
      *
      * @ 작성자   : 이병수
      * @ 작성일   : 2024-08-07
      * @ 설명     : 주어진 세션 ID에 대한 새로운 토큰을 생성하고, 토큰을 포함한 응답을 반환합니다.
      *
-     * @param  토큰을 생성할 OpenVidu 세션의 ID
-     * @return 생성된 토큰을 포함하는 ApiResponse를 포함한 ResponseEntity 객체
-     * @throws Exception 토큰 생성 중 오류가 발생하면 발생
      */
+
 
     @PostMapping("/create/token")
     public ResponseEntity<ApiResponse<String>> createToken(@RequestBody Map<String, String> request) throws Exception {
@@ -52,6 +50,7 @@ public class OpenViduController {
        // 실제 토큰 생성 로직을 적용해야 합니다.
         return openViduService.generateToken(sessionId);
     }
+
 
 
 

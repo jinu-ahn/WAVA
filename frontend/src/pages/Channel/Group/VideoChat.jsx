@@ -1,15 +1,23 @@
 import React, { useState, useRef, useEffect } from "react";
 import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
+import useUserStore from "../../../store/userStore";
 
 const OPENVIDU_SERVER_URL = process.env.REACT_APP_SERVER_ADDRESS;
-const OPENVIDU_SERVER_SECRET = "MY_SECRET";
+
+
 
 const VideoChat = () => {
+  
   const [session, setSession] = useState(null);
   const [publisher, setPublisher] = useState(null);
   const [subscribers, setSubscribers] = useState([]);
   const localVideoRef = useRef();
+  
+  const userInfo = useUserStore((state) => state.userInfo);
+  const userNickName = userInfo?.nickName;
+
+
 
   useEffect(() => {
     return () => {
@@ -17,20 +25,32 @@ const VideoChat = () => {
     };
   }, [session]);
 
+    // 세션에 연결하는 함수
   const joinSession = async () => {
     const OV = new OpenVidu();
     const mySession = OV.initSession();
 
+
+      // 스트림 생성 시 구독자 추가 이벤트 핸들러 설정
     mySession.on("streamCreated", (event) => {
       const subscriber = mySession.subscribe(event.stream, undefined);
       setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber]);
+    });
+
+    // 스트림이 제거될 때 구독자를 제거하는 이벤트 핸들러 설정
+    mySession.on("streamDestroyed", (event) => {
+      setSubscribers((prevSubscribers) =>
+        prevSubscribers.filter(
+          (subscriber) => subscriber !== event.stream.streamManager
+        )
+      );
     });
 
     setSession(mySession);
 
     try {
       const token = await getToken();
-      await mySession.connect(token, { clientData: "User" });
+      await mySession.connect(token, { clientData: userNickName });
 
       const publisher = OV.initPublisher(localVideoRef.current, {
         audioSource: undefined, // 마이크를 기본값으로 사용
@@ -45,33 +65,35 @@ const VideoChat = () => {
       mySession.publish(publisher);
       setPublisher(publisher);
 
-      // publisher 변수를 사용하여 경고 해결
+      // 퍼블리셔 초기화 로그 출력
       console.log("Publisher initialized", publisher);
     } catch (error) {
       console.error("Error connecting to the session:", error);
     }
   };
 
+  // DB 에서 모임채널의 세션 ID를 가져와 화상채팅을 위한 TOKEN 생성
   const getToken = async () => {
-    const sessionId = await createSession();
-    return createToken(sessionId);
+    const channelId = "1"; // <-- 나중에 현재 모임채널의 아이디로 수정
+    const sessionId = await getSessionId(channelId);
+    
+    let token = await createToken(sessionId);
+    return token;
   };
 
-  const createSession = async () => {
-    const response = await axios.post(
-      `${OPENVIDU_SERVER_URL}/openvidu/create/session`,
-      { customSessionId: "SessionA" },
-      { auth: { username: "OPENVIDUAPP", password: OPENVIDU_SERVER_SECRET } }
-    );
-    return response.data.data; // data.sessionId -> data.data로 수정
+  // 채널 ID로 채널정보를 가져와서 세션 ID를 파싱하면될듯?? 
+  const getSessionId = async (channelId) => {
+    const response = await axios.get(
+      `${OPENVIDU_SERVER_URL}/channel/detail/${channelId}`);// 예시 URL, 실제 API 경로에 맞게 수정 필요            
+    console.log(response)
+    return response.data.data.channelSessionId; // 응답 데이터에서 세션 ID 반환
   };
 
+
+ // join session할떄마다 만들어버립시다.
   const createToken = async (sessionId) => {
     const response = await axios.post(
-      `${OPENVIDU_SERVER_URL}/openvidu/create/token`,
-      { session: sessionId },
-      { auth: { username: "OPENVIDUAPP", password: OPENVIDU_SERVER_SECRET } }
-    );
+      `${OPENVIDU_SERVER_URL}/openvidu/create/token`,{session:sessionId});
     return response.data.data; // data.token -> data.data로 수정
   };
 
