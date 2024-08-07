@@ -128,13 +128,13 @@ public class TokenProvider {
                     .parseClaimsJws(token);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
-            throw new JwtException(ErrorCode.WRONG_TYPE_TOKEN.getMessage());
+            throw new CustomException(ErrorCode.WRONG_TYPE_TOKEN);
         } catch (ExpiredJwtException e) {
-            throw new JwtException(ErrorCode.EXPIRED_TOKEN.getMessage());
+            throw new CustomException(ErrorCode.EXPIRED_TOKEN);
         } catch (UnsupportedJwtException e) {
-            throw  new JwtException(ErrorCode.UNSUPPORTED_TOKEN.getMessage());
+            throw  new CustomException(ErrorCode.UNSUPPORTED_TOKEN);
         } catch (IllegalArgumentException e) {
-            throw new JwtException(ErrorCode.UNKNOWN_TOKEN.getMessage());
+            throw new CustomException(ErrorCode.UNKNOWN_TOKEN);
         }
     }
 
