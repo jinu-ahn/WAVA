@@ -85,7 +85,7 @@ const VideoChat = () => {
   const getSessionId = async (channelId) => {
     const response = await axios.get(
       `${OPENVIDU_SERVER_URL}/channel/detail/${channelId}`);// 예시 URL, 실제 API 경로에 맞게 수정 필요            
-    console.log(response)
+    console.log(response.data.data.channelSessionId)
     return response.data.data.channelSessionId; // 응답 데이터에서 세션 ID 반환
   };
 
