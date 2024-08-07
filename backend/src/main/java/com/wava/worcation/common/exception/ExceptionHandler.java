@@ -2,8 +2,11 @@ package com.wava.worcation.common.exception;
 
 import com.wava.worcation.common.response.ApiResponse;
 import com.wava.worcation.common.response.ErrorCode;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 /**
  * 작성자   : 이병수
@@ -12,6 +15,8 @@ import org.springframework.http.ResponseEntity;
  * CustomException  : 명시적으로 작성된 예외를 처리
  * Exception : 그 외 모든 예외를 처리
  */
+@Slf4j
+@RestControllerAdvice
 public class ExceptionHandler {
 
 

@@ -1,17 +1,19 @@
 package com.wava.worcation.domain.channel.controller;
 
 import com.wava.worcation.common.response.ApiResponse;
+import com.wava.worcation.domain.channel.domain.Channel;
 import com.wava.worcation.domain.channel.dto.request.GroupChannelRequestDto;
 import com.wava.worcation.domain.channel.dto.response.GroupChannelResponseDto;
+import com.wava.worcation.domain.channel.dto.response.GroupDetailResponseDto;
 import com.wava.worcation.domain.channel.service.GroupChannelService;
 import com.wava.worcation.domain.user.domain.AuthUser;
 import com.wava.worcation.domain.user.domain.User;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/channel")
@@ -50,13 +52,13 @@ public class GroupChannelController {
     }
 
     @GetMapping ("/detail/{channelId}")
-    public ResponseEntity<ApiResponse<GroupChannelResponseDto>> getGroupChannelDetail (@PathVariable("channelId") String channelId, HttpServletRequest request) {
-        String token = request.getHeader("Authorization").substring(7);
-        return groupChannelServcice.getGroupChannelDetail(channelId,token);
+    public ResponseEntity<ApiResponse<GroupDetailResponseDto>> getGroupChannelDetail (@PathVariable("channelId") Long channelId) {
+        return groupChannelServcice.getGroupDetail(channelId);
     }
 
-
-
-
+    @PatchMapping ("/update/{channelId}")
+    public ResponseEntity<ApiResponse<GroupChannelResponseDto>> updateMemo (@PathVariable("channelId") Long channelId, @RequestBody Map<String,String> memo) {
+        return groupChannelServcice.updateMemo(channelId,memo.get("memo"));
+    }
 
 }

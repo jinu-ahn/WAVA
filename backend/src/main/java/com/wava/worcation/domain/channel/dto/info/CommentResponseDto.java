@@ -8,6 +8,7 @@ import java.time.Instant;
 @Data
 @Builder
 public class CommentResponseDto {
+    private String nickName;
     private Long id;
     private Long feedid;
     private Long userid;

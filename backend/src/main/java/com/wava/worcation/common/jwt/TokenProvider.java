@@ -1,31 +1,23 @@
 package com.wava.worcation.common.jwt;
 
+import com.wava.worcation.common.exception.CustomException;
+import com.wava.worcation.common.response.ErrorCode;
 import com.wava.worcation.domain.user.dto.response.TokenDto;
-import com.wava.worcation.domain.user.repository.UserRepository;
 import com.wava.worcation.domain.user.service.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
-
 import java.security.Key;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
-import java.util.stream.Collectors;
 
 /**
  * 작성자 : jingu
@@ -119,7 +111,7 @@ public class TokenProvider {
                     .parseClaimsJws(accessToken)
                     .getBody();
         }catch (ExpiredJwtException e) {
-            return e.getClaims();
+            throw new CustomException(ErrorCode.EXPIRED_TOKEN);
         }
     }
 
@@ -135,16 +127,15 @@ public class TokenProvider {
                     .build()
                     .parseClaimsJws(token);
             return true;
-        } catch(SecurityException | MalformedJwtException e) {
-            log.info("Invalid JWT Token",e);
-        } catch(ExpiredJwtException e) {
-            log.info("Expired JWT Token",e);
-        } catch(UnsupportedJwtException e) {
-            log.info("Unsupported JWT Token",e);
-        } catch(IllegalArgumentException e){
-            log.info("JWT claims string is empty",e);
+        } catch (SecurityException | MalformedJwtException e) {
+            throw new JwtException(ErrorCode.WRONG_TYPE_TOKEN.getMessage());
+        } catch (ExpiredJwtException e) {
+            throw new JwtException(ErrorCode.EXPIRED_TOKEN.getMessage());
+        } catch (UnsupportedJwtException e) {
+            throw  new JwtException(ErrorCode.UNSUPPORTED_TOKEN.getMessage());
+        } catch (IllegalArgumentException e) {
+            throw new JwtException(ErrorCode.UNKNOWN_TOKEN.getMessage());
         }
-        return false;
     }
 
     /**

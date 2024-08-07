@@ -9,9 +9,10 @@ function ChatInputComponent(props) {
                     type="text"
                     value={props.inputValue}
                     onChange={props.handleInputChange}
+                    onKeyDown={props.handleKeyDown}
                     className="flex-grow p-2 focus:outline-none"
                 />
-                <button className="text-white" onClick={props.sendMessage}>
+                <button className="text-white" onClick={props.sendMessage} >
                     <ArrowUpCircleIcon className="w-10 fill-blue-600"/>
                 </button>            
             </div>

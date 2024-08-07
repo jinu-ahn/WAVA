@@ -12,4 +12,5 @@ public class UserResponseDto {
     private String phone;
     private String sido;
     private String sigungu;
+    private String profile;
 }

@@ -1,5 +1,7 @@
 package com.wava.worcation.domain.plan.service;
 
+import com.wava.worcation.common.exception.CustomException;
+import com.wava.worcation.common.response.ErrorCode;
 import com.wava.worcation.domain.plan.dao.PlanRepository;
 import com.wava.worcation.domain.plan.domain.Plan;
 import com.wava.worcation.domain.plan.dto.PlanRequestDto;
@@ -86,7 +88,7 @@ public class PlanServiceImpl implements PlanService {
     @Override
     public PlanResponseDto updatePlan(PlanRequestDto planRequestDto, Long planId) {
         Plan existingPlan = planRepository.findById(planId)
-                .orElseThrow(() -> new EntityNotFoundException("Plan not found"));
+                .orElseThrow(() -> new CustomException(ErrorCode.PLAN_NOT_FOUND));
 
         Plan updatedPlan = Plan.builder()
                 .id(existingPlan.getId()) // 기존 ID 유지

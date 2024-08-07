@@ -1,149 +1,4 @@
-// import React, { useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
-// import useDeviceStore from "../../../store/deviceStore";
-// import {
-//   ChevronDoubleRightIcon,
-//   HeartIcon as EmptyHeart,
-//   ChatBubbleLeftIcon,
-//   ChevronLeftIcon,
-//   ChevronRightIcon,
-//   UserCircleIcon,
-// } from "@heroicons/react/24/outline";
-// import { HeartIcon as FullHeart } from "@heroicons/react/24/solid";
-
-// const ContentDrawer = ({
-//   isOpen,
-//   onClose,
-//   content,
-//   onLeftClick,
-//   onRightClick,
-// }) => {
-//   const isMobile = useDeviceStore((state) => state.isMobile);
-//   const navigate = useNavigate();
-
-//   useEffect(() => {
-//     // 여기서 데이터를 받아오는 로직을 구현합니다.
-//   }, [content]);
-
-//   const handleAuthorClick = () => {
-//     if (content && content.authorId) {
-//       navigate(`/personal/${content.authorId}`);
-//       onClose();
-//     }
-//   };
-
-//   return (
-//     <div className="drawer drawer-end z-20">
-//       <input
-//         type="checkbox"
-//         className="drawer-toggle"
-//         checked={isOpen}
-//         readOnly
-//       />
-//       <div className="drawer-side">
-//         <label
-//           className="drawer-overlay"
-//           style={{ backgroundColor: isOpen ? "#0003" : "transparent" }}
-//           onClick={onClose}
-//         />
-//         <div
-//           className={`${
-//             isMobile ? "w-11/12" : "w-2/3"
-//           } bg-white h-full p-6 flex flex-col`}
-//         >
-//           <button
-//             onClick={onClose}
-//             className="self-start mb-4 p-2 rounded-full hover:bg-gray-200 transition-colors"
-//           >
-//             <ChevronDoubleRightIcon className="h-6 w-6" />
-//           </button>
-
-//           {content && isOpen && (
-//             <div className="flex-grow flex flex-col items-center overflow-y-auto">
-//               <div className="w-full max-w-lg aspect-square relative mb-6">
-//                 <img
-//                   src={content.imageUrl}
-//                   alt="Content"
-//                   className="w-full h-full object-cover rounded-lg"
-//                 />
-//                 <button
-//                   onClick={onLeftClick}
-//                   className="absolute top-1/2 left-2 -translate-y-1/2 bg-white rounded-full p-1 shadow-md"
-//                 >
-//                   <ChevronLeftIcon className="h-6 w-6" />
-//                 </button>
-//                 <button
-//                   onClick={onRightClick}
-//                   className="absolute top-1/2 right-2 -translate-y-1/2 bg-white rounded-full p-1 shadow-md"
-//                 >
-//                   <ChevronRightIcon className="h-6 w-6" />
-//                 </button>
-//               </div>
-
-//               <div className="w-full max-w-lg mb-4">
-//                 <div className="flex justify-between items-center">
-//                   <div className="flex items-center space-x-2">
-//                     <FullHeart className="w-6 h-6 text-red-500" />
-//                     <span>좋아요 수</span>
-//                     <ChatBubbleLeftIcon className="w-6 h-6" />
-//                     <span>댓글 수</span>
-//                   </div>
-//                   {content.isOwner && (
-//                     <div className="space-x-2">
-//                       <button className="text-toDoMid hover:underline">
-//                         수정
-//                       </button>
-//                       <button className="text-red-500 hover:underline">
-//                         삭제
-//                       </button>
-//                     </div>
-//                   )}
-//                 </div>
-//               </div>
-
-//               <div className="w-full max-w-lg">
-//                 <div className="flex items-center space-x-2 mb-4">
-//                   <UserCircleIcon className="h-10 w-10 text-gray-400" />
-//                   <button
-//                     onClick={handleAuthorClick}
-//                     className="text-lg font-semibold hover:underline"
-//                   >
-//                     {content.authorName}
-//                   </button>
-//                 </div>
-//                 <h2 className="text-xl font-bold mb-2">{content.title}</h2>
-//                 <p className="text-gray-600 mb-4">내용: {content.visitDate}</p>
-//                 <p className="mb-6">{content.description}</p>
-
-//                 <div className="border-t border-gray-200 pt-4 mb-4">
-//                   <h3 className="font-semibold mb-2">댓글</h3>
-//                   {/* 여기에 댓글 목록을 렌더링합니다 */}
-//                 </div>
-
-//                 <div className="flex items-center space-x-2">
-//                   <input
-//                     type="text"
-//                     placeholder="댓글을 입력하세요..."
-//                     className="flex-grow px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-0.5 focus:ring-mainBlue focus:border-mainBlue"
-//                   />
-//                   <button className="bg-mainBlue text-white px-4 py-2 rounded-md hover:bg-blue-500 transition-colors">
-//                     작성
-//                   </button>
-//                 </div>
-//               </div>
-//             </div>
-//           )}
-//         </div>
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default ContentDrawer;
-
-// 수정 및 삭제 기능 간단 구현 -> 수정 필요 위는 수정 삭제 없는 클린 코드
-// 댓글, 프로필 클릭->이동, 게시글 수정/삭제,
-import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
+import React, { useState, useRef, useLayoutEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useDeviceStore from "../../../store/deviceStore";
 import useUserStore from "../../../store/userStore";
@@ -159,7 +14,10 @@ import {
   XMarkIcon,
   PlusCircleIcon,
 } from "@heroicons/react/24/outline";
-import { HeartIcon as FullHeart } from "@heroicons/react/24/solid";
+import {
+  HeartIcon as FullHeart,
+  UserCircleIcon as DefaultUserIcon,
+} from "@heroicons/react/24/solid";
 import Swal from "sweetalert2";
 import {
   createCommentFeedRequest,
@@ -191,8 +49,8 @@ const ContentDrawer = ({
   const [writedComment, setWritedComment] = useState("");
 
   const [isFetching, setIsFecthing] = useState(false);
+
   useLayoutEffect(() => {
-    // 임시
     const getData = async () => {
       try {
         setIsFecthing(true);
@@ -201,13 +59,15 @@ const ContentDrawer = ({
           setFeedContent({
             isOwner: resp?.nickName === userInfo?.nickName,
             ...resp,
+            isLiked: resp?.liked,
           });
           setEditedContent({
             isOwner: resp?.nickName === userInfo?.nickName,
             ...resp,
+            isLiked: resp?.liked,
           });
           setImages(resp?.image || []);
-          setIsLiked(resp?.isLiked || false);
+          setIsLiked(resp?.liked || false);
         }
       } catch (e) {
         console.log(e);
@@ -215,8 +75,9 @@ const ContentDrawer = ({
         setIsFecthing(false);
       }
     };
-
-    getData();
+    if (feedId != null) {
+      getData();
+    }
   }, [feedId]);
 
   const handleAuthorClick = () => {
@@ -291,6 +152,7 @@ const ContentDrawer = ({
       file,
       imageUrl: URL.createObjectURL(file),
     }));
+
     setImages((prevImages) => [...prevImages, ...newImages]);
     setCurrentIndex(images.length);
   };
@@ -313,11 +175,11 @@ const ContentDrawer = ({
     try {
       setIsFecthing(true);
       if (isLiked) {
-        await deleteLikeFeedRequest();
+        await deleteLikeFeedRequest(feedId);
         // 좋아요면 딜리트
       } else {
         // 아니면 포스트
-        await createLikeFeedRequest();
+        await createLikeFeedRequest(feedId);
       }
     } catch (e) {
       console.log(e);
@@ -338,21 +200,22 @@ const ContentDrawer = ({
     if (isFetching) return;
     try {
       setIsFecthing(true);
-      if (await createCommentFeedRequest(feedId, writedComment)) {
-        const newComment = {
-          id: nanoid(),
-          userId: nanoid(),
-          nickName: userInfo?.nickName,
-          profile: userInfo?.profile,
-          comment: writedComment,
-        };
-
-        setFeedContent((state) => ({
-          ...state,
-          comment: [...state.comment, newComment],
-        }));
-        setWritedComment("");
-      }
+      const resp = await createCommentFeedRequest(9, {
+        comment: writedComment,
+      });
+      console.log(resp);
+      const newComment = {
+        id: resp?.commentId,
+        userId: resp?.userId,
+        nickName: userInfo?.nickName,
+        profile: userInfo?.profile,
+        comment: writedComment,
+      };
+      setFeedContent((state) => ({
+        ...state,
+        comment: [...state.comment, newComment],
+      }));
+      setWritedComment("");
     } catch (e) {
       console.log(e);
     } finally {
@@ -451,7 +314,7 @@ const ContentDrawer = ({
               </div>
 
               <div className="w-full max-w-lg aspect-video relative mb-6">
-                {images.length === 0 ? (
+                {isEditing && images.length === 0 ? (
                   <div
                     onClick={() => imgInput.current.click()}
                     className="w-full h-full border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-pointer hover:border-gray-400 transition-colors"
@@ -570,11 +433,15 @@ const ContentDrawer = ({
                       {feedContent?.comment?.map((item, index) => {
                         return (
                           <div key={index}>
-                            <img
-                              className="h-8 w-8 rounded-full object-cover"
-                              src={item?.profile}
-                              alt="프로필이미지"
-                            />
+                            {item?.profile ? (
+                              <img
+                                className="h-8 w-8 rounded-full object-cover inline"
+                                src={item?.profile}
+                                alt="프로필이미지"
+                              />
+                            ) : (
+                              <DefaultUserIcon className="w-8 h-8 rounded-full shadow-md inline" />
+                            )}
                             {item?.nickName} : {item?.comment}
                           </div>
                         );

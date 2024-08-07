@@ -1,5 +1,7 @@
 package com.wava.worcation.domain.user.service;
 
+import com.wava.worcation.common.exception.CustomException;
+import com.wava.worcation.common.response.ErrorCode;
 import com.wava.worcation.domain.user.domain.User;
 import com.wava.worcation.domain.user.domain.UserAdapter;
 import com.wava.worcation.domain.user.repository.UserRepository;
@@ -26,7 +28,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email).orElseThrow(() ->
-                new UsernameNotFoundException("사용자가 존재하지 않습니다."));
+                new CustomException(ErrorCode.USER_NOT_FOUND));
         return new UserAdapter(user);
     }
 }

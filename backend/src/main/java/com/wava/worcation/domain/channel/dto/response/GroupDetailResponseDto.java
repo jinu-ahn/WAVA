@@ -1,19 +1,16 @@
 package com.wava.worcation.domain.channel.dto.response;
 
-
+import com.wava.worcation.domain.user.dto.response.UserResponseDto;
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Builder
-public class GroupChannelResponseDto {
+public class GroupDetailResponseDto {
     private Long channelId;
-    private Long userId;
-    private String channelSido;
-    private String channelSigungu;
     private String channelTitle;
     private String channelDescription;
-    private String channelMemo;
-    private int userCount;
+    private List<UserResponseDto> user;
 }
