@@ -1,10 +1,8 @@
 package com.wava.worcation.domain.channel.dto.info;
 
-import com.wava.worcation.domain.channel.domain.Feed;
 import com.wava.worcation.domain.channel.repository.FeedCommentRepository;
 import com.wava.worcation.domain.channel.repository.ImageRepository;
 import com.wava.worcation.domain.channel.repository.LikeRepository;
-import com.wava.worcation.domain.user.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -36,17 +34,4 @@ public class FeedSortResponseDto {
         private String imageName; // 이미지 이름
         private String imageUrl; // 이미지 URL
     }
-
-    public FeedSortResponseDto(Feed feed, User user) {
-        this.id = feed.getId();
-        this.content = feed.getContent();
-        this.heart = feed.getHeart();
-        this.image = imageRepository.findFirstByFeedOrderByFeed(feed);
-        this.commentsCount = feedCommentRepository.findAllByFeedId(feed.getId()).size();
-        this.isLiked = likeRepository.existsByUserAndFeed(user, feed);
-        this.likedCount = likeRepository.countByFeed(feed);
-    }
-
-
-
 }

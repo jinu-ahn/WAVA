@@ -156,7 +156,22 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
     public Page<FeedSortResponseDto> searchfeed(int pages, String nickname, String content, User user) {
         Pageable pageable = PageRequest.of(pages, 20);
         Page<Feed> feedPage = feedReository.findByContentContaining(content,pageable);
-        return feedPage.map(feed -> new FeedSortResponseDto(feed,user));
+        return feedPage.map(feed -> {
+            String imageUrl = imageRepository.findFirstByFeedOrderByFeed(feed).getImageUrl();
+            int commentsCount = feedCommentRepository.findAllByFeedId(feed.getId()).size();
+            boolean isLiked = likeRepository.existsByUserAndFeed(user, feed);
+            int likedCount = likeRepository.countByFeed(feed);
+
+            return FeedSortResponseDto.builder()
+                    .id(feed.getId())
+                    .content(feed.getContent())
+                    .heart(feed.getHeart())
+                    .image(imageUrl)
+                    .commentsCount(commentsCount)
+                    .isLiked(isLiked)
+                    .likedCount(likedCount)
+                    .build();
+        });
     }
 
     @Override

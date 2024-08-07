@@ -11,5 +11,5 @@ import java.util.List;
 public interface ImageRepository extends JpaRepository<Image, Long> {
     List<Image> findByFeed(Feed feed);
 
-    String findFirstByFeedOrderByFeed (Feed feed);
+    Image findFirstByFeedOrderByFeed (Feed feed);
 }
