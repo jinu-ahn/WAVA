@@ -98,6 +98,7 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
             log.info("댓글리스트완료{}", feedComments);
             for (FeedComment feedComment : feedComments) {
                 CommentResponseDto comment = CommentResponseDto.builder()
+                        .nickName(feedComment.getUser().getNickName())
                         .comment(feedComment.getComment())
                         .createdAt(feedComment.getCreatedAt())
                         .id(feedComment.getId())
