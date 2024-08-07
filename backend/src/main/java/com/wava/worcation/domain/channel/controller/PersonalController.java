@@ -56,4 +56,12 @@ public class PersonalController {
                     .body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()));
         }
     }
+
+//    @PostMapping("/profile")
+//    public ResponseEntity<ApiResponse<?>> changeProfile(@RequestParam("file") MultipartFile file) {
+//        if (file.isEmpty()) {
+//            return ResponseEntity.badRequest().body(new ApiResponse<>(false, "파일이 비어있습니다."));
+//        }
+//    }
+//    return null;
 }

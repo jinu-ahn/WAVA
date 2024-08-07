@@ -26,7 +26,7 @@ public class PersonalServiceImpl implements PersonalService {
 
     private final ChannelRepository channelRepository;
     private final UserRepository userRepository;
-    private final FeedReository feedRepository;
+    private final FeedRepository feedRepository;
     private final FeedCommentRepository commentRepository;
     private final LikeRepository likeRepository;
     private final ImageRepository imageRepository;
