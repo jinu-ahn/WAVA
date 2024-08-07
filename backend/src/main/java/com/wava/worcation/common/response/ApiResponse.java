@@ -2,6 +2,8 @@ package com.wava.worcation.common.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -43,5 +45,18 @@ public class ApiResponse<T> {
 
     public static <T> ApiResponse<T> error(HttpStatus status, String message) {
         return new ApiResponse<T>(status,message,null);
+    }
+
+    /**
+     * Json 형태로 반환
+     * @return
+     */
+    public String toJson() {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            return objectMapper.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            return "{}";
+        }
     }
 }

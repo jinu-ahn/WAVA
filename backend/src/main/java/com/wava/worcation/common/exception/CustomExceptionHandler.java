@@ -58,29 +58,4 @@ public class CustomExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, "일시적인 오류가 발생하였습니다. 다시 시도해주세요."));
     }
-
-    @ExceptionHandler(MalformedJwtException.class)
-    public ResponseEntity<ApiResponse> handleMalformedJwtException() {
-        return ResponseEntity.status(ErrorCode.WRONG_TYPE_TOKEN.getStatus()).body(ApiResponse.error(ErrorCode.WRONG_TYPE_TOKEN));
-    }
-
-    @ExceptionHandler(ExpiredJwtException.class)
-    public ResponseEntity<ApiResponse> handleExpiredJwtException() {
-        return ResponseEntity.status(ErrorCode.EXPIRED_TOKEN.getStatus()).body(ApiResponse.error(ErrorCode.EXPIRED_TOKEN));
-    }
-
-    @ExceptionHandler(UnsupportedJwtException.class)
-    public ResponseEntity<ApiResponse> handleAuthenticationException() {
-        return ResponseEntity.status(ErrorCode.UNSUPPORTED_TOKEN.getStatus()).body(ApiResponse.error(ErrorCode.UNSUPPORTED_TOKEN));
-    }
-
-    @ExceptionHandler(IllegalAccessError.class)
-    public ResponseEntity<ApiResponse> handleIllegalAccessException() {
-        return ResponseEntity.status(ErrorCode.UNKNOWN_TOKEN.getStatus()).body(ApiResponse.error(ErrorCode.UNKNOWN_TOKEN));
-    }
-
-    @ExceptionHandler(JwtException.class)
-    public ResponseEntity<ApiResponse> handlerJwtException() {
-        return ResponseEntity.status(401).body(ApiResponse.error(ErrorCode.EXPIRED_TOKEN));
-    }
 }
