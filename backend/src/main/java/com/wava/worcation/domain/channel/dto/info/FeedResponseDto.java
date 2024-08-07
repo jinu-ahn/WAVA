@@ -14,6 +14,8 @@ import java.util.List;
 public class FeedResponseDto {
     private String content;
     private int heart;
+    private String nickNake;
+    private String profile;
 //    private Timestamp created_at;
     private Long id;
     private List<com.wava.worcation.domain.channel.dto.info.ImageResponseDto> imageList;

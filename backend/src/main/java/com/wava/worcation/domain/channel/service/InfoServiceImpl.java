@@ -129,6 +129,8 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
                     .imageList(imageResponseDtos)
                     .likedCount(feed.getHeart())
                     .isLiked(islike)
+                    .nickNake(feed.getChannel().getUser().getNickName())
+                    .profile(feed.getChannel().getUser().getProfileImg())
                     .build();
 
         }
