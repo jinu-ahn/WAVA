@@ -91,7 +91,6 @@ public class MapPinServiceImpl implements MapPinService {
     }
 
     private void isPinOrder(final Long channelId, final Long pinId) {
-        log.info("isPinOrder : {}",mapPinRepository.existsByPinOrderAndChannelId(pinId,channelId));
         if(mapPinRepository.existsByPinOrderAndChannelId(pinId,channelId))
             throw new CustomException(ErrorCode.INVALID_PIN_ORDER);
     }
