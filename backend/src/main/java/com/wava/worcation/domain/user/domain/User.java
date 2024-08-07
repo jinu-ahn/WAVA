@@ -72,4 +72,7 @@ public class User implements UserDetails {
         return this.email;
     }
 
+    public void updateProfileImg(String profileImg) {
+        this.profileImg = profileImg;
+    }
 }

@@ -11,4 +11,6 @@ public interface PersonalService {
     public ResponseEntity<ApiResponse<PersonalResponseDto>> ChannelInfo(String nickName);
 
     Page<FeedSortResponseDto> personalFeed(int pages, String nickname, User user);
+
+    ResponseEntity changeProfile(String imageUrl,User user);
 }
