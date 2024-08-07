@@ -3,6 +3,8 @@ import GraphView from "./Graph/GraphView";
 import { useNavigate } from "react-router-dom";
 import useUserStore from "../../store/userStore";
 import dayjs from "dayjs";
+import ReactMarkdown from "react-markdown";
+
 
 const DashboardContent = () => {
   const navigate = useNavigate();
@@ -39,6 +41,14 @@ const DashboardContent = () => {
         </div>
         <div className="w-full flex flex-col items-center shadow-md rounded-lg py-5 me-3 ms-1 my-3 flex-grow overflow-auto min-h-[200px]">
           <p>AI 출력 부분</p>
+           <button
+              type="button"
+              onClick={ai_test}
+              className="w-full h-10 border rounded-[10px] mt-3 mb-1 drop-shadow-md bg-[#1c77c3] text-white"
+            >
+              ai 호출
+          </button>
+          <ReactMarkdown children={answer} />
         </div>
       </div>
     </>
