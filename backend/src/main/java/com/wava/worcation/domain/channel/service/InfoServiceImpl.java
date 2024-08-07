@@ -110,7 +110,7 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
             List<Image> images = imageRepository.findByFeed(feed);
             List<ImageResponseDto> imageResponseDtos = new ArrayList<>();
             log.info("이미지검색완료{}", images);
-            boolean islike = likeRepository.existsByUserAndFeed(user,feed);
+            boolean isLiked = likeRepository.existsByUserAndFeed(user,feed);
 
             for(Image image : images){
 
@@ -128,8 +128,7 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
                     .userId(feed.getChannel().getUser().getId())
                     .comment(commentResponseDtos)
                     .image(imageResponseDtos)
-                    .likedCount(feed.getHeart())
-                    .isLiked(islike)
+                    .isLiked(isLiked)
                     .nickName(feed.getChannel().getUser().getNickName())
                     .profile(feed.getChannel().getUser().getProfileImg())
                     .build();
