@@ -85,6 +85,7 @@ public class PersonalServiceImpl implements PersonalService {
     @Override
     public ResponseEntity changeProfile(String imageUrl, User user) {
         user.updateProfileImg(imageUrl);
+        userRepository.save(user);
         return ResponseEntity.ok().body(ApiResponse.success(HttpStatus.OK));
     }
 }
