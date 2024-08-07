@@ -18,7 +18,7 @@ function OtherMessageComponent(props) {
                         <div className=" bg-white text-dark p-2 rounded-md">
                             {props.item.message}
                         </div>
-                        <p className="self-end ms-1">{props.item.registTime ? props.item.registTime.substr(11) : ''}</p>
+                        <p className="self-end ms-1 text-sm">{props.item.registTime ? props.item.registTime.substr(11) : ''}</p>
                     </div>
                     <div className="absolute left-0 -mt-0.5 w-0 border-t-8 border-t-white border-x-8 border-x-transparent border-b-0 rotate-[135deg]"></div>
                 </div>

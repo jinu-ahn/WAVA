@@ -3,19 +3,13 @@ import React from "react";
 
 function MyMessageComponent(props) {
 
-    // const today = new Date()
-    // const hours = ('0' + today.getHours()).slice(-2);
-    // const minutes = ('0' + today.getMinutes()).slice(-2);
-    // hours+ ':' + minutes
     return (
         <>
-            <div className="flex flex-col items-end">
-                <div className="text-right">
-                </div>
-                <div className="relative inline-block max-w-xs">
-                    <div className="flex">
-                        <p className="self-end me-1">{props.item.registTime ? props.item.registTime.substr(11) : ''}</p>
-                        <div className=" bg-white text-dark p-2 rounded-md">
+            <div className="flex flex-col items-end max-w-full">
+                <div className="relative max-w-full">
+                    <div className="flex items-center max-w-full">
+                        <p className="self-end me-1 text-sm">{props.item.registTime ? props.item.registTime.substr(11) : ''}</p>
+                        <div className=" bg-white text-dark p-2 rounded-md break-words">
                             {props.item.message}
                         </div>
                     </div>

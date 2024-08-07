@@ -19,6 +19,7 @@ import useUserStore from "../../store/userStore";
 function ChannelPage() {
   const isMobile = useDeviceStore((state) => state.isMobile);
   const userInfo = useUserStore((state) => state.userInfo);
+  const myId = userInfo?.nickName;
 
   const myChannelRef = useRef(null);
   const meetingChannelsRef = useRef(null);
@@ -33,8 +34,7 @@ function ChannelPage() {
   useLayoutEffect(() => {
     // 현재 경로가 정확히 '/channel'일 때만 리다이렉트
     if (location.pathname?.replaceAll("/", "") === "channel") {
-      const userId = "12345"; // 여기에 실제 접속자 ID를 넣으세요
-      navigate(`/channel/feed/${userId}`);
+      navigate(`/channel/feed/${myId}`);
     }
   }, [location.pathname, navigate, userId]);
 
@@ -161,7 +161,7 @@ function ChannelPage() {
               </div>
             </div>
             <div className="my-0.5">
-              <NavLink to={`/channel/feed/${"내아이디"}`}>
+              <NavLink to={`/channel/feed/${myId}`}>
                 {userInfo?.profile ? (
                   <img
                     src={userInfo?.profile}

@@ -77,6 +77,7 @@ function CreateContentDrawer({ isOpen, onClose, addItem }) {
     formData.append("sido", userInfo?.worcation?.sido);
     formData.append("sigungu", userInfo?.worcation?.sigungu);
     const resp = await createFeedRequest(formData);
+    console.log(resp);
     if (resp) {
       // addItem();
       setImages([]);
@@ -85,6 +86,14 @@ function CreateContentDrawer({ isOpen, onClose, addItem }) {
       onClose();
 
       addItem();
+    } else {
+      Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "알 수 없는 에러!",
+        showConfirmButton: false,
+        timer: 2000,
+      });
     }
   };
 
