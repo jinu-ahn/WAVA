@@ -115,3 +115,5 @@ cloud:
 openvidu:
   url: https://i11c204.p.ssafy.io:4443
   secret: ${OPENVIDU_SECRET}
+  session:
+    inactive-timeout: 31536000
