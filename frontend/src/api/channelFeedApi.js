@@ -1,4 +1,3 @@
-import { nanoid } from "nanoid";
 import { localAxios as local } from "../util/http-commons";
 import { get_feedData } from "./dummy";
 
@@ -11,9 +10,10 @@ const handleRequest = async (requestFunction) => {
     if (
       response.status === 200 ||
       response.status === 201 ||
+      response.status === 202 ||
       response.status === 204
     ) {
-      return response.data;
+      return response.data || true;
     } else if (response?.data?.message) {
       throw new Error(response?.data?.message);
     } else {
@@ -49,7 +49,7 @@ const handleRequest = async (requestFunction) => {
  * @returns {Promise<feedReturn>} 피드 콘텐츠를 포함한 객체를 반환합니다
  */
 export const readFeedContentRequest = async (id, pageNo = 1) => {
-  return get_feedData;
+  // return get_feedData;
   return await handleRequest(() =>
     local.get(address + "/personal/" + id + "/feed?pages=" + pageNo)
   );
@@ -78,10 +78,8 @@ export const readFeedInfoRequest = async (id) => {
 // 헤더 덮어씌워서 명시적으로 지정
 // 피드 생성
 export const createFeedRequest = async (data) => {
-  // const token = localStorage.getItem("authToken");
-  const token = "MYTOKEN";
+  const token = sessionStorage.getItem("accessToken");
   if (token) {
-    return true;
     return await handleRequest(() =>
       local.post(address + "/feed/create", data, {
         headers: {
@@ -97,66 +95,32 @@ export const createFeedRequest = async (data) => {
 
 // 피드 디테일 보기
 export const readOneFeedDetailRequest = async (id) => {
-  return {
-    id: 1,
-    userId: 1,
-    nickName: "닉네임위치",
-    profile: "https://picsum.photos/250/250",
-    content: "오늘날씨좋다",
-    isLiked: true,
-    heart: 222,
-
-    image: [
-      {
-        imageName: nanoid(),
-        imageUrl: "https://loremflickr.com/600/400",
-      },
-      {
-        imageName: nanoid(),
-        imageUrl: "https://loremflickr.com/600/400",
-      },
-    ],
-    comment: [
-      {
-        id: 1,
-        userId: 1234,
-        nickName: "와바사용자2",
-        profile: "https://loremflickr.com/600/400",
-        comment: "와정말좋아요",
-      },
-      {
-        id: 2,
-        userId: 3324,
-        nickName: "와바사용자3",
-        profile: "https://loremflickr.com/600/400",
-        comment: "와진짜대단해요",
-      },
-    ],
-  };
   return await handleRequest(() => local.get(address + "/feed/" + id));
 };
 
 // 피드에 코멘트 작성
 export const createCommentFeedRequest = async (id, data) => {
-  return true;
+  // return true;
   return await handleRequest(() =>
-    local.post(`${address}/${id}/comment`, data)
+    local.post(`${address}/feed/${id}/comment`, data)
   );
 };
 
 // 피드 좋아요
 export const createLikeFeedRequest = async (id) => {
-  return await handleRequest(() => local.post(`${address}/${id}/like`, {}));
+  return await handleRequest(() => local.post(`${address}/feed/${id}/like`));
 };
 
 // 피드 좋아요 취소
 export const deleteLikeFeedRequest = async (id) => {
-  return await handleRequest(() => local.delete(`${address}/${id}/dislike`));
+  return await handleRequest(() =>
+    local.delete(`${address}/feed/${id}/dislike`)
+  );
 };
 
 // 피드 검색 -> 에러 핸들링 할 것 ->마지막페이지, 페이지아웃
 export const searchFeedRequest = async (keyword = "") => {
-  return get_feedData;
+  return get_feedData.data;
 
   return await handleRequest(() => local.get(`${address}/search?q=${keyword}`));
 };
