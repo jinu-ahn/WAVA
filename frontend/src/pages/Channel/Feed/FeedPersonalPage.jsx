@@ -28,6 +28,7 @@ function FeedPersonalPage() {
       try {
         setLoading(true);
         const feedInfoResp = await readFeedInfoRequest(userId);
+        console.log(feedInfoResp);
         const feedContResp = await readFeedContentRequest(userId);
         // 1페이지 컨텐츠 있는지 서버 붙었을때 테스트 할 것
         if (feedContResp?.data?.data) {
@@ -35,7 +36,7 @@ function FeedPersonalPage() {
           setMaxPage(feedContResp?.data?.totalPages);
           setContents(feedContResp.data.data);
         }
-        if (feedInfoResp) setUserInfo(feedInfoResp);
+        if (feedInfoResp?.data) setUserInfo(feedInfoResp?.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
