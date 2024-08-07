@@ -155,7 +155,7 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
     }
 
     @Override
-    public Page<FeedSortResponseDto> searchfeed(int pages, String nickname, String content, User user) {
+    public Page<FeedSortResponseDto> searchfeed(int pages, String content, User user) {
         Pageable pageable = PageRequest.of(pages, 20);
         Page<Feed> feedPage = feedReository.findByContentContaining(content,pageable);
         return feedPage.map(feed -> {

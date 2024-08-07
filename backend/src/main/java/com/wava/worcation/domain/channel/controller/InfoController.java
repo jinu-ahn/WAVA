@@ -2,6 +2,7 @@ package com.wava.worcation.domain.channel.controller;
 
 import com.wava.worcation.common.response.ApiResponse;
 import com.wava.worcation.common.s3.service.S3ImageUpLoadService;
+import com.wava.worcation.domain.channel.dto.info.CommentRequestDto;
 import com.wava.worcation.domain.channel.dto.info.FeedResponseDto;
 import com.wava.worcation.domain.channel.dto.info.FeedSortResponseDto;
 import com.wava.worcation.domain.channel.service.InfoService;
@@ -97,11 +98,11 @@ public class InfoController{
     }
 
     @PostMapping("/{feedId}/comment")
-    public ResponseEntity<?> createComment(@PathVariable("feedId") Long feedId, @RequestParam("comment") String comment, @AuthUser User user) {
+    public ResponseEntity<?> createComment(@PathVariable("feedId") Long feedId, @RequestBody CommentRequestDto comment, @AuthUser User user) {
         try {
             Long userId = user.getId();
 
-            Map<String, Object> commentMap = infoService.createComment(userId, feedId, comment);
+            Map<String, Object> commentMap = infoService.createComment(userId, feedId, comment.getComment());
 
             return ResponseEntity.ok(commentMap);
         }
@@ -118,7 +119,7 @@ public class InfoController{
                                                      @AuthUser User user) {
         try {
             // 페이지 네이션된 피드를 검색
-            Page<FeedSortResponseDto> feedSortResponse = infoService.searchfeed(page, nickname, content, user);
+            Page<FeedSortResponseDto> feedSortResponse = infoService.searchfeed(page, content, user);
 
             // 페이지 네이션 정보 계산
             boolean hasMore = feedSortResponse.hasNext();

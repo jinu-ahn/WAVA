@@ -16,7 +16,7 @@ public interface InfoService {
     FeedResponseDto viewFeed(Long feedid, User user);
     void likeAdd(Long feedId, User user);
     void likeDistract(Long feedId, User user);
-    Page<FeedSortResponseDto> searchfeed(int pages, String nickname, String content, User user);
+    Page<FeedSortResponseDto> searchfeed(int pages, String content, User user);
 
     int feedCount(Long userId);
 
