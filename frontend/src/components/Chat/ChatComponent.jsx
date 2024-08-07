@@ -44,10 +44,6 @@ function ChatComponent() {
     }
 
     const isSameDate = (date1, date2) => {
-        console.log(date1.getFullYear() === date2.getFullYear())
-        console.log(date1.getMonth() === date2.getMonth())
-        console.log(date1.getDate() === date2.getDate())
-
         return date1.getFullYear() === date2.getFullYear()
             && date1.getMonth() === date2.getMonth()
             && date1.getDate() === date2.getDate();
@@ -56,7 +52,6 @@ function ChatComponent() {
     const isChangeDate = (prevMessage, currentMessage) => {
         const prevDate = prevMessage ? stringToDate(prevMessage.registTime.substring(0, 10)) : null;
         const currentDate = stringToDate(currentMessage.registTime.substring(0, 10));
-        console.log(prevDate, currentDate)
         return !isSameDate(prevDate, currentDate);
     }
 
@@ -64,7 +59,6 @@ function ChatComponent() {
         connect();
         fetchMessages();
         getUserNickName();
-        console.log("my", nickName)
         // 컴포넌트 언마운트 시 웹소켓 연결 해제
         return () => disconnect();
     }, [channelId]);
@@ -129,7 +123,7 @@ function ChatComponent() {
             const hours = currentDate.getHours();
             const minutes = currentDate.getMinutes();
 
-            const formattedDate = `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')} ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
+            const formattedDate = `${year}.${String(month).padStart(2, '0')}.${String(day).padStart(2, '0')} ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}`;
 
             const messageObj = {
                 channelId : 1,
@@ -143,6 +137,11 @@ function ChatComponent() {
         console.log(nickName)
     };
 
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            sendMessage();
+        }
+    };
 
     return (
         <>
@@ -150,7 +149,6 @@ function ChatComponent() {
                 <div className="bg-blue-400 w-1/4 flex flex-col rounded-t-lg overflow-x-auto min-h-screen max-h-screen">
                     {messages.map((item, index) => {
                         const showDate = index === 0 || isChangeDate(messages[index - 1], item);
-                        console.log("showDate ", showDate)
                         return (
                             <div key={index} className="m-4 relative max-w-full">
                                 {showDate && <MessageDateComponent date={item.registTime.substring(0, 10)} />}
@@ -163,7 +161,7 @@ function ChatComponent() {
                     })}
                     <div ref={messagesEndRef} />
                 </div>
-                <ChatInputComponent inputValue={inputValue} handleInputChange={handleInputChange} sendMessage={sendMessage} />
+                <ChatInputComponent inputValue={inputValue} handleInputChange={handleInputChange} sendMessage={sendMessage} handleKeyDown={handleKeyDown} />
             </div>
         </>
   );
