@@ -150,7 +150,9 @@ const FeedHeader = ({ openCreateDrawer, userId, setUserInfo, userInfo }) => {
             <span>
               게시물{" "}
               <span className="font-semibold">
-                {userInfo?.feedCount || "-"}
+                {Number.isInteger(userInfo?.feedCount)
+                  ? userInfo?.feedCount
+                  : "-"}
               </span>
             </span>
           </div>
