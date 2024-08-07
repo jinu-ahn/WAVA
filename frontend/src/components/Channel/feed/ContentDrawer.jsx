@@ -25,14 +25,13 @@ import {
   deleteLikeFeedRequest,
   readOneFeedDetailRequest,
 } from "../../../api/channelFeedApi";
-import { nanoid } from "nanoid";
 
 const ContentDrawer = ({
   isOpen,
   onClose,
   onEdit,
   onDelete,
-  onLike,
+  originChangeHandle,
   feedId,
 }) => {
   const isMobile = useDeviceStore((state) => state.isMobile);
@@ -185,6 +184,7 @@ const ContentDrawer = ({
       console.log(e);
     } finally {
       // 내부 로직
+      // handleLike(feedId, isLiked);
       setIsFecthing(false);
       const newLikedState = !isLiked;
       setIsLiked(newLikedState);
@@ -192,7 +192,7 @@ const ContentDrawer = ({
         ...prev,
         heart: newLikedState ? (prev.heart || 0) + 1 : (prev.heart || 1) - 1,
       }));
-      onLike(editedContent.id, newLikedState);
+      originChangeHandle(editedContent.id, "like", newLikedState);
     }
   };
 
@@ -200,7 +200,7 @@ const ContentDrawer = ({
     if (isFetching) return;
     try {
       setIsFecthing(true);
-      const resp = await createCommentFeedRequest(9, {
+      const resp = await createCommentFeedRequest(feedId, {
         comment: writedComment,
       });
       console.log(resp);
@@ -215,6 +215,12 @@ const ContentDrawer = ({
         ...state,
         comment: [...state.comment, newComment],
       }));
+      setEditedContent((state) => ({
+        ...state,
+        comment: [...state.comment, newComment],
+      }));
+      originChangeHandle(editedContent.id, "comment");
+
       setWritedComment("");
     } catch (e) {
       console.log(e);
