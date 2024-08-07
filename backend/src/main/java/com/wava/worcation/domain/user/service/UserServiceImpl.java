@@ -1,8 +1,12 @@
 package com.wava.worcation.domain.user.service;
+import com.wava.worcation.common.exception.CustomException;
 import com.wava.worcation.common.jwt.TokenProvider;
 import com.wava.worcation.common.response.ApiResponse;
 import com.wava.worcation.common.response.ErrorCode;
 import com.wava.worcation.common.util.RedisUtil;
+import com.wava.worcation.domain.channel.domain.Channel;
+import com.wava.worcation.domain.channel.enums.ChannelType;
+import com.wava.worcation.domain.channel.repository.ChannelRepository;
 import com.wava.worcation.domain.user.domain.User;
 import com.wava.worcation.domain.user.dto.request.LoginRequestDto;
 import com.wava.worcation.domain.user.dto.request.SignUpRequestDto;
@@ -38,6 +42,7 @@ public class UserServiceImpl implements UserService{
     private final AuthenticationManagerBuilder managerBuilder;
     private final TokenProvider tokenProvider;
     private final RedisUtil redisUtil;
+    private final ChannelRepository channelRepository;
 
     /**
      * 유저 회원 가입
@@ -47,18 +52,9 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public ResponseEntity<ApiResponse<UserResponseDto>> signUp(@Valid final SignUpRequestDto requestDto) {
-        if(emailValidate(requestDto.getEmail())) {
-            return ResponseEntity.status(ErrorCode.DUPLICATE_EMAIL.getStatus())
-                    .body(ApiResponse.error(ErrorCode.DUPLICATE_EMAIL));
-        }
-        if(phoneNumberValidate(requestDto.getPhone())) {
-            return ResponseEntity.status(ErrorCode.DUPLICATE_PHONE_NUMBER.getStatus())
-                    .body(ApiResponse.error(ErrorCode.DUPLICATE_PHONE_NUMBER));
-        }
-        if(nickNameValidate(requestDto.getNickName())) {
-            return ResponseEntity.status(ErrorCode.DUPLICATE_NICKNAME.getStatus())
-                    .body(ApiResponse.error(ErrorCode.DUPLICATE_NICKNAME));
-        }
+        emailValidate(requestDto.getEmail()); // 이메일 중복 체크
+        phoneNumberValidate(requestDto.getPhone()); // 전화번호 중복 체크
+        nickNameValidate(requestDto.getNickName()); // 닉네임 중복 체크
 
         String encodedPassword = bCryptPasswordEncoder.encode(requestDto.getPassword());
 
@@ -73,6 +69,16 @@ public class UserServiceImpl implements UserService{
                 .roles(Collections.singletonList("VISITOR"))
                 .build());
 
+        channelRepository.save(
+                Channel.builder()
+                        .user(user)
+                        .channelTitle(user.getNickName())
+                        .channelSido(user.getSido())
+                        .channelSigungu(user.getSigungu())
+                        .channelDescription(user.getNickName() + "님의 채널 입니다.")
+                        .channelType(ChannelType.PERSONAL.getCode())
+                        .build());
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(UserResponseDto.builder()
                         .id(user.getId())
@@ -81,6 +87,7 @@ public class UserServiceImpl implements UserService{
                         .nickName(user.getNickName())
                         .sido(user.getSido())
                         .sigungu(user.getSigungu())
+                        .profile(user.getProfileImg())
                         .build()));
 
     }
@@ -117,7 +124,7 @@ public class UserServiceImpl implements UserService{
                 .body(ApiResponse.success(LoginResponseDto.builder()
                                 .nickName(userOpt.get().getNickName())
                                 .profile(userOpt.get().getProfileImg())
-                                .isWorcation(worcation != null ? true : false)
+                                .isWorcation(worcation != null)
                                 .worcation(worcationResponseDto)
                                 .build()));
     }
@@ -148,9 +155,9 @@ public class UserServiceImpl implements UserService{
         String refreshToken = redisUtil.getData(authentication.getName());
 
         if(refreshToken == null)
-            log.info("토큰이 존재하지 않습니다.");
+            throw new CustomException(ErrorCode.UNKNOWN_TOKEN);
         if(!Objects.equals(refreshToken, request.getHeader("refreshToken")))
-            log.info("유효하지 않은 토큰입니다.");
+            throw new CustomException(ErrorCode.WRONG_TYPE_TOKEN);
 
         TokenDto tokenDto = tokenProvider.generateToken(authentication);
         tokenToHeader(tokenDto,response);
@@ -164,32 +171,27 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public ResponseEntity<ApiResponse<String>> nickNameCheck(String nickName) {
-        if(nickNameValidate(nickName)) {
-            return ResponseEntity.status(ErrorCode.DUPLICATE_NICKNAME.getStatus())
-                    .body(ApiResponse.error(ErrorCode.DUPLICATE_NICKNAME));
-        }
+        nickNameValidate(nickName); // 닉네임 중복 체크
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success("사용가능한 닉네임 입니다."));
     }
 
-    private boolean emailValidate(String email) {
+    private void emailValidate(String email) {
         Optional<User> user = userRepository.findByEmail(email);
         if(user.isPresent()) {
-            return true;
+            throw new CustomException(ErrorCode.DUPLICATE_EMAIL);
         }
-        return false;
     }
-    private boolean phoneNumberValidate(String phone) {
+    private void phoneNumberValidate(String phone) {
         if(userRepository.findByPhone(phone) != null) {
-            return true;
+            throw new CustomException(ErrorCode.DUPLICATE_PHONE_NUMBER);
         }
-        return false;
     }
-    private boolean nickNameValidate(String nickName) {
+    private void nickNameValidate(String nickName) {
         if(userRepository.findByNickName(nickName) != null) {
-            return true;
+            throw new CustomException(ErrorCode.DUPLICATE_NICKNAME);
         }
-        return false;
     }
     private void tokenToHeader(TokenDto tokenDto, HttpServletResponse response){
         response.addHeader("Authorization",tokenDto.accessToken());

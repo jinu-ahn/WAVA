@@ -1,6 +1,8 @@
 package com.wava.worcation.common.config.websocket;
 
+import com.wava.worcation.common.exception.CustomException;
 import com.wava.worcation.common.jwt.TokenProvider;
+import com.wava.worcation.common.response.ErrorCode;
 import com.wava.worcation.domain.channel.domain.Channel;
 import com.wava.worcation.domain.channel.domain.ChannelUser;
 import com.wava.worcation.domain.channel.repository.ChannelRepository;
@@ -48,7 +50,7 @@ public class StompHandler implements ChannelInterceptor {
                 String userToken = accessor.getFirstNativeHeader("Authorization");
 
                 if(userToken == null && !tokenProvider.validateToken(userToken.substring(7))) {
-                    throw new JwtException("토큰이 유효하지 않습니다.");
+                    throw new CustomException(ErrorCode.UNKNOWN_TOKEN);
                 }
                 String userEmail = tokenProvider.getAuthentication(userToken.substring(7)).getName();
 
