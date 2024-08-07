@@ -12,5 +12,6 @@ import java.util.Optional;
 public interface LikeRepository extends JpaRepository<Like, Long>  {
     Optional<Like>  findByUserAndFeed(User user, Feed feed);
     boolean existsByUserAndFeed(User user, Feed feed);
+    boolean existsByUserAndFeedId(User user, Long feedId);
     int countByFeed(Feed feed);
 }

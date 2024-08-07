@@ -69,7 +69,7 @@ public class PersonalServiceImpl implements PersonalService {
 
             return FeedSortResponseDto.builder()
                     .id(feed.getId())
-                    .userid(user.getId())
+                    .userid(userRepository.findByNickName(nickName).getId())
                     .heart(feed.getHeart())
                     .image(imageUrl)
                     .commentsCount(commentsCount)

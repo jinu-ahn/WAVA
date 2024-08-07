@@ -77,13 +77,13 @@ public class InfoController{
         }
     }
 
-    @GetMapping("/{feedId}/like")
+    @PostMapping("/{feedId}/like")
     public ResponseEntity<?> likeAdd (@PathVariable("feedId") Long feedId, @AuthUser User user){
         try{
             infoService.likeAdd(feedId,user);
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         }catch (Exception e){
-            return ResponseEntity.status(400).body("잘못된 요청입니다.");
+            return ResponseEntity.status(400).body(e.getMessage());
         }
     }
 
@@ -93,7 +93,7 @@ public class InfoController{
             infoService.likeDistract(feedId,user);
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
         }catch (Exception e){
-            return ResponseEntity.status(400).body("잘못된 요청입니다.");
+            return ResponseEntity.status(400).body(e.getMessage());
         }
     }
 
@@ -107,7 +107,7 @@ public class InfoController{
             return ResponseEntity.ok(commentMap);
         }
         catch (Exception e){
-            return ResponseEntity.status(400).body("400에러");
+            return ResponseEntity.status(400).body(e.getMessage());
         }
     }
 

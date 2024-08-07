@@ -142,17 +142,21 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
 
     @Override
     public void likeAdd(Long feedId, User user) {
-        Like like = Like.builder()
-                .user(user)
-                .feed(feedReository.findById(feedId).orElseThrow(ResourceNotFoundException::new))
-                .build();
-        likeRepository.save(like);
+        if (!likeRepository.existsByUserAndFeedId(user,feedId)){
+            Like like = Like.builder()
+                    .user(user)
+                    .feed(feedReository.findById(feedId).orElseThrow(ResourceNotFoundException::new))
+                    .build();
+            likeRepository.save(like);
+        }
     }
 
     @Override
     public void likeDistract(Long feedId, User user) {
-        Optional<com.wava.worcation.domain.channel.domain.Like> likeOptional = likeRepository.findByUserAndFeed(user,feedReository.findById(feedId).orElseThrow(ResourceNotFoundException::new));
-        likeOptional.ifPresent(likeRepository::delete);
+        if (likeRepository.existsByUserAndFeedId(user,feedId)){
+            Optional<com.wava.worcation.domain.channel.domain.Like> likeOptional = likeRepository.findByUserAndFeed(user,feedReository.findById(feedId).orElseThrow(ResourceNotFoundException::new));
+            likeOptional.ifPresent(likeRepository::delete);
+        }
     }
 
     @Override
