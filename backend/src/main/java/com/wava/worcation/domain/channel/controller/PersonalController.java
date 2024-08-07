@@ -1,6 +1,7 @@
 package com.wava.worcation.domain.channel.controller;
 
 import com.wava.worcation.common.response.ApiResponse;
+import com.wava.worcation.common.s3.service.S3ImageUpLoadService;
 import com.wava.worcation.domain.channel.dto.info.FeedSortResponseDto;
 import com.wava.worcation.domain.channel.dto.info.PersonalResponseDto;
 import com.wava.worcation.domain.channel.service.PersonalService;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
@@ -21,6 +23,7 @@ import java.util.Map;
 @Slf4j
 public class PersonalController {
     private final PersonalService personalService;
+    private final S3ImageUpLoadService s3ImageUpLoadService;
 
     @GetMapping("/{nickName}/info")
     public ResponseEntity<ApiResponse<PersonalResponseDto>> info(@PathVariable("nickName") String nickName) {
@@ -56,11 +59,17 @@ public class PersonalController {
         }
     }
 
-//    @PostMapping("/profile")
-//    public ResponseEntity<ApiResponse<?>> changeProfile(@RequestParam("file") MultipartFile file) {
-//        if (file.isEmpty()) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error());
-//        }
-//    }
-//    return ResponseEntity;
+    @PostMapping("/profile")
+    public ResponseEntity<ApiResponse<?>> changeProfile(@RequestParam("image") MultipartFile file, @AuthUser User user){
+        try {
+            if (file.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(HttpStatus.BAD_REQUEST,"잘못된 요청"));
+            }
+            String imageUrl = s3ImageUpLoadService.uploadImage(file);
+            return personalService.changeProfile(imageUrl,user);
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR,"에러 발생!"));
+        }
+    }
 }
