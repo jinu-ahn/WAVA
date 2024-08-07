@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 import useUserStore from "../../store/userStore";
 import dayjs from "dayjs";
 import ReactMarkdown from "react-markdown";
+import { useState } from "react";
+import mainLogic from "../../util/assistant-logic";
+import useTodoStore from "../../store/todoStore";
 
 
 const DashboardContent = () => {
@@ -14,6 +17,16 @@ const DashboardContent = () => {
   const handleClick = () => {
     navigate("/worcation");
   };
+
+  const [answer, setAnswer] = useState(null);
+  const ai_test = async() => {
+    const comment = await mainLogic();
+    console.log(comment)
+    setAnswer(comment);
+  }
+
+  console.log(useTodoStore.getState().events.join(','))
+
   return (
     <>
       <div className="bg-white text-mainTxt text-center flex flex-col h-full">

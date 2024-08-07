@@ -1,6 +1,6 @@
 import callAssistant from "./gpt";
 import datas from "./test-data";
-
+import useTodoStore from "../store/todoStore";
 
 const prompts = {
     "allDayTasks": "사용자의 하루 일정 정보와 아래의 문장을 참고해서 오늘 할 일을 브리핑 하세요. 할 일을 오전과 오후 나눠서 간단히 브리핑을 하고, 그 뒤에 중요도가 높은 업무들을 content 내용을 요약한 것도 포함해서 한 번 더 요약해서 제공하세요. 중요 일정들은 content를 요약한 내용과 중요도를 포함해서 작성하세요.",
@@ -9,7 +9,9 @@ const prompts = {
     "monthlyReview": "사용자의 월간 일정 정보를 기반으로 해당 월에 수행한 일정을 요약하고, 일과 여가 시간의 합계를 계산하여 제공하며, 중요 일정을 요약하여 제공하세요."
 };
 
-const dataString = "사용자의 하루 일정 정보는 " + JSON.stringify(datas) + " 입니다.";
+// const dataString = "사용자의 하루 일정 정보는 " + JSON.stringify(datas) + " 입니다.";
+const toDos = useTodoStore.getState().events
+const dataString = "사용자의 하루 일정 정보는 " + JSON.stringify(toDos) + " 입니다.";
 const now = "현재 시간은 " + getCurrentDate(false) + "입니다. "
 
 // function mainLogic() {
