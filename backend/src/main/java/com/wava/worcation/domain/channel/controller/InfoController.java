@@ -59,7 +59,6 @@ public class InfoController{
         }
     }
 
-
     @GetMapping("/{feedId}")
     public ResponseEntity<?> viewFeed(@PathVariable("feedId") Long feedId, @AuthUser User user) {
         log.info("{}",feedId);
