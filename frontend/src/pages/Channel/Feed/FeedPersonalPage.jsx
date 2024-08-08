@@ -21,7 +21,7 @@ function FeedPersonalPage() {
 
   const [loading, setLoading] = useState(false);
 
-  const [pages, setPages] = useState(1);
+  const [pages, setPages] = useState(0);
   const [maxPage, setMaxPage] = useState(-1);
 
   const [isNoContent, setIsNoContent] = useState(false);
@@ -33,16 +33,14 @@ function FeedPersonalPage() {
       try {
         setLoading(true);
         const feedInfoResp = await readFeedInfoRequest(userId);
-        console.log(feedInfoResp);
+        if (feedInfoResp?.data) setUserInfo(feedInfoResp?.data);
         const feedContResp = await readFeedContentRequest(userId);
         if (feedContResp?.data?.data?.length > 0) {
-          console.log(feedContResp?.data?.data);
-          setMaxPage(feedContResp?.data?.totalPages);
+          setMaxPage(feedContResp?.data?.totalPages - 1); // 0부터 -1까지
           setContents(feedContResp.data.data);
         } else {
           setIsNoContent(true);
         }
-        if (feedInfoResp?.data) setUserInfo(feedInfoResp?.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
@@ -69,7 +67,6 @@ function FeedPersonalPage() {
       )
     );
     setSelectedFeedId(editedContent?.id);
-    // setSelectedContent(editedContent?.id);
   };
 
   const handleDeleteContent = (contentId) => {
@@ -102,6 +99,7 @@ function FeedPersonalPage() {
   };
 
   const loadMore = async () => {
+    if (loading) return;
     try {
       if (pages >= maxPage) return;
       setLoading(true);
@@ -126,7 +124,6 @@ function FeedPersonalPage() {
             setUserInfo={setUserInfo}
             openCreateDrawer={() => setIsCreateDrawerOpen(true)}
           />
-
           {isNoContent && <NoContent />}
           <ContentItemGrid
             loadMore={loadMore}

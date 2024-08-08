@@ -55,7 +55,7 @@ const Explorer = () => {
           <NavLink className="hover:text-btnBlue" to="/dashboard">
             <div
               className="py-3.5 flex justify-center items-center tooltip tooltip-right  z-[11]"
-              data-tip="dashboard"
+              data-tip="Dashboard"
             >
               <CalendarDaysIcon
                 className={`size-8  hover:text-btnBlue ${

@@ -48,6 +48,7 @@ const Calendar = ({ calendarRef }) => {
     events,
     addEvent,
     fetchEvents,
+    fetchTodayEvents,
     updateEvent,
     deleteEvent,
   } = useTodoStore();
@@ -58,6 +59,12 @@ const Calendar = ({ calendarRef }) => {
       await fetchEvents();
     })();
   }, [fetchEvents]);
+
+  useEffect(() => {
+    (async () => {
+      await fetchTodayEvents();
+    })();
+  }, [fetchTodayEvents]);
 
   // 필터링된 이벤트 설정
   useEffect(() => {

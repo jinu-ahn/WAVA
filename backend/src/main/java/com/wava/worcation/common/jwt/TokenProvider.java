@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -110,8 +111,8 @@ public class TokenProvider {
                     .build()
                     .parseClaimsJws(accessToken)
                     .getBody();
-        }catch (ExpiredJwtException e) {
-            throw new CustomException(ErrorCode.EXPIRED_TOKEN);
+        }catch (JwtException e) {
+            throw new JwtException(ErrorCode.EXPIRED_TOKEN.getMessage());
         }
     }
 
@@ -128,12 +129,16 @@ public class TokenProvider {
                     .parseClaimsJws(token);
             return true;
         } catch (SecurityException | MalformedJwtException e) {
+            log.debug("[TOKEN ERROR] : {}",ErrorCode.WRONG_TYPE_TOKEN.getMessage());
             throw new JwtException(ErrorCode.WRONG_TYPE_TOKEN.getMessage());
         } catch (ExpiredJwtException e) {
+            log.debug("[TOKEN ERROR] : {}",ErrorCode.EXPIRED_TOKEN.getMessage());
             throw new JwtException(ErrorCode.EXPIRED_TOKEN.getMessage());
         } catch (UnsupportedJwtException e) {
-            throw  new JwtException(ErrorCode.UNSUPPORTED_TOKEN.getMessage());
+            log.debug("[TOKEN ERROR] : {}",ErrorCode.UNSUPPORTED_TOKEN.getMessage());
+            throw new JwtException(ErrorCode.UNSUPPORTED_TOKEN.getMessage());
         } catch (IllegalArgumentException e) {
+            log.debug("[TOKEN ERROR] : {}",ErrorCode.UNKNOWN_TOKEN.getMessage());
             throw new JwtException(ErrorCode.UNKNOWN_TOKEN.getMessage());
         }
     }

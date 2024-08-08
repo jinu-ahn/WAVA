@@ -24,8 +24,6 @@ public class WorcationController {
             return worcationService.createWorcation(worcationRequestDto, user);
         } catch (WorcationNotFoundException e) {
             return ResponseEntity.status(400).body("존재하지 않는 워케이션 입니다.");
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("일시적인 오류가 발생하였습니다. 다시 시도해주세요.");
         }
     }
 

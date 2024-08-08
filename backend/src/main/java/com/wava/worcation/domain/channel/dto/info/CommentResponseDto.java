@@ -14,4 +14,5 @@ public class CommentResponseDto {
     private Long userid;
     private String comment;
     private Instant createdAt;
+    private String profile;
 }

@@ -1,6 +1,8 @@
 package com.wava.worcation.domain.channel.service;
 
+import com.wava.worcation.common.exception.CustomException;
 import com.wava.worcation.common.exception.ResourceNotFoundException;
+import com.wava.worcation.common.response.ErrorCode;
 import com.wava.worcation.domain.channel.domain.*;
 import com.wava.worcation.domain.channel.dto.info.CommentResponseDto;
 import com.wava.worcation.domain.channel.dto.info.FeedResponseDto;
@@ -18,11 +20,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.*;
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -102,6 +104,7 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
                         .comment(feedComment.getComment())
                         .createdAt(feedComment.getCreatedAt())
                         .id(feedComment.getId())
+                        .profile(feedComment.getUser().getProfileImg())
                         .userid(feedComment.getUser().getId())
                         .feedid(feedComment.getFeed().getId())
                         .build();
@@ -167,7 +170,7 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
 
     @Override
     public Page<FeedSortResponseDto> searchfeed(int pages, String content, User user) {
-        Pageable pageable = PageRequest.of(pages, 20);
+        Pageable pageable = PageRequest.of(pages, 20,Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Feed> feedPage = feedRepository.findByContentContaining(content,pageable);
         return feedPage.map(feed -> {
             String imageUrl = imageRepository.findFirstByFeedOrderByFeed(feed).getImageUrl();
@@ -192,4 +195,16 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
         return feedRepository.countByChannelId(channelRepository.findChannelByUserId(userId).getId());
     }
 
+    @Override
+    public void deleteFeed(Long feedId, User user) {
+        Feed feed = feedRepository.findById(feedId).orElseThrow(()->new ResourceNotFoundException("피드가 없음"));
+        if(feed.getChannel() != channelRepository.findChannelByUserId(user.getId())){
+            log.info(feed.getChannel().toString());
+            log.info(channelRepository.findByUserId(user.getId()).toString());
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+        List<Image> imageList = imageRepository.findAllByFeed(feed);
+        imageRepository.deleteAll(imageList);
+        feedRepository.delete(feed);
+    }
 }

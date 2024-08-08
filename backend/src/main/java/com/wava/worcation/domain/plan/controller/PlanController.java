@@ -53,6 +53,16 @@ public class PlanController {
             return  ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error(ErrorCode.SERVER_ERROR));
         }
     }
+    @GetMapping("/view/today")
+    public ResponseEntity<ApiResponse<List<PlanResponseDto>>> viewTodayPlan(@AuthUser User user){
+        try {
+            List<PlanResponseDto> response = planService.viewTodayPlan(user);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(ApiResponse.success(response));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponse.error(ErrorCode.SERVER_ERROR));
+        }
+    }
     @PatchMapping("/update/{planId}")
     public ResponseEntity<ApiResponse<PlanResponseDto>> updatePlan(@RequestBody PlanRequestDto planRequestDto,@PathVariable Long planId){
         try {

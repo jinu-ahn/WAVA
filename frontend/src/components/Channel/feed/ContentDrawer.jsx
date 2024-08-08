@@ -22,6 +22,7 @@ import Swal from "sweetalert2";
 import {
   createCommentFeedRequest,
   createLikeFeedRequest,
+  deleteFeedRequest,
   deleteLikeFeedRequest,
   readOneFeedDetailRequest,
 } from "../../../api/channelFeedApi";
@@ -125,6 +126,7 @@ const ContentDrawer = ({
     }).then((result) => {
       if (result.isConfirmed) {
         console.log(feedContent);
+        deleteFeedRequest(feedContent?.id);
         onDelete(feedContent?.id);
         handleCloseReset();
         Swal.fire("컨텐츠가 성공적으로 삭제되었습니다.", "", "success");
@@ -438,9 +440,7 @@ const ContentDrawer = ({
                     <h2 className="text-xl font-bold mb-2">
                       {editedContent.title}
                     </h2>
-                    {/* <p className="text-gray-600 mb-4">
-                      {editedContent.authorName} {editedContent.visitDate}
-                    </p> */}
+
                     <p className="mb-6">{editedContent.content}</p>
 
                     {/* 댓글 섹션 - 편집 모드가 아닐 때만 표시 */}

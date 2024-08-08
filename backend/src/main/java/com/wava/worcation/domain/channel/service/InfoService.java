@@ -20,4 +20,5 @@ public interface InfoService {
 
     int feedCount(Long userId);
 
+    void deleteFeed(Long feedId, User user);
 }

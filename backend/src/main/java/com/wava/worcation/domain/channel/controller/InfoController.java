@@ -1,10 +1,13 @@
 package com.wava.worcation.domain.channel.controller;
 
+import com.wava.worcation.common.exception.CustomException;
 import com.wava.worcation.common.response.ApiResponse;
 import com.wava.worcation.common.s3.service.S3ImageUpLoadService;
 import com.wava.worcation.domain.channel.dto.info.CommentRequestDto;
 import com.wava.worcation.domain.channel.dto.info.FeedResponseDto;
 import com.wava.worcation.domain.channel.dto.info.FeedSortResponseDto;
+import com.wava.worcation.domain.channel.repository.ChannelRepository;
+import com.wava.worcation.domain.channel.repository.FeedRepository;
 import com.wava.worcation.domain.channel.service.InfoService;
 import com.wava.worcation.domain.user.domain.AuthUser;
 import com.wava.worcation.domain.user.domain.User;
@@ -29,6 +32,10 @@ public class InfoController{
     public final InfoService infoService;
     @Autowired
     private S3ImageUpLoadService s3ImageUpLoadService;
+    @Autowired
+    private FeedRepository feedRepository;
+    @Autowired
+    private ChannelRepository channelRepository;
 
     @PostMapping("/create")
     public ResponseEntity<?> createInfo(
@@ -56,6 +63,20 @@ public class InfoController{
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return ResponseEntity.status(500).body("잘못된 요청입니다.");
+        }
+    }
+
+    @DeleteMapping("{feedId}/delete")
+    public ResponseEntity<?> deleteFeed(@PathVariable("feedId") Long feedId, @AuthUser User user) throws Exception {
+        try {
+            infoService.deleteFeed(feedId,user);
+            return ResponseEntity.ok().body("성공적으로 삭제완료");
+        }
+        catch (CustomException e){
+            return ResponseEntity.status(e.getErrorCode().getStatus()).body(e.getMessage());
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
@@ -111,9 +132,8 @@ public class InfoController{
     }
 
 
-    @GetMapping("/{nickname}/search")
-    public ResponseEntity<ApiResponse<?>> searchFeed(@PathVariable String nickname,
-                                                     @RequestParam(defaultValue = "0") int page,
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<?>> searchFeed(@RequestParam(defaultValue = "0") int page,
                                                      @RequestParam String content,
                                                      @AuthUser User user) {
         try {

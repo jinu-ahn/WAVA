@@ -19,4 +19,5 @@ public interface GroupChannelService {
     ResponseEntity<ApiResponse<GroupDetailResponseDto>> getGroupDetail(final Long channelId);
 
     ResponseEntity<ApiResponse<GroupChannelResponseDto>> updateMemo(final Long channelId, final String memo);
+    ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> userJoinChannel(final User user);
 }

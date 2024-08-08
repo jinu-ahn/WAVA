@@ -107,7 +107,7 @@ function GraphView() {
         plugins={[centerTextPlugin]} // 플러그인을 이곳에 추가
         // height={"31rem"}
       />
-      <div className="mt-3">
+      <div className="mb-1">
         {`완료 : ${finishCnt} 개`} <br />
         {`미완료 : ${filteredEvents.length - finishCnt} 개`} <br />
       </div>

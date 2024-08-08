@@ -17,11 +17,18 @@ public enum ErrorCode {
     CHANNEL_FULL(HttpStatus.FORBIDDEN, "채널 인원이 가득찼습니다."),
     SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "일시적인 오류가 발생했습니다"),
     BLACK_LIST_TOKEN(HttpStatus.FORBIDDEN,"로그아웃 된 유저입니다."),
-    UNKNOWN_TOKEN(HttpStatus.valueOf(400), "토큰이 존재하지 않습니다."),
-    WRONG_TYPE_TOKEN(HttpStatus.valueOf(401), "잘못된 타입의 토큰입니다."),
-    EXPIRED_TOKEN(HttpStatus.valueOf(402), "만료된 토큰입니다."),
-    UNSUPPORTED_TOKEN(HttpStatus.valueOf(403), "지원되지 않는 토큰입니다."),
-    PLAN_NOT_FOUND(HttpStatus.NOT_FOUND,"일정을 찾을 수 없습니다.");
+    UNKNOWN_TOKEN(HttpStatus.BAD_REQUEST, "토큰이 존재하지 않습니다."),
+    WRONG_TYPE_TOKEN(HttpStatus.UNAUTHORIZED, "잘못된 타입의 토큰입니다."),
+    EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
+    UNSUPPORTED_TOKEN(HttpStatus.FORBIDDEN, "지원되지 않는 토큰입니다."),
+    PLAN_NOT_FOUND(HttpStatus.NOT_FOUND,"일정을 찾을 수 없습니다."),
+    DUPLICATE_PIN_ORDER(HttpStatus.CONFLICT,"핀 번호가 중복되었습니다."),
+    NOT_FOUND_MAP_PIN(HttpStatus.NOT_FOUND,"핀 번호를 찾을 수 없습니다."),
+    PERMISSION_DENIED(HttpStatus.FORBIDDEN,"해당 작업을 수행할 권한이 없습니다."),
+    AUTHENTICATION_ERROR(HttpStatus.UNAUTHORIZED, "인증에 실패했습니다."),
+    FEED_NOT_FOUND(HttpStatus.NOT_FOUND,"피드를 찾을 수 없습니다."),
+    EXPIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED,"재 로그인이 필요합니다."),
+    ALREADY_EXIST_WORCATION(HttpStatus.CONFLICT, "진행중인 워케이션이 있습니다.");
 
     private HttpStatus status;
     private String message;
