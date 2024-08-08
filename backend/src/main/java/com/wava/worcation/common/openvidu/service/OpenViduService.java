@@ -29,9 +29,9 @@ public class OpenViduService {
         this.openvidu = new OpenVidu(openviduUrl,secret);
     }
 
-    public ResponseEntity<ApiResponse<String>> createSession(String channelId) throws Exception{
-//        SessionProperties properties = SessionProperties.Builder(channelId);
-        Session session = openvidu.createSession();
+    public ResponseEntity<ApiResponse<String>> createSession(Map <String , String> params) throws Exception{
+        SessionProperties properties = SessionProperties.fromJson(params).build();
+        Session session = openvidu.createSession(properties);
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(session.getSessionId()));
 
     }

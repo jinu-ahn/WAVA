@@ -57,9 +57,6 @@ public class Channel {
     @Column(name = "channel_type", nullable = false, length = 4)
     private String channelType;
 
-    @Column(name ="channel_session_id")
-    private String channelSessionId;
-
     @OneToMany(mappedBy = "channel", cascade = CascadeType.REMOVE)
     private List<Chat> chat;
 

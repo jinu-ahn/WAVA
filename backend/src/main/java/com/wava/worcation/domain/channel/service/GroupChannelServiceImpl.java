@@ -60,7 +60,6 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                 .channelType(ChannelType.GROUP.getCode())    //C001 : 그룹 ,  C002 : 피드
                 .channelSido(groupChannelRequestDto.getSido())
                 .channelSigungu(groupChannelRequestDto.getGugun())
-                .channelSessionId(openViduService.createSession(channel.getId()).getBody().getData())
                 .build();
 
          channelRepository.save(channel);
@@ -79,7 +78,6 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                  .channelSido(channel.getChannelSido())
                  .channelSigungu(channel.getChannelSigungu())
                  .channelMemo(channel.getChannelMemo())
-                 .channelSessionId(channel.getChannelSessionId())
                  .userCount(channelUserRepository.countByChannelId(channel.getId()))
                  .build();
 
@@ -145,7 +143,6 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                         .channelId(channel.getId())
                         .channelTitle(channel.getChannelTitle())
                         .channelDescription(channel.getChannelDescription())
-                        .channelSessionId(channel.getChannelSessionId())
                         .user(userResponseDtoList)
                         .build()));
     }
