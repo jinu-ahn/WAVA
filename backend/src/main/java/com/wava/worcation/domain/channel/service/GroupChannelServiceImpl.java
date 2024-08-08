@@ -60,7 +60,7 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                 .channelType(ChannelType.GROUP.getCode())    //C001 : 그룹 ,  C002 : 피드
                 .channelSido(groupChannelRequestDto.getSido())
                 .channelSigungu(groupChannelRequestDto.getGugun())
-                .channelSessionId(openViduService.createSession().getBody().getData())
+                .channelSessionId(openViduService.createSession(channel.getId()).getBody().getData())
                 .build();
 
          channelRepository.save(channel);

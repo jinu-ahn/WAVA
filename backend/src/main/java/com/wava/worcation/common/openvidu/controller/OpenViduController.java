@@ -28,9 +28,9 @@ public class OpenViduController {
      * @throws Exception 세션 생성 중 오류가 발생하면 발생
      */
     @PostMapping("/create/session")
-    public ResponseEntity<ApiResponse<String>> createSession() throws Exception {
-        log.debug("createSession");
-        return openViduService.createSession();
+    public ResponseEntity<ApiResponse<String>> createSession(@RequestBody(required = false) Map<String, String> params) throws Exception {
+
+        return openViduService.createSession(params);
     }
 
     /**
