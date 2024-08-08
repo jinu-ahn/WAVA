@@ -14,6 +14,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -83,7 +86,30 @@ public class PlanServiceImpl implements PlanService {
                 .collect(Collectors.toList());
     }
 
-
+    @Override
+    public List<PlanResponseDto> viewTodayPlan(User user) {
+        log.info("유저 아이디{}",user.getId());
+        Worcation worcation = worcationRepository.findByUserId(user.getId());
+        log.info(worcation.toString());
+        LocalDate today = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        String todayString = today.format(formatter);
+        List<Plan> plans = planRepository.findAllByWorcationIdAndTaskStartTimeStartingWith(worcation.getId(), todayString);
+        log.info("리스트{}",plans.toString());
+        return plans.stream()
+        .map(plan -> PlanResponseDto.builder()
+                .id(plan.getId())
+                .title(plan.getTaskTitle())
+                .content(plan.getTaskContent())
+                .start(plan.getTaskStartTime())
+                .end(plan.getTaskEndTime())
+                .important(plan.getTaskImportant())
+                .type(plan.getTaskType())
+                .className(plan.getTaskImportant())
+                .isFinish(plan.getTaskIsFinish())
+                .build())
+        .collect(Collectors.toList());
+    }
 
     @Override
     public PlanResponseDto updatePlan(PlanRequestDto planRequestDto, Long planId) {
