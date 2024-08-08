@@ -126,6 +126,14 @@ public class MapPinServiceImpl implements MapPinService {
                 .build();
     }
 
+    @Override
+    public void deletePin(Long pinId) {
+        mapPinRepository.findById(pinId).orElseThrow(
+                () -> new CustomException(ErrorCode.NOT_FOUND_MAP_PIN)
+        );
+        mapPinRepository.deleteById(pinId);
+    }
+
     private Channel validateChannel(final Long channelId){
         Channel channel = channelRepository.findById(channelId).orElseThrow(
                 () -> new CustomException(ErrorCode.CHANNEL_NOT_FOUND)
@@ -137,4 +145,5 @@ public class MapPinServiceImpl implements MapPinService {
         if(mapPinRepository.existsByPinOrderAndChannelId(pinId,channelId))
             throw new CustomException(ErrorCode.DUPLICATE_PIN_ORDER);
     }
+
 }

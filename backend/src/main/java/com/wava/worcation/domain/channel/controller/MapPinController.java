@@ -26,9 +26,15 @@ public class MapPinController {
 
     @PatchMapping("/{pinId}/update")
     private ResponseEntity<ApiResponse<MapPinResponseDto>> updatePin(@PathVariable("pinId") Long pinId, @RequestBody MapPinRequestDto requestDto) {
-        log.info("in?");
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(mapPinService.updatePin(pinId, requestDto)));
+    }
+
+    @DeleteMapping("/{pinId}/delete")
+    private ResponseEntity<ApiResponse<String>> deletePin(@PathVariable("pinId") Long pinId) {
+        mapPinService.deletePin(pinId);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.success("PIN_DELETE_SUCCESS"));
     }
 
 }
