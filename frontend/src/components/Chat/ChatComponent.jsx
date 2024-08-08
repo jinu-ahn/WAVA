@@ -163,8 +163,8 @@ function ChatComponent() {
 
   return (
     <>
-      <div className="flex flex-col items-end">
-        <div className="bg-blue-400 w-full flex flex-col rounded-t-lg overflow-x-auto min-h-screen max-h-screen">
+      <div className="flex flex-col h-full">
+        <div className="bg-mainBlue w-full flex flex-col rounded-t-lg overflow-x-auto flex-grow">
           {messages.map((item, index) => {
             const showDate =
               index === 0 || isChangeDate(messages[index - 1], item);
