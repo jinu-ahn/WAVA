@@ -37,18 +37,22 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
             ErrorCode errorCode = null;
 
             if(e.getMessage().equals(ErrorCode.EXPIRED_TOKEN.getMessage())) {
-                Authentication authentication = tokenProvider.getAuthentication(request.getHeader("refreshToken"));
-                if (redisUtil.getData(authentication.getName()) == null) {
+                if(request.getHeader("refreshToken") == null) { // 만약 헤더에 refreshToken 이 없다면 토큰 만료 에러발생
                     errorCode = ErrorCode.EXPIRED_TOKEN;
-                } else {
-                    TokenDto tokenDto = tokenProvider.generateToken(authentication);
-                    response.setHeader("Authorization", tokenDto.accessToken());
-                    response.setHeader("refreshToken", tokenDto.refreshToken());
-                    response.setStatus(HttpStatus.CREATED.value());
+                } else { // RefreshToken이 있다면 reissue 요청이므로 refreshToken으로 Authentication을 만들고 토큰 재발급
+                    Authentication authentication = tokenProvider.getAuthentication(request.getHeader("refreshToken"));
+                    if (redisUtil.getData(authentication.getName()) == null) {
+                        errorCode = ErrorCode.EXPIRED_REFRESH_TOKEN;
+                    } else {
+                        TokenDto tokenDto = tokenProvider.generateToken(authentication);
+                        response.setHeader("Authorization", tokenDto.accessToken());
+                        response.setHeader("refreshToken", tokenDto.refreshToken());
+                        response.setStatus(HttpStatus.CREATED.value());
 
-                    redisUtil.setData(authentication.getName(), tokenDto.refreshToken(), tokenDto.refreshTokenExpiresIn());
+                        redisUtil.setData(authentication.getName(), tokenDto.refreshToken(), tokenDto.refreshTokenExpiresIn());
 
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    }
                 }
             } else if(e.getMessage().equals(ErrorCode.UNKNOWN_TOKEN.getMessage())){
                 errorCode = ErrorCode.UNKNOWN_TOKEN;
