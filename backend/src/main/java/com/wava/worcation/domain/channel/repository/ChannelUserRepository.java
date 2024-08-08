@@ -10,4 +10,5 @@ import java.util.List;
 public interface ChannelUserRepository extends JpaRepository<ChannelUser, Long> {
     List<ChannelUser> findByChannelId(Long channelId);
     int countByChannelId(@Param("channel_id") Long channel_id);
+    List<ChannelUser> findByUserId(Long userId);
 }
