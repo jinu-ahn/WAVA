@@ -1,10 +1,9 @@
 package com.wava.worcation.common.config;
 
-
-import com.wava.worcation.common.jwt.AuthenticationFilter;
-import com.wava.worcation.common.jwt.TokenProvider;
+import com.wava.worcation.common.jwt.*;
 import com.wava.worcation.common.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -60,6 +59,11 @@ public class SecurityConfiguration {
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(new AuthenticationFilter(tokenProvider,redisUtil), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtExceptionFilter(), AuthenticationFilter.class)
+                .exceptionHandling(e -> {
+                    e.authenticationEntryPoint(new CustomAuthenticationEntryPoint());
+                    e.accessDeniedHandler(new CustomAccessDeniedHandler());
+                })
                 .build();
     }
 
