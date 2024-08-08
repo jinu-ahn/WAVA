@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { Camera, Edit } from "lucide-react";
+import { Camera, CheckIcon, Edit, XIcon } from "lucide-react";
 import FollowDrawer from "./FollowDrawer";
 import useDeviceStore from "../../../store/deviceStore";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
+import ProfileIconBtn from "./ProfileIconBtn";
+import { createProfileImageRequest } from "../../../api/channelFeedApi";
 
 const FeedHeader = ({ openCreateDrawer, userId, setUserInfo, userInfo }) => {
   const isMobile = useDeviceStore((state) => state.isMobile);
@@ -10,6 +12,8 @@ const FeedHeader = ({ openCreateDrawer, userId, setUserInfo, userInfo }) => {
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [isFollowDrawerOpen, setIsFollowDrawerOpen] = useState(false);
   const [followDrawerTab, setFollowDrawerTab] = useState("followers");
+
+  const [editProfile, setEditProfile] = useState(null);
 
   const handleNameChange = (e) =>
     setUserInfo((state) => ({ ...state, nickname: e.target.value }));
@@ -26,48 +30,87 @@ const FeedHeader = ({ openCreateDrawer, userId, setUserInfo, userInfo }) => {
   };
 
   const handleProfilePicChange = (e) => {
-    console.log("Profile picture change requested", e.target.files[0]);
+    setEditProfile({
+      file: e.target.files[0],
+      url: URL.createObjectURL(e.target.files[0]),
+    });
+    // console.log("Profile picture change requested", e.target.files[0]);
   };
-
   const openFollowDrawer = (tab) => {
     setFollowDrawerTab(tab);
     setIsFollowDrawerOpen(true);
   };
 
+  const canceldProfilePicChange = () => {
+    setEditProfile(null);
+  };
+
+  const handleSubmitProfilePicChange = async () => {
+    if (!editProfile) return;
+    const formData = new FormData();
+    formData.append("image", editProfile?.file);
+    const resp = await createProfileImageRequest(formData);
+    if (resp) {
+      window.location.reload();
+    }
+  };
   return (
     <div className={isMobile ? "p-4" : "p-6"}>
       <div
         className={`flex ${isMobile ? "flex-col items-center" : "items-start"}`}
       >
-        <div className={`relative ${isMobile ? "mb-4" : "mr-6"}`}>
-          {!userInfo ? (
-            <div
-              className="
-          rounded-full w-24 h-24 mx-auto bg-gray-200 hover:bg-gray-300 transition-colors duration-200 flex items-center justify-center"
-            />
-          ) : userInfo?.profileImage ? (
+        {!editProfile && (
+          <div className={`relative ${isMobile ? "mb-4" : "mr-6"}`}>
+            {!userInfo ? (
+              <div
+                className="
+            rounded-full w-24 h-24 mx-auto bg-gray-200 hover:bg-gray-300 transition-colors duration-200 flex items-center justify-center"
+              />
+            ) : userInfo?.profileImage ? (
+              <img
+                src={userInfo?.profileImage}
+                alt="Profile"
+                className="rounded-full w-24 h-24 object-cover shadow-md"
+              />
+            ) : (
+              <UserCircleIcon className="w-24 h-24 rounded-full shadow-md" />
+            )}
+
+            <ProfileIconBtn style={"bg-white"}>
+              <Camera size={20} />
+              <input
+                id="profile-pic-upload"
+                type="file"
+                className="hidden"
+                onChange={handleProfilePicChange}
+                accept="image/*"
+              />
+            </ProfileIconBtn>
+          </div>
+        )}
+
+        {editProfile && (
+          <div className={`relative ${isMobile ? "mb-4" : "mr-6"}`}>
             <img
-              src={userInfo?.profileImage}
-              alt="Profile"
               className="rounded-full w-24 h-24 object-cover shadow-md"
+              src={editProfile?.url}
             />
-          ) : (
-            <UserCircleIcon className="w-24 h-24 rounded-full shadow-md" />
-          )}
-          <label
-            htmlFor="profile-pic-upload"
-            className="absolute bottom-0 right-0 bg-white rounded-full p-1 shadow-md cursor-pointer"
-          >
-            <Camera size={20} />
-          </label>
-          <input
-            id="profile-pic-upload"
-            type="file"
-            className="hidden"
-            onChange={handleProfilePicChange}
-            accept="image/*"
-          />
-        </div>
+            <ProfileIconBtn
+              onClick={canceldProfilePicChange}
+              isLeft
+              style={"bg-white"}
+            >
+              <XIcon className="text-red-600" size={20} />
+            </ProfileIconBtn>
+            <ProfileIconBtn
+              onClick={handleSubmitProfilePicChange}
+              style={"bg-green-500"}
+            >
+              <CheckIcon className=" text-white" size={20} />
+            </ProfileIconBtn>
+          </div>
+        )}
+
         <div className={`flex-1 ${isMobile ? "w-full" : ""}`}>
           <div
             className={`flex ${
@@ -150,7 +193,9 @@ const FeedHeader = ({ openCreateDrawer, userId, setUserInfo, userInfo }) => {
             <span>
               게시물{" "}
               <span className="font-semibold">
-                {userInfo?.feedCount || "-"}
+                {Number.isInteger(userInfo?.feedCount)
+                  ? userInfo?.feedCount
+                  : "-"}
               </span>
             </span>
           </div>
