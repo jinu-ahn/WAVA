@@ -33,7 +33,7 @@ const FeedHeader = ({ openCreateDrawer, userId, setUserInfo, userInfo }) => {
   };
 
   const handleBioSubmit = async () => {
-    await updateFeedDescription(isEditingBio);
+    await updateFeedDescription(userInfo.description);
     setIsEditingBio(false);
   };
 

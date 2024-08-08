@@ -52,6 +52,7 @@ function FeedAroundPage() {
   const searchHandle = async (searchText) => {
     const resp = await searchFeedRequest(searchText);
     if (resp?.data?.data.length > 0) {
+      setIsNoContent(false);
       setContents(resp?.data?.data);
       setMaxPage(resp?.data?.totalPages);
     } else {
@@ -100,6 +101,11 @@ function FeedAroundPage() {
     }
   };
 
+  const handleDeleteContent = (contentId) => {
+    setContents((prevContents) =>
+      prevContents.filter((content) => content.id !== contentId)
+    );
+  };
   return (
     <div className="flex h-full">
       <div className="flex flex-col flex-1">
@@ -113,6 +119,7 @@ function FeedAroundPage() {
           onSelectContent={handleSelectContent}
         />
         <ContentDrawer
+          onDelete={handleDeleteContent}
           isOpen={isDrawerOpen}
           onClose={handleCloseDrawer}
           feedId={selectedFeedId}

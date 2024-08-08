@@ -157,3 +157,10 @@ export const updateFeedDescription = async (desc) => {
     local.patch(`${address}/personal/description`, { description: desc })
   );
 };
+
+// 개인 피드 삭제
+export const deleteFeedRequest = async (feedId) => {
+  return await handleRequest(() =>
+    local.delete(`${address}/feed/${feedId}/delete`)
+  );
+};
