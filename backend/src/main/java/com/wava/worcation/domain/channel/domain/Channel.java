@@ -73,6 +73,8 @@ public class Channel {
     public void memoUpdate(String memo) {
         this.channelMemo = memo;
     }
-
+    public void updateDescription(String description) {
+        this.channelDescription = description;
+    }
 
 }

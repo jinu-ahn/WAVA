@@ -83,9 +83,16 @@ public class PersonalServiceImpl implements PersonalService {
     }
 
     @Override
-    public ResponseEntity changeProfile(String imageUrl, User user) {
+    public ResponseEntity<?> changeProfile(String imageUrl, User user) {
         user.updateProfileImg(imageUrl);
         userRepository.save(user);
+        return ResponseEntity.ok().body(ApiResponse.success(HttpStatus.OK));
+    }
+
+    @Override
+    public ResponseEntity<?> changeDescription(String description, User user) {
+        Channel channel = channelRepository.findChannelByUserId(userRepository.findByNickName(user.getNickName()).getId());
+        channel.updateDescription(description);
         return ResponseEntity.ok().body(ApiResponse.success(HttpStatus.OK));
     }
 }

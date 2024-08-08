@@ -13,4 +13,5 @@ public interface PersonalService {
     Page<FeedSortResponseDto> personalFeed(int pages, String nickname, User user);
 
     ResponseEntity changeProfile(String imageUrl,User user);
+    ResponseEntity changeDescription(String description,User user);
 }
