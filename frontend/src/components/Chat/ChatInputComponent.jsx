@@ -1,23 +1,23 @@
 import React from "react";
-import { ArrowUpCircleIcon } from "@heroicons/react/24/outline"; 
+import { ArrowUpCircleIcon } from "@heroicons/react/24/outline";
 
 function ChatInputComponent(props) {
-    return (
-        <>
-            <div className="mb-3 p-2 w-1/4 flex shadow-md rounded-b-lg">
-                <input
-                    type="text"
-                    value={props.inputValue}
-                    onChange={props.handleInputChange}
-                    onKeyDown={props.handleKeyDown}
-                    className="flex-grow p-2 focus:outline-none"
-                />
-                <button className="text-white" onClick={props.sendMessage} >
-                    <ArrowUpCircleIcon className="w-10 fill-blue-600"/>
-                </button>            
-            </div>
-        </>
-    )
+  return (
+    <>
+      <div className="p-2 w-full flex shadow-md rounded-b-lg">
+        <input
+          type="text"
+          value={props.inputValue}
+          onChange={props.handleInputChange}
+          onKeyDown={props.handleKeyDown}
+          className="flex-grow p-2 focus:outline-none"
+        />
+        <button className="text-white" onClick={props.sendMessage}>
+          <ArrowUpCircleIcon className="w-10 fill-blue-600" />
+        </button>
+      </div>
+    </>
+  );
 }
 
-export default ChatInputComponent
+export default ChatInputComponent;

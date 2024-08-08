@@ -182,7 +182,7 @@ const GroupChannelPage = () => {
   return (
     <div className="flex h-screen">
       {/* 지도 컴포넌트 (3/4) */}
-      <div className="w-3/4 h-full p-4">
+      <div className="w-3/4 h-full">
         <MapComponent />
       </div>
 

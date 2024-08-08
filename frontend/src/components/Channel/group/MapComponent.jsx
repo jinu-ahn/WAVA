@@ -33,6 +33,7 @@ const MapComponent = () => {
 
         infowindow.current = new window.kakao.maps.InfoWindow({
           zIndex: 1,
+          removable: true,
         });
 
         const manager = new window.kakao.maps.drawing.DrawingManager({
@@ -149,8 +150,8 @@ const MapComponent = () => {
       text: "이 마커를 삭제하시겠습니까?",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#d33",
-      cancelButtonColor: "#3085d6",
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
       confirmButtonText: "삭제",
       cancelButtonText: "취소",
     }).then((result) => {
@@ -290,72 +291,85 @@ const MapComponent = () => {
     // 현재 지도 뷰는 유지
   }, [map, markers]);
 
+  // 검색 결과 목록에 마우스 오버 이벤트 추가
+  const handleMouseOverPlaceItem = useCallback(
+    (index) => {
+      const marker = markers[index];
+      if (marker) {
+        const position = marker.getPosition();
+        map.panTo(position);
+        displayInfowindow(marker, places[index].place_name);
+      }
+    },
+    [map, markers, places]
+  );
+
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex space-x-2">
-        <input
-          type="text"
-          value={keyword}
-          onChange={(e) => setKeyword(e.target.value)}
-          placeholder="검색할 키워드를 입력하세요"
-          className="p-2 border rounded flex-grow"
-        />
-        <button
-          onClick={searchPlaces}
-          className="p-2 bg-blue-500 text-white rounded"
-        >
-          검색하기
-        </button>
-        <button
-          onClick={resetMap}
-          className="p-2 bg-red-500 text-white rounded"
-        >
-          초기화
-        </button>
+    <div className="flex flex-col h-full relative">
+      <div className="absolute top-0 left-0 w-full p-4 bg-white bg-opacity-60 z-10">
+        <div className="flex space-x-2">
+          <input
+            type="text"
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+            placeholder="검색할 키워드를 입력하세요"
+            className="p-2 border rounded flex-grow focus:bg-opacity-100"
+          />
+          <button
+            onClick={searchPlaces}
+            className="p-2 bg-mainBlue text-white rounded hover:bg-blue-600"
+          >
+            검색
+          </button>
+          <button
+            onClick={resetMap}
+            className="p-2 bg-gray-600 text-white rounded hover:bg-gray-500"
+          >
+            초기화
+          </button>
+        </div>
+        <div className="p-2 flex space-x-2 mt-2">
+          <button
+            onClick={() => handleDrawingModeChange("MARKER")}
+            className="p-2 bg-gray-500 text-white rounded hover:bg-toolBtn"
+          >
+            마커
+          </button>
+          <button
+            onClick={() => handleDrawingModeChange("POLYLINE")}
+            className="p-2 bg-gray-500 text-white rounded hover:bg-toolBtn"
+          >
+            선
+          </button>
+          <button
+            onClick={() => handleDrawingModeChange("RECTANGLE")}
+            className="p-2 bg-gray-500 text-white rounded hover:bg-toolBtn"
+          >
+            사각형
+          </button>
+          <button
+            onClick={() => handleDrawingModeChange("CIRCLE")}
+            className="p-2 bg-gray-500 text-white rounded hover:bg-toolBtn"
+          >
+            원
+          </button>
+          <button
+            onClick={() => handleDrawingModeChange("POLYGON")}
+            className="p-2 bg-gray-500 text-white rounded hover:bg-toolBtn"
+          >
+            다각형
+          </button>
+        </div>
       </div>
-      <div className="p-2 flex space-x-2">
-        <button
-          onClick={() => handleDrawingModeChange("MARKER")}
-          className="p-2 bg-green-500 text-white rounded"
-        >
-          마커
-        </button>
-        <button
-          onClick={() => handleDrawingModeChange("POLYLINE")}
-          className="p-2 bg-green-500 text-white rounded"
-        >
-          선
-        </button>
-        <button
-          onClick={() => handleDrawingModeChange("RECTANGLE")}
-          className="p-2 bg-green-500 text-white rounded"
-        >
-          사각형
-        </button>
-        <button
-          onClick={() => handleDrawingModeChange("CIRCLE")}
-          className="p-2 bg-green-500 text-white rounded"
-        >
-          원
-        </button>
-        <button
-          onClick={() => handleDrawingModeChange("POLYGON")}
-          className="p-2 bg-green-500 text-white rounded"
-        >
-          다각형
-        </button>
-      </div>
-      <div ref={mapContainer} className="flex-grow"></div>
-      <div className="p-4 overflow-y-auto max-h-40">
+      <div ref={mapContainer} className="flex-grow h-screen"></div>
+      <div className="absolute bottom-0 left-0 w-full p-4 bg-white bg-opacity-60 z-10 max-h-40 overflow-y-auto">
         <ul>
           {places.map((place, index) => (
             <li
               id={`place-item-${index}`}
               key={index}
               className="mb-2"
-              onMouseOver={() =>
-                displayInfowindow(markers[index], place.place_name)
-              }
+              onMouseOver={() => handleMouseOverPlaceItem(index)}
               onMouseOut={() => infowindow.current.close()}
             >
               <span className="font-bold">{place.place_name}</span>

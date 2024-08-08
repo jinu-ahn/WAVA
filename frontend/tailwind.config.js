@@ -53,6 +53,7 @@ module.exports = {
         vacationLow: "rgb(255, 194, 209)",
         vacationBtn: "rgb(251, 111, 146)",
         toDoBtn: "rgb(52, 78, 65)",
+        toolBtn: "rgb(0, 128, 0)",
       },
     },
   },
