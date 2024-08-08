@@ -22,7 +22,7 @@ function ChannelPage() {
   const myId = userInfo?.nickName;
 
   const myChannelRef = useRef(null);
-  const meetingChannelsRef = useRef(null);
+  const GroupChannelsRef = useRef(null);
   const infoChannelsRef = useRef(null);
 
   const { userId } = useParams();
@@ -126,10 +126,10 @@ function ChannelPage() {
 
   React.useEffect(() => {
     handleMouseEvents(myChannelRef);
-    handleMouseEvents(meetingChannelsRef);
+    handleMouseEvents(GroupChannelsRef);
     handleMouseEvents(infoChannelsRef);
     handleTouchEvents(myChannelRef);
-    handleTouchEvents(meetingChannelsRef);
+    handleTouchEvents(GroupChannelsRef);
     handleTouchEvents(infoChannelsRef);
   }, []);
 
@@ -192,7 +192,7 @@ function ChannelPage() {
 
           {/* 모임채널 */}
           <div
-            ref={meetingChannelsRef}
+            ref={GroupChannelsRef}
             className=" flex-1 overflow-y-auto text-center mb-2"
           >
             <ChannelSubExplorer
