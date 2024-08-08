@@ -15,4 +15,6 @@ public interface PlanService {
     List<PlanResponseDto> viewPlan(final User user);
 
     PlanResponseDto updatePlan(PlanRequestDto planRequestDto, Long planId);
+
+    List<PlanResponseDto> viewTodayPlan(User user);
 }
