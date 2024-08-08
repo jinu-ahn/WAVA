@@ -103,6 +103,7 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
                         .comment(feedComment.getComment())
                         .createdAt(feedComment.getCreatedAt())
                         .id(feedComment.getId())
+                        .profile(feedComment.getUser().getProfileImg())
                         .userid(feedComment.getUser().getId())
                         .feedid(feedComment.getFeed().getId())
                         .build();

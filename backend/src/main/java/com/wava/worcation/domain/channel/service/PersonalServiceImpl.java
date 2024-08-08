@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -61,7 +62,7 @@ public class PersonalServiceImpl implements PersonalService {
 
     @Override
     public Page<FeedSortResponseDto> personalFeed(int pages, String nickName, User user) {
-        Pageable pageable = PageRequest.of(pages, 20);
+        Pageable pageable = PageRequest.of(pages, 20,Sort.by(Sort.Direction.DESC, "createdAt"));
         Channel channel = channelRepository.findChannelByUserId(userRepository.findByNickName(nickName).getId());
         Page<Feed> feedPage = feedRepository.findByChannel(channel,pageable);
         return feedPage.map(feed -> {
