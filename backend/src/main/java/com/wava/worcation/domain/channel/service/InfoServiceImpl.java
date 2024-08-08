@@ -1,6 +1,8 @@
 package com.wava.worcation.domain.channel.service;
 
+import com.wava.worcation.common.exception.CustomException;
 import com.wava.worcation.common.exception.ResourceNotFoundException;
+import com.wava.worcation.common.response.ErrorCode;
 import com.wava.worcation.domain.channel.domain.*;
 import com.wava.worcation.domain.channel.dto.info.CommentResponseDto;
 import com.wava.worcation.domain.channel.dto.info.FeedResponseDto;
@@ -22,7 +24,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.util.*;
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -192,4 +193,16 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
         return feedRepository.countByChannelId(channelRepository.findChannelByUserId(userId).getId());
     }
 
+    @Override
+    public void deleteFeed(Long feedId, User user) {
+        Feed feed = feedRepository.findById(feedId).orElseThrow(()->new ResourceNotFoundException("피드가 없음"));
+        if(feed.getChannel() != channelRepository.findChannelByUserId(user.getId())){
+            log.info(feed.getChannel().toString());
+            log.info(channelRepository.findByUserId(user.getId()).toString());
+            throw new CustomException(ErrorCode.USER_NOT_FOUND);
+        }
+        List<Image> imageList = imageRepository.findAllByFeed(feed);
+        imageRepository.deleteAll(imageList);
+        feedRepository.delete(feed);
+    }
 }
