@@ -21,16 +21,15 @@ const address = "/channel";
 // 그룹 채널 서비스 객체
 const createGroupChannelAPI = {
   getAllChannelList: async () => {
-    return await handleRequest(() => {
-      local.get(address);
-    }, "채널 전체 가져오기");
+    return await handleRequest(() => local.get(address), "채널 전체 가져오기");
   },
 
   // 채널 정보 가져오기
   getChannelInfo: async (channelId) => {
-    return await handleRequest(() => {
-      local.get(`/channels/${channelId}`);
-    }, "채널 정보 가져오기");
+    return await handleRequest(
+      () => local.get(`/channels/${channelId}`),
+      "채널 정보 가져오기"
+    );
   },
 
   // 채팅 메시지 가져오기
