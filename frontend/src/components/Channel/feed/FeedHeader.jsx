@@ -4,7 +4,10 @@ import FollowDrawer from "./FollowDrawer";
 import useDeviceStore from "../../../store/deviceStore";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
 import ProfileIconBtn from "./ProfileIconBtn";
-import { createProfileImageRequest } from "../../../api/channelFeedApi";
+import {
+  createProfileImageRequest,
+  updateFeedDescription,
+} from "../../../api/channelFeedApi";
 import useUserStore from "../../../store/userStore";
 
 const FeedHeader = ({ openCreateDrawer, userId, setUserInfo, userInfo }) => {
@@ -29,7 +32,8 @@ const FeedHeader = ({ openCreateDrawer, userId, setUserInfo, userInfo }) => {
     setIsEditingName(false);
   };
 
-  const handleBioSubmit = () => {
+  const handleBioSubmit = async () => {
+    await updateFeedDescription(isEditingBio);
     setIsEditingBio(false);
   };
 
@@ -81,7 +85,7 @@ const FeedHeader = ({ openCreateDrawer, userId, setUserInfo, userInfo }) => {
               <UserCircleIcon className="w-24 h-24 rounded-full shadow-md" />
             )}
             {loginedUserNickName === ownerUserNickName && (
-              <ProfileIconBtn style={"bg-white"}>
+              <ProfileIconBtn customStyle="bg-white">
                 <Camera size={20} />
                 <input
                   id="profile-pic-upload"
@@ -98,19 +102,20 @@ const FeedHeader = ({ openCreateDrawer, userId, setUserInfo, userInfo }) => {
         {editProfile && (
           <div className={`relative ${isMobile ? "mb-4" : "mr-6"}`}>
             <img
+              alt="profile-preview"
               className="rounded-full w-24 h-24 object-cover shadow-md"
               src={editProfile?.url}
             />
             <ProfileIconBtn
               onClick={canceldProfilePicChange}
               isLeft
-              style={"bg-white"}
+              customStyle="bg-white"
             >
               <XIcon className="text-red-600" size={20} />
             </ProfileIconBtn>
             <ProfileIconBtn
               onClick={handleSubmitProfilePicChange}
-              style={"bg-green-500"}
+              customStyle="bg-green-500"
             >
               <CheckIcon className=" text-white" size={20} />
             </ProfileIconBtn>
