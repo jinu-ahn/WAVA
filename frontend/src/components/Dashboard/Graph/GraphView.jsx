@@ -1,11 +1,5 @@
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { Doughnut } from "react-chartjs-2";
-import {
-  graphWORQBgColor,
-  graphWORQBorderColor,
-  graphImportantBgColor,
-  grpahImportantBorderColor,
-} from "../dataset";
 import useTodoStore from "../../../store/todoStore";
 import { useEffect, useState } from "react";
 import useCountNum from "./useCountUp";
@@ -17,7 +11,7 @@ const centerTextPlugin = {
     const { ctx, width, height } = chart;
     ctx.restore();
     const fontSize = (height / 114).toFixed(2);
-    console.log(fontSize);
+    // console.log(fontSize);
     ctx.font = `${fontSize}em sans-serif`;
     ctx.textBaseline = "middle";
 
@@ -33,7 +27,7 @@ const centerTextPlugin = {
     const centerY = chartArea.top + (chartArea.bottom - chartArea.top) / 2;
     const textY = centerY;
     const textX = Math.round((width - ctx.measureText(text).width) / 2);
-    ctx.shadowColor = "rgba(121,11,97, 0.7)";
+    ctx.shadowColor = "rgba(217, 217, 217, 0.7)";
     ctx.shadowBlur = 15;
     ctx.shadowOffsetX = 8;
     ctx.shadowOffsetY = 8;
@@ -44,63 +38,46 @@ const centerTextPlugin = {
 
 ChartJS.register(ArcElement, Tooltip, Legend, centerTextPlugin);
 
-function GraphView({ category }) {
-  const { events } = useTodoStore();
+function GraphView() {
+  const { filteredEvents } = useTodoStore();
   const [finishCnt, setFinishCnt] = useState(0);
-  const [importantCnt, setImportantCnt] = useState({ 상: 0, 중: 0, 하: 0 });
   const [percentage, setPercentage] = useState(0);
 
   useEffect(() => {
-    const completedCount = events?.filter((i) => i?.isFinish).length || 0;
-    setImportantCnt((state) => {
-      const cnts = { 상: 0, 중: 0, 하: 0 };
-      for (let item of events) {
-        cnts[item?.important] += 1;
-      }
-      return cnts;
-    });
+    const completedCount =
+      filteredEvents?.filter((i) => i?.isFinish).length || 0;
+
     setFinishCnt(completedCount);
-    setPercentage(Math.round((completedCount / events.length) * 100));
-  }, [events]);
+    setPercentage(Math.round((completedCount / filteredEvents.length) * 100));
+  }, [filteredEvents]);
 
   const finishData = {
     labels: ["미완료", "완료"],
     datasets: [
       {
-        data: [events.length - finishCnt, finishCnt],
-        backgroundColor: graphWORQBgColor,
-        borderColor: graphWORQBorderColor,
-        borderWidth: 1,
+        data: [filteredEvents.length - finishCnt, finishCnt],
+        backgroundColor: ["rgb(255, 255, 255)", "rgb(28, 119, 195)"],
+        borderColor: ["rgb(255, 255, 255)", "rgb(28, 119, 195)"],
+        borderWidth: 0.5,
       },
     ],
   };
 
-  const importantData = {
-    labels: ["상", "중", "하"],
-    datasets: [
-      {
-        data: [importantCnt["상"], importantCnt["중"], importantCnt["하"]],
-        backgroundColor: graphImportantBgColor,
-        borderColor: grpahImportantBorderColor,
-        borderWidth: 1,
-      },
-    ],
-  };
   const options = {
-    cutout: "65%",
+    cutout: "67%",
     // maintainAspectRatio: false,
 
     responsive: true,
     plugins: {
       legend: {
-        display: true,
+        display: false,
       },
       tooltip: {
         enabled: true,
       },
       centerTextPlugin: {
         percentage: useCountNum(percentage), // 플러그인에 상태값 전달
-        eventCnt: events?.length,
+        eventCnt: filteredEvents?.length,
       },
     },
   };
@@ -108,20 +85,32 @@ function GraphView({ category }) {
   return (
     <div
       className="relative"
-      style={{ minWidth: "200px", height: "70%", width: "70%" }}
+      style={{
+        maxWidth: "200px",
+        height: "100%",
+        width: "100%",
+      }}
     >
       <Doughnut
-        data={category === "important" ? importantData : finishData}
-        options={options}
+        data={finishData}
+        options={{
+          ...options,
+          layout: {
+            padding: {
+              // top: 20, // 필요한 경우 상단 여백 추가
+              bottom: 20, // 필요한 경우 하단 여백 추가
+              left: 10, // 필요한 경우 좌측 여백 추가
+              right: 10, // 필요한 경우 우측 여백 추가
+            },
+          },
+        }}
         plugins={[centerTextPlugin]} // 플러그인을 이곳에 추가
         // height={"31rem"}
       />
-      {`상 : ${importantCnt.상} 개`} <br />
-      {`중 : ${importantCnt.중} 개`} <br />
-      {`하 : ${importantCnt.하} 개`} <br />
-      {`완료 : ${finishCnt} 개`} <br />
-      {`미완료 : ${events.length - finishCnt} 개`} <br />
-      <br />
+      <div className="mt-3">
+        {`완료 : ${finishCnt} 개`} <br />
+        {`미완료 : ${filteredEvents.length - finishCnt} 개`} <br />
+      </div>
     </div>
   );
 }

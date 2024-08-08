@@ -1,6 +1,6 @@
 {
-  "name": "worq",
-  "version": "0.1.0",
+  "name": "wava",
+  "version": "0.1.1",
   "private": true,
   "dependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
@@ -12,23 +12,24 @@
     "@fullcalendar/timegrid": "^6.1.15",
     "@headlessui/react": "^2.1.2",
     "@heroicons/react": "^2.1.5",
-    "@mui/lab": "^5.0.0-alpha.172",
     "@mui/material": "^5.16.4",
     "@mui/x-date-pickers": "^7.11.0",
+    "@stomp/stompjs": "^7.0.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
-    "axios": "^1.7.2",
+    "axios": "^1.7.3",
     "chart.js": "^4.4.3",
     "dayjs": "^1.11.12",
-    "i": "^0.3.7",
+    "lucide-react": "^0.419.0",
     "nanoid": "^5.0.7",
     "npm": "^10.8.2",
+    "openvidu-browser": "^2.30.1",
     "react": "^18.3.1",
-    "react-beautiful-dnd": "^13.1.1",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.3.1",
     "react-icons": "^5.2.1",
+    "react-intersection-observer": "^9.13.0",
     "react-multi-carousel": "^2.8.5",
     "react-router-dom": "^6.25.1",
     "react-scripts": "5.0.1",
@@ -48,13 +49,15 @@
     "workbox-routing": "^6.6.0",
     "workbox-strategies": "^6.6.0",
     "workbox-streams": "^6.6.0",
+    "ws": "^8.18.0",
     "zustand": "^4.5.4"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "start:host": "HOST=0.0.0.0 react-scripts start"
   },
   "eslintConfig": {
     "extends": [

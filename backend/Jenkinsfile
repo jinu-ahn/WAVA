@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_CREDENTIALS_ID = 'DOCKER_USER' // Docker Hub 자격 증명 ID
+        DOCKER_CREDENTIALS_ID = 'DOCKER_USER' // Docker  Hub 자격 증명 ID
         DOCKER_IMAGE_BACKEND = credentials('work_backend')
         DOCKER_IMAGE_FRONTEND = credentials('work_frontend')
         DOCKER_USERNAME = credentials('DOCKER_USERNAME')
@@ -12,7 +12,7 @@ pipeline {
         stage('Git Clone') {
             steps {
                 echo "Cloning Git repository..."
-                git branch: 'dev', credentialsId: 'GITLAB_LOGIN', url: 'https://lab.ssafy.com/s11-webmobile1-sub2/S11P12C204'
+                git branch: 'dev-test', credentialsId: 'GITLAB_LOGIN', url: 'https://lab.ssafy.com/s11-webmobile1-sub2/S11P12C204'
                 echo "Git Clone Completed."
             }
         }
@@ -110,9 +110,12 @@ pipeline {
                     dir('frontend') {
 
                         sh '''
-                        docker build -t $DOCKER_USERNAME/work_frontend .
-                        docker push $DOCKER_USERNAME/work_frontend:latest
-                     '''
+                            docker build \
+                            --build-arg SERVER_DOMAIN=i11c204.p.ssafy.io \
+                            --build-arg SERVER_PORT=${TARGET_PORT} \
+                            -t $DOCKER_USERNAME/work_frontend:latest .
+                            docker push $DOCKER_USERNAME/work_frontend:latest
+                        '''
                     }
 
                 }
@@ -123,7 +126,7 @@ pipeline {
             steps {
                 script {
                     sh '''
-                        cd /home/ubuntu
+                        cd /home/ubuntu/myproject
                         docker-compose -f docker-compose-${TARGET_SERVERNAME}.yml pull
                     '''
                     echo "Docker backend image pulled: ${TARGET_SERVERNAME}/work_backend:latest"
@@ -144,10 +147,11 @@ pipeline {
                         string(credentialsId: 'SERVER_URL', variable: 'SERVER_URL'),
                         string(credentialsId: 'AWS_ACCESS_KEY_ID', variable: 'AWS_ACCESS_KEY_ID'),
                         string(credentialsId: 'AWS_SECRET_ACCESS_KEY', variable: 'AWS_SECRET_ACCESS_KEY'),
-                        string(credentialsId: 'S3_BUCKET', variable: 'S3_BUCKET')
+                        string(credentialsId: 'S3_BUCKET', variable: 'S3_BUCKET'),
+                        string(credentialsId: 'OPENVIDU_SECRET', variable: 'OPENVIDU_SECRET')
                     ]) {
                         sh '''
-                            cd /home/ubuntu
+                            cd /home/ubuntu/myproject
 
                             if [ "$(docker ps -q -f name=back_${CURRENT_SERVERNAME})" ]; then
                                docker-compose -f docker-compose-${CURRENT_SERVERNAME}.yml down
@@ -164,6 +168,7 @@ pipeline {
                             echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" >> .env
                             echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> .env
                             echo "S3_BUCKET=$S3_BUCKET" >> .env
+                            echo "OPENVIDU_SECRET=$OPENVIDU_SECRET" >> .env
 
 
                             # 타켓서버가 실행 중 또는 exited 되었다면 제거

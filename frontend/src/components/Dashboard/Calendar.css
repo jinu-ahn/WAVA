@@ -17,9 +17,9 @@ NOTE: for old browsers, will need to restart watcher after changing a variable
   --fc-neutral-text-color: #808080;
   --fc-border-color: #ddd;
 
-  --fc-event-bg-color: #3788d8;
-  --fc-event-border-color: #3788d8;
-  --fc-event-text-color: #fff;
+  --fc-event-bg-color: rgb(47, 102, 144);
+  --fc-event-border-color: rgb(47, 102, 144);
+  --fc-event-text-color: white;
   --fc-event-selected-overlay-color: rgba(0, 0, 0, 0.25);
 
   --fc-more-link-bg-color: #d0d0d0;
@@ -34,20 +34,20 @@ NOTE: for old browsers, will need to restart watcher after changing a variable
   --fc-bg-event-opacity: 0.3;
   --fc-highlight-color: rgba(188, 232, 241, 0.3);
   --fc-today-bg-color: rgba(255, 220, 40, 0.15);
-  --fc-now-indicator-color: red;
+  --fc-now-indicator-color: black;
 
   /* 버튼들 */
   --fc-button-text-color: #fff;
-  --fc-button-bg-color: pink;
-  --fc-button-border-color: pink;
+  --fc-button-bg-color: rgb(47, 102, 144);
+  --fc-button-border-color: rgb(47, 102, 144);
   /* --fc-button-hover-bg-color: #1e2b37; */
-  --fc-button-hover-bg-color: #ff93ac;
+  --fc-button-hover-bg-color: rgb(58, 124, 165);
   /* --fc-button-hover-border-color: #1a252f; */
-  --fc-button-hover-border-color: #ff6289;
+  --fc-button-hover-border-color: rgb(58, 124, 165);
   /* --fc-button-active-bg-color: #1a252f; */
-  --fc-button-active-bg-color: #fc3468;
+  --fc-button-active-bg-color: rgb(64, 188, 216);
   /* --fc-button-active-border-color: #151e27; */
-  --fc-button-active-border-color: #ff084a;
+  --fc-button-active-border-color: rgb(64, 188, 216);
   /* 끝 */
 
   /* daygrid 전용 */
@@ -120,24 +120,26 @@ NOTE: for old browsers, will need to restart watcher after changing a variable
 
   .fc-scroller-harness,
   .fc-scroller-harness-liquid {
+    overflow-y: auto !important; /* 수직 스크롤을 활성화 */
+    -webkit-overflow-scrolling: touch; /* iOS에서 부드러운 스크롤을 지원 */
     max-height: 300px;
   }
 }
 /* 모바일 끝 */
 
-.상 {
-  background-color: red;
+.HIGH {
+  background-color: rgb(58, 90, 64);
   border: 0px;
 }
 
-.중 {
+.MID {
   border: 0px;
-  background-color: blue;
+  background-color: rgb(88, 129, 87);
 }
 
-.하 {
+.LOW {
   border: 0px;
-  background-color: yellow;
+  background-color: rgb(163, 177, 138);
 }
 
 .todo-finish {

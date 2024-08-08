@@ -5,14 +5,14 @@
  * content:string
  * start:Date
  * end:Date
- * className:"상"|"중"|"하"
- * important:"상"|"중"|"하"
+ * className:"HIGH"|"MID"|"LOW"
+ * important:"HIGH"|"MID"|"LOW"
  * type:"WORK"|"REST"
  * isFinish:boolean
  * }} event 
 
- * @returns {Promise<event>} - todo 이벤트 목록의 배열을 포함하는 프로미스를 반환합니다.
- * @throws {Error} - */
+ * @returns {Boolean<true|false>} 
+*/
 export function validateEvent(event) {
   // 문자열 및 기타 필수 속성 확인
   if (!event.title || typeof event.title !== "string") {
@@ -32,9 +32,9 @@ export function validateEvent(event) {
 
   if (
     typeof event.important !== "string" ||
-    (event.important !== "상" &&
-      event.important !== "중" &&
-      event.important !== "하")
+    (event.important !== "HIGH" &&
+      event.important !== "MID" &&
+      event.important !== "LOW")
   ) {
     console.error("important");
     return false;
@@ -70,5 +70,53 @@ export function validateEvent(event) {
     return false;
   }
 
+  return true;
+}
+
+/**
+ *  워케이션 등록 유효성 검증 함수
+ * @param {{
+ * start : date
+ * end : date,
+ * sido : string,
+ * sigungu : string,
+ * job : string,
+ * }} data
+ * @returns {Boolean<true|false>} - todo 이벤트 목록의 배열을 포함하는 프로미스를 반환합니다.
+ */
+export function validateWorcation(data) {
+  const { start, end, sido, sigungu, job } = data;
+
+  // 날짜 형식 검사
+
+  console.log(start);
+  if (!start || isNaN(Date.parse(start))) {
+    console.error("유효하지 않은 시작 날짜입니다.");
+    return false;
+  }
+  if (!end || isNaN(Date.parse(end))) {
+    console.error("유효하지 않은 종료 날짜입니다.");
+    return false;
+  }
+  if (end <= start) {
+    console.error("종료 날짜는 시작 날짜 이후여야 합니다.");
+    return false;
+  }
+
+  // 문자열 필드 유효성 검사
+  if (typeof sido !== "string" || sido.trim() === "") {
+    console.error("시/도 정보가 유효하지 않습니다.");
+    return false;
+  }
+  if (typeof sigungu !== "string" || sigungu.trim() === "") {
+    console.error("구/군 정보가 유효하지 않습니다.");
+    return false;
+  }
+  if (typeof job !== "string" || job.trim() === "") {
+    console.error("직업 정보가 유효하지 않습니다.");
+    return false;
+  }
+
+  // 모든 검사를 통과한 경우
   return true;
 }
