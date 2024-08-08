@@ -44,9 +44,7 @@ public class InfoController{
             @RequestParam("sido") String sido,
             @RequestParam("sigungu") String sigungu,
             @AuthUser User user) throws Exception {
-
         List<String> imgUrls = new ArrayList<>();
-
         try {
             if (images.size() < 10 && !images.isEmpty()) {
                 for (MultipartFile image : images) {
@@ -56,27 +54,11 @@ public class InfoController{
                 // 이미지가 없을 때 에러 반환
                 return ResponseEntity.status(400).body("이미지가 필요합니다.");
             }
-
             infoService.CreateFeed(content, sido, sigungu, imgUrls, user);
-
             return ResponseEntity.ok().build();
         } catch (Exception e) {
             log.error(e.getMessage(), e);
             return ResponseEntity.status(500).body("잘못된 요청입니다.");
-        }
-    }
-
-    @DeleteMapping("{feedId}/delete")
-    public ResponseEntity<?> deleteFeed(@PathVariable("feedId") Long feedId, @AuthUser User user) throws Exception {
-        try {
-            infoService.deleteFeed(feedId,user);
-            return ResponseEntity.ok().body("성공적으로 삭제완료");
-        }
-        catch (CustomException e){
-            return ResponseEntity.status(e.getErrorCode().getStatus()).body(e.getMessage());
-        }
-        catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
@@ -94,6 +76,34 @@ public class InfoController{
         }
         catch (Exception e){
             return ResponseEntity.status(HttpStatus.CREATED).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("{feedId}/update")
+    public ResponseEntity<?> updateFeed(@PathVariable("feedId") Long feedId, @AuthUser User user) throws Exception {
+        try {
+            infoService.deleteFeed(feedId,user);
+            return ResponseEntity.ok().body("성공적으로 업데이트 완료");
+        }
+        catch (CustomException e){
+            return ResponseEntity.status(e.getErrorCode().getStatus()).body(e.getMessage());
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("{feedId}/delete")
+    public ResponseEntity<?> deleteFeed(@PathVariable("feedId") Long feedId, @AuthUser User user) throws Exception {
+        try {
+            infoService.deleteFeed(feedId,user);
+            return ResponseEntity.ok().body("성공적으로 삭제완료");
+        }
+        catch (CustomException e){
+            return ResponseEntity.status(e.getErrorCode().getStatus()).body(e.getMessage());
+        }
+        catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
@@ -121,16 +131,13 @@ public class InfoController{
     public ResponseEntity<?> createComment(@PathVariable("feedId") Long feedId, @RequestBody CommentRequestDto comment, @AuthUser User user) {
         try {
             Long userId = user.getId();
-
             Map<String, Object> commentMap = infoService.createComment(userId, feedId, comment.getComment());
-
             return ResponseEntity.ok(commentMap);
         }
         catch (Exception e){
             return ResponseEntity.status(400).body(e.getMessage());
         }
     }
-
 
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<?>> searchFeed(@RequestParam(defaultValue = "0") int page,
@@ -151,7 +158,6 @@ public class InfoController{
                     "totalPages", totalPages,
                     "data", feedSortResponse.getContent()
             );
-
             // 성공적인 응답 반환
             return ResponseEntity.ok(ApiResponse.success(responseData));
         } catch (Exception e) {
@@ -160,6 +166,4 @@ public class InfoController{
                     .body(ApiResponse.error(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage()));
         }
     }
-
-
 }

@@ -16,6 +16,7 @@ import FeedPersonalPage from "./pages/Channel/Feed/FeedPersonalPage";
 import ChatPage from "./pages/ChatPage";
 import AuthenticatedRouter from "./components/common/AuthenticatedRouter";
 import VideoChat from "./pages/Channel/Group/VideoChat";
+import GroupDiscoverPage from "./pages/Channel/Group/GroupDiscoverPage";
 
 function App() {
   const { user } = useAuthStore();
@@ -44,8 +45,15 @@ function App() {
             />
             <Route path="/chat" element={<ChatPage />} />
             <Route path="/video-chat" element={<VideoChat />} />
+
+            {/* 중첩 라우팅 */}
             <Route path="/channel" element={<ChannelPageLayout />}>
-              {/* 그룹 시작 */}
+              {/* 그룹 시작 / 그룹 검색, 그룹 방 */}
+              <Route
+                path="/channel/group/discover-groups"
+                // element={<AuthenticatedRouter element={<GroupDiscoverPage />} />}
+                element={<GroupDiscoverPage />}
+              />
               <Route
                 path="/channel/group/:groupId"
                 // element={<AuthenticatedRouter element={<GroupChannelPage />} />}
@@ -65,7 +73,7 @@ function App() {
               />
               {/* 피드 끝 */}
             </Route>
-            {/* </Route> */}
+
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </main>
