@@ -27,14 +27,11 @@ public class MapPin {
     @Column(name="place_name")
     private String placeName;
 
-    @Column(name="place_url")
-    private String placeUrl;
+    @Column(name="info")
+    private String info;
 
     @Column(name="pin_order")
     private Long pinOrder;
-
-    @Column(name="visit_date")
-    private LocalDateTime visitDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="channel_id")
@@ -47,8 +44,7 @@ public class MapPin {
         this.lat = requestDto.getLat();
         this.lng = requestDto.getLng();
         this.placeName = requestDto.getPlaceName();
-        this.placeUrl = requestDto.getPlaceUrl();
+        this.info = requestDto.getInfo();
         this.pinOrder = requestDto.getPinOrder();
-        this.visitDate = requestDto.getVisitDate();
     }
 }
