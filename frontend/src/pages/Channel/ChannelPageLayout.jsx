@@ -10,7 +10,12 @@ import {
   useNavigate,
   useParams,
 } from "react-router-dom";
-import { GlobeAltIcon, UserCircleIcon } from "@heroicons/react/24/solid";
+import {
+  GlobeAltIcon,
+  UserCircleIcon,
+  EllipsisHorizontalIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/24/solid";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import CustomModal from "../../components/common/customModal";
 import CreateGroupChannel from "../../components/Channel/group/CreateGroupChannel";
@@ -196,15 +201,25 @@ function ChannelPage() {
             className=" flex-1 overflow-y-auto text-center mb-2"
           >
             <ChannelSubExplorer
-              // 그룹 생성 버튼(플러스버튼)
-              addBtn={
-                <div
-                  onClick={handleChannelPortalOpen}
-                  className="sticky top-0 bg-white flex items-center justify-center"
-                >
-                  <div className="border cursor-pointer rounded-full h-10 w-10 hover border-gray-300 hover:bg-gray-100 transition-colors duration-200 ">
-                    <PlusIcon className="w-6 h-6 m-4 mx-auto my-2 " />
+              // 그룹 생성 버튼(플러스버튼), 그룹 찾기 버튼(점점점)
+              toolbarBtn={
+                <div className="sticky top-0">
+                  <div
+                    onClick={handleChannelPortalOpen}
+                    className=" bg-white flex items-center justify-center"
+                  >
+                    <div className="border cursor-pointer rounded-full h-10 w-10 hover border-gray-300 hover:bg-gray-100 transition-colors duration-200 ">
+                      <PlusIcon className="w-6 h-6 m-4 mx-auto my-2 " />
+                    </div>
                   </div>
+                  <NavLink
+                    to="/channel/group/discover-groups"
+                    className="py-2 bg-white flex items-center justify-center"
+                  >
+                    <div className="border cursor-pointer rounded-full h-10 w-10 hover border-gray-300 hover:bg-gray-100 transition-colors duration-200 ">
+                      <MagnifyingGlassIcon className="w-6 h-6 m-4 mx-auto my-2 " />
+                    </div>
+                  </NavLink>
                 </div>
               }
               type="group"

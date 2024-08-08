@@ -19,7 +19,7 @@ const CustomModal = ({ isOpen, children, onClose, styles }) => {
 
   return ReactDOM.createPortal(
     <div
-      className={`fixed inset-0  bg-gray-600 bg-opacity-50 flex justify-center items-center z-10 transform transition-transform duration-300 ${styles}`}
+      className={`fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-[12] transform transition-transform duration-300 ${styles}`}
       onClick={onClose}
     >
       <div
