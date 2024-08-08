@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -169,7 +170,7 @@ public class InfoServiceImpl implements com.wava.worcation.domain.channel.servic
 
     @Override
     public Page<FeedSortResponseDto> searchfeed(int pages, String content, User user) {
-        Pageable pageable = PageRequest.of(pages, 20);
+        Pageable pageable = PageRequest.of(pages, 20,Sort.by(Sort.Direction.DESC, "createdAt"));
         Page<Feed> feedPage = feedRepository.findByContentContaining(content,pageable);
         return feedPage.map(feed -> {
             String imageUrl = imageRepository.findFirstByFeedOrderByFeed(feed).getImageUrl();
