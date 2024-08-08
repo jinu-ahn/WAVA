@@ -42,9 +42,8 @@ public class MapPinServiceImpl implements MapPinService {
                 .lat(mapPinRequestDto.getLat())
                 .lng(mapPinRequestDto.getLng())
                 .placeName(mapPinRequestDto.getPlaceName())
-                .placeUrl(mapPinRequestDto.getPlaceUrl())
+                .info(mapPinRequestDto.getInfo())
                 .pinOrder(mapPinRequestDto.getPinOrder())
-                .visitDate(mapPinRequestDto.getVisitDate())
                 .build());
         List<UserResponseDto> userResponseList = mapPinRequestDto.getUser()
                 .stream()
@@ -76,9 +75,8 @@ public class MapPinServiceImpl implements MapPinService {
                 .lat(mapPin.getLat())
                 .lng(mapPin.getLng())
                 .placeName(mapPin.getPlaceName())
-                .placeUrl(mapPin.getPlaceUrl())
+                .info(mapPin.getInfo())
                 .pinOrder(mapPin.getPinOrder())
-                .visitDate(mapPin.getVisitDate())
                 .user(userResponseList)
                 .build();
     }
@@ -119,9 +117,8 @@ public class MapPinServiceImpl implements MapPinService {
                 .lat(mapPin.getLat())
                 .lng(mapPin.getLng())
                 .placeName(mapPin.getPlaceName())
-                .placeUrl(mapPin.getPlaceUrl())
+                .info(mapPin.getInfo())
                 .pinOrder(mapPin.getPinOrder())
-                .visitDate(mapPin.getVisitDate())
                 .user(userResponseList)
                 .build();
     }

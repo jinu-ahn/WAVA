@@ -16,8 +16,7 @@ public class MapPinRequestDto {
     private Double lat;
     private Double lng;
     private String placeName;
-    private String placeUrl;
+    private String info;
     private Long pinOrder;
-    private LocalDateTime visitDate;
     private List<CompanionRequestDto> user;
 }
