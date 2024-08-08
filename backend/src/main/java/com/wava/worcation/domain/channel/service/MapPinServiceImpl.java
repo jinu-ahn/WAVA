@@ -84,26 +84,46 @@ public class MapPinServiceImpl implements MapPinService {
     }
 
     @Override
+    @Transactional(rollbackOn = Exception.class)
     public MapPinResponseDto updatePin(Long pinId, MapPinRequestDto mapPinRequestDto) {
         MapPin mapPin = mapPinRepository.findById(pinId).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_MAP_PIN)
         );
-
         mapPin.update(mapPinRequestDto);
-        log.info("update");
-        // 1. 현재 등록된 유저 ID 리스트 조회
-        List<Long> existingUserIds = companionRepository.findByMapPinId(pinId)
-                .stream()
-                .map(user -> user.getUser().getId())
-                .toList();
+        companionRepository.deleteAllByMapPinId(pinId);
 
-        // 2. mapPinRequestDto에서 현재 등록되어 있지 않은 유저 필터링
-        List<CompanionRequestDto> newUsers = mapPinRequestDto.getUser()
+        List<UserResponseDto> userResponseList = mapPinRequestDto.getUser()
                 .stream()
-//                .filter(user -> user.getUserId())
+                .map(user -> {
+                    User newUser = userRepository.findById(user.getUserId()).orElseThrow(
+                            () -> new CustomException(ErrorCode.USER_NOT_FOUND)
+                    );
+                    companionRepository.save(Companion.builder()
+                            .mapPin(mapPin)
+                            .user(newUser)
+                            .build());
+                    return UserResponseDto.builder()
+                            .id(newUser.getId())
+                            .email(newUser.getEmail())
+                            .phone(newUser.getPhone())
+                            .nickName(newUser.getNickName())
+                            .sido(newUser.getSido())
+                            .sigungu(newUser.getSigungu())
+                            .profile(newUser.getProfileImg())
+                            .build();
+                })
                 .toList();
-
-        return null;
+        return MapPinResponseDto.builder()
+                .pinId(mapPin.getId())
+                .channelId(mapPin.getChannel().getId())
+                .lat(mapPin.getLat())
+                .lng(mapPin.getLng())
+                .placeName(mapPin.getPlaceName())
+                .placeUrl(mapPin.getPlaceUrl())
+                .pinOrder(mapPin.getPinOrder())
+                .visitDate(mapPin.getVisitDate())
+                .user(userResponseList)
+                .build();
     }
 
     private Channel validateChannel(final Long channelId){
