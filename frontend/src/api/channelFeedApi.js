@@ -1,28 +1,7 @@
 import { localAxios as local } from "../util/http-commons";
+import { handleRequest } from "./helper";
 
 const address = "/channel";
-
-// try-catch 헬퍼함수
-const handleRequest = async (requestFunction) => {
-  try {
-    const response = await requestFunction();
-    if (
-      response.status === 200 ||
-      response.status === 201 ||
-      response.status === 202 ||
-      response.status === 204
-    ) {
-      return response.data || true;
-    } else if (response?.data?.message) {
-      throw new Error(response?.data?.message);
-    } else {
-      throw new Error(response.status);
-    }
-  } catch (error) {
-    console.error("feed Error" + error);
-    return false;
-  }
-};
 
 /**
  * @typedef {Object} Image
@@ -48,15 +27,17 @@ const handleRequest = async (requestFunction) => {
  * @returns {Promise<feedReturn>} 피드 콘텐츠를 포함한 객체를 반환합니다
  */
 export const readFeedContentRequest = async (id, pageNo = 1) => {
-  return await handleRequest(() =>
-    local.get(address + "/personal/" + id + "/feed?pages=" + pageNo)
+  return await handleRequest(
+    () => local.get(address + "/personal/" + id + "/feed?pages=" + pageNo),
+    "피드 가져오기"
   );
 };
 
 // 개인 채널의  정보
 export const readFeedInfoRequest = async (id) => {
-  return await handleRequest(() =>
-    local.get(address + "/personal/" + id + "/info")
+  return await handleRequest(
+    () => local.get(address + "/personal/" + id + "/info"),
+    "피드 인포 가져오기"
   );
 };
 
@@ -65,13 +46,15 @@ export const readFeedInfoRequest = async (id) => {
 export const createFeedRequest = async (data) => {
   const token = sessionStorage.getItem("accessToken");
   if (token) {
-    return await handleRequest(() =>
-      local.post(address + "/feed/create", data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-      })
+    return await handleRequest(
+      () =>
+        local.post(address + "/feed/create", data, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        }),
+      "피드 생성"
     );
   } else {
     return false;
@@ -80,53 +63,65 @@ export const createFeedRequest = async (data) => {
 
 // 피드 디테일 보기
 export const readOneFeedDetailRequest = async (id) => {
-  return await handleRequest(() => local.get(address + "/feed/" + id));
+  return await handleRequest(
+    () => local.get(address + "/feed/" + id),
+    "피드 디테일 보기"
+  );
 };
 
 // 피드에 코멘트 작성
 export const createCommentFeedRequest = async (id, data) => {
-  return await handleRequest(() =>
-    local.post(`${address}/feed/${id}/comment`, data)
+  return await handleRequest(
+    () => local.post(`${address}/feed/${id}/comment`, data),
+    "피드 코멘트 작성"
   );
 };
 
 // 피드 좋아요
 export const createLikeFeedRequest = async (id) => {
-  return await handleRequest(() => local.post(`${address}/feed/${id}/like`));
+  return await handleRequest(
+    () => local.post(`${address}/feed/${id}/like`),
+    "피드 좋아요"
+  );
 };
 
 // 피드 좋아요 취소
 export const deleteLikeFeedRequest = async (id) => {
-  return await handleRequest(() =>
-    local.delete(`${address}/feed/${id}/dislike`)
+  return await handleRequest(
+    () => local.delete(`${address}/feed/${id}/dislike`),
+    "피드 좋아요 취소"
   );
 };
 
-// 피드 검색 -> 에러 핸들링 할 것 ->마지막페이지, 페이지아웃
+// 피드 검색
 export const searchFeedRequest = async (keyword = "", page = 0) => {
-  return await handleRequest(() =>
-    local.get(`${address}/feed/search?page=${page}&content=${keyword}`)
+  return await handleRequest(
+    () => local.get(`${address}/feed/search?page=${page}&content=${keyword}`),
+    "피드 검색"
   );
 };
 
 // 팔로우 등록
 export const followRequest = async (channelId) => {
-  return await handleRequest(() =>
-    local.post(`${address}/follow`, { channelId })
+  return await handleRequest(
+    () => local.post(`${address}/follow`, { channelId }),
+    "팔로우 등록"
   );
 };
 
 // 팔로우 상세
 export const readFollowUserRequest = async (nickName) => {
-  return await handleRequest(() =>
-    local.get(`${address}/${nickName}/follower`)
+  return await handleRequest(
+    () => local.get(`${address}/${nickName}/follower`),
+    "팔로우 상세"
   );
 };
 
 // 팔로워 상세
 export const readFollowerUserRequest = async (nickName) => {
-  return await handleRequest(() =>
-    local.get(`${address}/${nickName}/followering`)
+  return await handleRequest(
+    () => local.get(`${address}/${nickName}/followering`),
+    "팔로워 상세"
   );
 };
 
@@ -135,13 +130,16 @@ export const readFollowerUserRequest = async (nickName) => {
 export const createProfileImageRequest = async (data) => {
   const token = sessionStorage.getItem("accessToken");
   if (token) {
-    return await handleRequest(() =>
-      local.post(`/channel/personal/profile`, data, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
-        },
-      })
+    return (
+      await handleRequest(() =>
+        local.post(`/channel/personal/profile`, data, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${token}`,
+          },
+        })
+      ),
+      "프사 저장"
     );
   } else {
     return false;
@@ -150,14 +148,16 @@ export const createProfileImageRequest = async (data) => {
 
 // 개인 채널 설명 변경
 export const updateFeedDescription = async (desc) => {
-  return await handleRequest(() =>
-    local.patch(`${address}/personal/description`, { description: desc })
+  return await handleRequest(
+    () => local.patch(`${address}/personal/description`, { description: desc }),
+    "채널 설명 저장"
   );
 };
 
 // 개인 피드 삭제
 export const deleteFeedRequest = async (feedId) => {
-  return await handleRequest(() =>
-    local.delete(`${address}/feed/${feedId}/delete`)
+  return await handleRequest(
+    () => local.delete(`${address}/feed/${feedId}/delete`),
+    "개인 피드 삭제"
   );
 };
