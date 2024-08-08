@@ -35,7 +35,7 @@ public class UserController {
         return userService.logout(request);
     }
 
-    @GetMapping("/reissue")
+    @PostMapping("/reissue")
     public ResponseEntity<ApiResponse<String>> reissue(HttpServletRequest request,HttpServletResponse response) {
         return userService.reissue(request,response);
     }

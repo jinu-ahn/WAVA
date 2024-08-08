@@ -111,8 +111,8 @@ public class TokenProvider {
                     .build()
                     .parseClaimsJws(accessToken)
                     .getBody();
-        }catch (ExpiredJwtException e) {
-            throw new CustomException(ErrorCode.EXPIRED_TOKEN);
+        }catch (JwtException e) {
+            throw new JwtException(ErrorCode.EXPIRED_TOKEN.getMessage());
         }
     }
 
