@@ -60,6 +60,9 @@ public class GroupChannelController {
         return groupChannelServcice.updateMemo(channelId,memo.get("memo"));
     }
 
-
+    @GetMapping("/userchannel")
+    public ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> getUserChannel (@AuthUser User user) {
+        return groupChannelServcice.userJoinChannel(user);
+    }
 
 }
