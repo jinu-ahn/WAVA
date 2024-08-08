@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import {
   getTodoList,
+  getTodayTodoList,
   createTodoRequest,
   deleteTodoRequest,
   updateTodoRequest,
@@ -8,6 +9,7 @@ import {
 
 const useTodoStore = create((set) => ({
   events: [],
+  todayEvents: [],
   filteredEvents: [],
   setFilteredEvents: (evts) => {
     set(() => ({ filteredEvents: evts }));
@@ -18,6 +20,20 @@ const useTodoStore = create((set) => ({
       set({
         events,
       });
+      return true;
+    } else {
+      console.log("server error-f");
+      return false;
+    }
+  },
+
+  fetchTodayEvents: async () => {
+    const todayEvents = await getTodayTodoList();
+    if (Array.isArray(todayEvents)) {
+      set({
+        todayEvents,
+      });
+      console.log(todayEvents)
       return true;
     } else {
       console.log("server error-f");

@@ -39,6 +39,22 @@ export const getTodoList = async () => {
   }
 };
 
+export const getTodayTodoList = async () => {
+  try {
+    const response = await local.get(address + "/view/today");
+    if (response.data?.status !== "OK") {
+      console.log(response.message);
+      throw new Error(`HTTP 오류! 상태: ${response.status}`);
+    }
+
+    const { data } = response.data;
+    return data;
+  } catch (error) {
+    console.error("today todo 목록을 가져오는 중 오류 발생:", error);
+    return false;
+  }
+}
+
 // C
 export const createTodoRequest = async (newTodoItem) => {
   try {
