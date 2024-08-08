@@ -48,7 +48,6 @@ const handleRequest = async (requestFunction) => {
  * @returns {Promise<feedReturn>} 피드 콘텐츠를 포함한 객체를 반환합니다
  */
 export const readFeedContentRequest = async (id, pageNo = 1) => {
-  // return get_feedData;
   return await handleRequest(() =>
     local.get(address + "/personal/" + id + "/feed?pages=" + pageNo)
   );
@@ -105,8 +104,6 @@ export const deleteLikeFeedRequest = async (id) => {
 
 // 피드 검색 -> 에러 핸들링 할 것 ->마지막페이지, 페이지아웃
 export const searchFeedRequest = async (keyword = "", page = 0) => {
-  // return get_feedData.data;
-
   return await handleRequest(() =>
     local.get(`${address}/feed/search?page=${page}&content=${keyword}`)
   );
