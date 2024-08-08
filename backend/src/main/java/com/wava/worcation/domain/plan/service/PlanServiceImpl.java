@@ -15,6 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
@@ -29,6 +32,17 @@ public class PlanServiceImpl implements PlanService {
     @Autowired
     private WorcationRepository worcationRepository;
 
+    private String changeTime(String TimeFirst){
+        String changeTime;
+        ZonedDateTime utcDateTime = ZonedDateTime.parse(TimeFirst, DateTimeFormatter.ISO_DATE_TIME.withZone(ZoneOffset.UTC));
+
+        // 로컬 시간대로 변환
+        ZonedDateTime localDateTime = utcDateTime.withZoneSameInstant(ZoneId.systemDefault());
+
+        // 로컬 시간대의 문자열로 변환
+        changeTime = localDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+        return changeTime;
+    }
 
     @Override
     public PlanResponseDto createPlan(PlanRequestDto planRequestDto, User user) {
@@ -36,8 +50,8 @@ public class PlanServiceImpl implements PlanService {
         Plan plan = Plan.builder()
                 .taskTitle(planRequestDto.getTitle())
                 .taskContent(planRequestDto.getContent())
-                .taskStartTime(planRequestDto.getStart())
-                .taskEndTime(planRequestDto.getEnd())
+                .taskStartTime(changeTime(planRequestDto.getStart()))
+                .taskEndTime(changeTime(planRequestDto.getEnd()))
                 .taskImportant(planRequestDto.getImportant())
                 .taskType(planRequestDto.getType())
                 .taskIsFinish(planRequestDto.getIsFinish())
