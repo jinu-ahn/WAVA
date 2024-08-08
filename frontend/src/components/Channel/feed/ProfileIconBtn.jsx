@@ -9,8 +9,6 @@ function ProfileIconBtn({ children, customStyle, isLeft, onClick }) {
         } ${customStyle} rounded-full p-1 shadow-md cursor-pointer`}
       >
         {children}
-        {/* <CheckIcon className=" text-white" size={20} /> */}
-        {/* <Camera size={20} /> */}
       </label>
     </>
   );
