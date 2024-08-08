@@ -118,10 +118,12 @@ export const deleteLikeFeedRequest = async (id) => {
 };
 
 // 피드 검색 -> 에러 핸들링 할 것 ->마지막페이지, 페이지아웃
-export const searchFeedRequest = async (keyword = "") => {
-  return get_feedData.data;
+export const searchFeedRequest = async (keyword = "", page = 0) => {
+  // return get_feedData.data;
 
-  return await handleRequest(() => local.get(`${address}/search?q=${keyword}`));
+  return await handleRequest(() =>
+    local.get(`${address}/feed/search?page=${page}&content=${keyword}`)
+  );
 };
 
 // 팔로우 등록
