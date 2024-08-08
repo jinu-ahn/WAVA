@@ -5,6 +5,7 @@ import useDeviceStore from "../../../store/deviceStore";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
 import ProfileIconBtn from "./ProfileIconBtn";
 import { createProfileImageRequest } from "../../../api/channelFeedApi";
+import useUserStore from "../../../store/userStore";
 
 const FeedHeader = ({ openCreateDrawer, userId, setUserInfo, userInfo }) => {
   const isMobile = useDeviceStore((state) => state.isMobile);
@@ -14,6 +15,9 @@ const FeedHeader = ({ openCreateDrawer, userId, setUserInfo, userInfo }) => {
   const [followDrawerTab, setFollowDrawerTab] = useState("followers");
 
   const [editProfile, setEditProfile] = useState(null);
+
+  const loginedUserNickName = useUserStore((state) => state.userInfo?.nickName);
+  const ownerUserNickName = userInfo?.nickName;
 
   const handleNameChange = (e) =>
     setUserInfo((state) => ({ ...state, nickname: e.target.value }));
@@ -54,6 +58,7 @@ const FeedHeader = ({ openCreateDrawer, userId, setUserInfo, userInfo }) => {
       window.location.reload();
     }
   };
+
   return (
     <div className={isMobile ? "p-4" : "p-6"}>
       <div
@@ -75,17 +80,18 @@ const FeedHeader = ({ openCreateDrawer, userId, setUserInfo, userInfo }) => {
             ) : (
               <UserCircleIcon className="w-24 h-24 rounded-full shadow-md" />
             )}
-
-            <ProfileIconBtn style={"bg-white"}>
-              <Camera size={20} />
-              <input
-                id="profile-pic-upload"
-                type="file"
-                className="hidden"
-                onChange={handleProfilePicChange}
-                accept="image/*"
-              />
-            </ProfileIconBtn>
+            {loginedUserNickName === ownerUserNickName && (
+              <ProfileIconBtn style={"bg-white"}>
+                <Camera size={20} />
+                <input
+                  id="profile-pic-upload"
+                  type="file"
+                  className="hidden"
+                  onChange={handleProfilePicChange}
+                  accept="image/*"
+                />
+              </ProfileIconBtn>
+            )}
           </div>
         )}
 
@@ -128,15 +134,18 @@ const FeedHeader = ({ openCreateDrawer, userId, setUserInfo, userInfo }) => {
                 {userInfo?.nickName || " "}
               </h1>
             </div>
-            <button
-              onClick={openCreateDrawer}
-              className={`px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 transition-colors ${
-                isMobile ? "w-full" : ""
-              }`}
-            >
-              글 작성
-            </button>
+            {loginedUserNickName === ownerUserNickName && (
+              <button
+                onClick={openCreateDrawer}
+                className={`px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 transition-colors ${
+                  isMobile ? "w-full" : ""
+                }`}
+              >
+                글 작성
+              </button>
+            )}
           </div>
+
           <div className="mb-4">
             {isEditingBio ? (
               <div className="flex items-center">
@@ -158,12 +167,14 @@ const FeedHeader = ({ openCreateDrawer, userId, setUserInfo, userInfo }) => {
                 <p className="text-gray-700 mr-2">
                   {userInfo?.description || " "}
                 </p>
-                <button
-                  onClick={() => setIsEditingBio(true)}
-                  className="text-gray-500 hover:text-gray-700"
-                >
-                  <Edit size={16} />
-                </button>
+                {loginedUserNickName === ownerUserNickName && (
+                  <button
+                    onClick={() => setIsEditingBio(true)}
+                    className="text-gray-500 hover:text-gray-700"
+                  >
+                    <Edit size={16} />
+                  </button>
+                )}
               </div>
             )}
           </div>

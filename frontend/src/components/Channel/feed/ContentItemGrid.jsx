@@ -22,7 +22,10 @@ const ContentItemGrid = ({ loadMore, onSelectContent, contents, loading }) => {
         } 2xl:grid-cols-6 lg:grid-cols-4 md:grid-cols-3 gap-6 p-6`}
       >
         {contents?.map((content, index) => (
-          <div className="flex justify-center relative group" key={index}>
+          <div
+            className="flex justify-center relative group aspect-square border rounded-lg "
+            key={index}
+          >
             <img
               src={content.imageUrl}
               onClick={() => onSelectContent(content)}

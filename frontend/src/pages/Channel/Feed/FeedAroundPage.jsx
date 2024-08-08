@@ -6,14 +6,34 @@ import { searchFeedRequest } from "../../../api/channelFeedApi";
 
 function FeedAroundPage() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [selectedContent, setSelectedContent] = useState(null);
+  const [selectedFeedId, setSelectedFeedId] = useState(null);
 
   const [contents, setContents] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  const [pages, setPages] = useState(0);
+  const [maxPage, setMaxPage] = useState(-1);
+
+  const [searchKeyword, setSearchKeyword] = useState("");
+
+  const [isNoContent, setIsNoContent] = useState(false);
 
   useEffect(() => {
     const getData = async () => {
-      const resp = await searchFeedRequest();
-      setContents(resp);
+      try {
+        setLoading(true);
+        const resp = await searchFeedRequest();
+        if (resp?.data?.data?.length > 0) {
+          setContents(resp?.data?.data);
+          setMaxPage(resp?.data?.totalPages - 1); // 0부터 -1까지
+        } else {
+          setIsNoContent(true);
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
     };
 
     getData();
@@ -21,16 +41,26 @@ function FeedAroundPage() {
 
   const handleCloseDrawer = () => {
     setIsDrawerOpen(false);
-    setSelectedContent(null);
+    setSelectedFeedId(null);
   };
 
   const handleSelectContent = (content) => {
-    setSelectedContent(content);
+    setSelectedFeedId(content.id);
     setIsDrawerOpen(true);
   };
 
   const searchHandle = async (searchText) => {
-    setContents(await searchFeedRequest(searchText));
+    const resp = await searchFeedRequest(searchText);
+    if (resp?.data?.data.length > 0) {
+      setContents(resp?.data?.data);
+      setMaxPage(resp?.data?.totalPages);
+    } else {
+      setIsNoContent(true);
+      setContents([]);
+      setMaxPage(-1);
+    }
+    setPages(0);
+    setSearchKeyword(searchText);
   };
 
   const handleChange = (contentId, type, status) => {
@@ -51,19 +81,41 @@ function FeedAroundPage() {
       );
     }
   };
+
+  const loadMore = async () => {
+    if (loading) return;
+    try {
+      console.log(pages, maxPage);
+      if (pages + 1 > maxPage) return;
+      setLoading(true);
+      const feedContResp = await searchFeedRequest(searchKeyword, pages + 1);
+      if (feedContResp?.data) {
+        setContents((state) => [...state, ...feedContResp?.data?.data]);
+        setPages((c) => c + 1);
+      }
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex h-full">
       <div className="flex flex-col flex-1">
         <FeedSearchBar searchHandle={searchHandle} />
+
+        {isNoContent && <h1>아무것도검색되지않았다</h1>}
         <ContentItemGrid
-          loadMore={null}
+          loadMore={loadMore}
           contents={contents}
+          loading={loading}
           onSelectContent={handleSelectContent}
         />
         <ContentDrawer
           isOpen={isDrawerOpen}
           onClose={handleCloseDrawer}
-          content={selectedContent}
+          feedId={selectedFeedId}
           originChangeHandle={handleChange}
         />
       </div>
