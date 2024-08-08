@@ -1,14 +1,13 @@
 import useDeviceStore from "../store/deviceStore";
 import { useNavigate } from "react-router-dom";
 import CustomDatePicker from "../components/common/customDatePicker";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useLayoutEffect, useState } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { createWorcation, updateWorcation } from "../api/createWorcationApi";
 import Swal from "sweetalert2";
 import { validateWorcation } from "../util/func";
 import SidoSigunguSelector from "../components/Worcation/SidoSigunguSelector";
-import { useLocation } from "react-router-dom";
 import useUserStore from "../store/userStore";
 
 function WorcationPage() {
@@ -50,7 +49,7 @@ function WorcationPage() {
     setData((state) => ({ ...state, sigungu: "", sido: e }));
   };
 
-  // // 구군 변경 함수
+  // 구군 변경 함수
   const sigunguChangeHandle = (e) => {
     const elem = document.activeElement;
     if (elem) {
@@ -58,11 +57,6 @@ function WorcationPage() {
     }
     setData((state) => ({ ...state, sigungu: e }));
   };
-
-  // // 직업 변경 함수
-  // const onChangeJob = (e) => {
-  //   setData((state) => ({ ...state, job: e.target.value }));
-  // };
 
   // 서브밋 함수
   const submitHandle = async (e) => {

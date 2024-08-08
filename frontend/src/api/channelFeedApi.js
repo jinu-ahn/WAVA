@@ -1,5 +1,4 @@
 import { localAxios as local } from "../util/http-commons";
-import { get_feedData } from "./dummy";
 
 const address = "/channel";
 
@@ -57,19 +56,6 @@ export const readFeedContentRequest = async (id, pageNo = 1) => {
 
 // 개인 채널의  정보
 export const readFeedInfoRequest = async (id) => {
-  // return {
-  //   email: "wava@wava.com",
-  //   nickname: "전지훈",
-  //   sido: "광주광역시",
-  //   sigungu: "광산구",
-  //   description: "전지훈의 개인 채널입니다.",
-  //   profileImage:
-  //     "https://fastly.picsum.photos/id/184/250/250.jpg?hmac=6ULGFzE9ycGK0cgb3NB9AJG6Jt0_w_Ez-QWFZpWEFRI",
-  //   follow: 1,
-  //   follower: 1,
-  //   feedCount: 1,
-  // };
-
   return await handleRequest(() =>
     local.get(address + "/personal/" + id + "/info")
   );
@@ -163,4 +149,11 @@ export const createProfileImageRequest = async (data) => {
   } else {
     return false;
   }
+};
+
+// 개인 채널 설명 변경
+export const updateFeedDescription = async (desc) => {
+  return await handleRequest(() =>
+    local.patch(`${address}/personal/description`, { description: desc })
+  );
 };
