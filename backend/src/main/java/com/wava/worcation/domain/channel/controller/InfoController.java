@@ -111,9 +111,8 @@ public class InfoController{
     }
 
 
-    @GetMapping("/{nickname}/search")
-    public ResponseEntity<ApiResponse<?>> searchFeed(@PathVariable String nickname,
-                                                     @RequestParam(defaultValue = "0") int page,
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<?>> searchFeed(@RequestParam(defaultValue = "0") int page,
                                                      @RequestParam String content,
                                                      @AuthUser User user) {
         try {

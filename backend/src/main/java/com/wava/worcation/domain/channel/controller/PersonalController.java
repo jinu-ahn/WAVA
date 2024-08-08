@@ -59,7 +59,7 @@ public class PersonalController {
         }
     }
 
-    @PostMapping("/profile")
+    @PatchMapping("/profile")
     public ResponseEntity<ApiResponse<?>> changeProfile(@RequestParam("image") MultipartFile file, @AuthUser User user){
         try {
             if (file.isEmpty()) {
