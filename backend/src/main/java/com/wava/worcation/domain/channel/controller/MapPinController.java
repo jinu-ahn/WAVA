@@ -20,7 +20,7 @@ public class MapPinController {
 
     @PostMapping()
     private ResponseEntity<ApiResponse<MapPinResponseDto>> createPin(@RequestBody MapPinRequestDto requestDto) {
-        return ResponseEntity.status(HttpStatus.OK)
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success(mapPinService.createPin(requestDto)));
     }
 
