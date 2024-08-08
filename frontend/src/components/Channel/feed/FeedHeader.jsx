@@ -4,6 +4,7 @@ import FollowDrawer from "./FollowDrawer";
 import useDeviceStore from "../../../store/deviceStore";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
 import ProfileIconBtn from "./ProfileIconBtn";
+import { createProfileImageRequest } from "../../../api/channelFeedApi";
 
 const FeedHeader = ({ openCreateDrawer, userId, setUserInfo, userInfo }) => {
   const isMobile = useDeviceStore((state) => state.isMobile);
@@ -35,7 +36,6 @@ const FeedHeader = ({ openCreateDrawer, userId, setUserInfo, userInfo }) => {
     });
     // console.log("Profile picture change requested", e.target.files[0]);
   };
-  console.log(editProfile);
   const openFollowDrawer = (tab) => {
     setFollowDrawerTab(tab);
     setIsFollowDrawerOpen(true);
@@ -45,8 +45,14 @@ const FeedHeader = ({ openCreateDrawer, userId, setUserInfo, userInfo }) => {
     setEditProfile(null);
   };
 
-  const handleSubmitProfilePicChange = () => {
-    console.log("클릭");
+  const handleSubmitProfilePicChange = async () => {
+    if (!editProfile) return;
+    const formData = new FormData();
+    formData.append("image", editProfile?.file);
+    const resp = await createProfileImageRequest(formData);
+    if (resp) {
+      window.location.reload();
+    }
   };
   return (
     <div className={isMobile ? "p-4" : "p-6"}>

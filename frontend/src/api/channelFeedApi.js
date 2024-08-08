@@ -147,12 +147,11 @@ export const readFollowerUserRequest = async (nickName) => {
 
 // 헤더 덮어씌워서 명시적으로 지정
 // 프로필 이미지 저장
-export const createProfileImageRequest = async (nickName, data) => {
-  // const token = localStorage.getItem("authToken");
-  const token = "MYTOKEN";
+export const createProfileImageRequest = async (data) => {
+  const token = sessionStorage.getItem("accessToken");
   if (token) {
     return await handleRequest(() =>
-      local.post(`personal/${nickName}/profile`, data, {
+      local.post(`/channel/personal/profile`, data, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${token}`,
