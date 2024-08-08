@@ -1,5 +1,7 @@
 package com.wava.worcation.domain.worcation.application;
 
+import com.wava.worcation.common.exception.CustomException;
+import com.wava.worcation.common.response.ErrorCode;
 import com.wava.worcation.domain.user.domain.User;
 import com.wava.worcation.domain.worcation.dao.WorcationRepository;
 import com.wava.worcation.domain.worcation.domain.Worcation;
@@ -20,22 +22,20 @@ public class WorcationServiceImpl implements WorcationService {
 
     @Override
     public ResponseEntity<?> createWorcation(WorcationRequestDto worcationRequestDto, User user) {
-        log.info("들어갔나");
-        if (!worcationRepository.existsByUserId(user.getId())){
-            Worcation worcation = Worcation.builder()
-                    .user(user)
-                    .start(worcationRequestDto.getStart())
-                    .end(worcationRequestDto.getEnd())
-                    .sido(worcationRequestDto.getSido())
-                    .sigungu(worcationRequestDto.getSigungu())
-                    .job(worcationRequestDto.getJob())
-                    .type(worcationRequestDto.getType())
-                    .build();
-            Worcation savedWorcation = worcationRepository.save(worcation);
-            return ResponseEntity.ok().body(new WorcationResponseDto(savedWorcation));
+        if (worcationRepository.existsByUserId(user.getId())){
+            throw new CustomException(ErrorCode.ALREADY_EXIST_WORCATION);
         }
-        else {return ResponseEntity.status(HttpStatus.CONFLICT).body("중복");
-        }
+        Worcation worcation = Worcation.builder()
+                .user(user)
+                .start(worcationRequestDto.getStart())
+                .end(worcationRequestDto.getEnd())
+                .sido(worcationRequestDto.getSido())
+                .sigungu(worcationRequestDto.getSigungu())
+                .job(worcationRequestDto.getJob())
+                .type(worcationRequestDto.getType())
+                .build();
+        Worcation savedWorcation = worcationRepository.save(worcation);
+        return ResponseEntity.ok().body(new WorcationResponseDto(savedWorcation));
     }
 
     @Override
