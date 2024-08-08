@@ -51,9 +51,14 @@ function FeedAroundPage() {
 
   const searchHandle = async (searchText) => {
     const resp = await searchFeedRequest(searchText);
-    setContents(resp?.data?.data);
-    setMaxPage(resp?.data?.totalPages);
-
+    if (resp?.data?.data.length > 0) {
+      setContents(resp?.data?.data);
+      setMaxPage(resp?.data?.totalPages);
+    } else {
+      setIsNoContent(true);
+      setContents([]);
+      setMaxPage(-1);
+    }
     setPages(0);
     setSearchKeyword(searchText);
   };
@@ -100,6 +105,7 @@ function FeedAroundPage() {
       <div className="flex flex-col flex-1">
         <FeedSearchBar searchHandle={searchHandle} />
 
+        {isNoContent && <h1>아무것도검색되지않았다</h1>}
         <ContentItemGrid
           loadMore={loadMore}
           contents={contents}
