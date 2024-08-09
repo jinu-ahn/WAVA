@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -21,6 +21,15 @@ import GroupDiscoverPage from "./pages/Channel/Group/GroupDiscoverPage";
 function App() {
   const { user } = useAuthStore();
   console.log(user);
+
+  useEffect(() => {
+    if (!sessionStorage.getItem("accessToken")) {
+      if (JSON.parse(localStorage.getItem("userStorage"))?.state?.isLogin) {
+        localStorage.removeItem("userStorage");
+        console.log("세션 만료로 로그아웃되었습니다.");
+      }
+    }
+  }, []);
   return (
     <BrowserRouter>
       <div className="App flex flex-col min-h-screen">

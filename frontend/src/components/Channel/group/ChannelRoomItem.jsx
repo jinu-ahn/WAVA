@@ -1,7 +1,9 @@
-function ChannelRoomItem({ roomInfo }) {
+function ChannelRoomItem({ roomInfo, onClick }) {
   const isFull = roomInfo.userCount > 3;
 
-  const joinChannelHandle = () => {};
+  const joinChannelHandle = () => {
+    onClick();
+  };
   return (
     <div className="bg-white rounded-lg shadow p-4">
       <div className="flex justify-between items-center mb-2">
