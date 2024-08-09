@@ -109,6 +109,7 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                     .channelSido(channel.getChannelSido())
                     .channelSigungu(channel.getChannelSigungu())
                     .channelMemo(channel.getChannelMemo())
+                    .channelType(channel.getChannelType())
                     .userCount(channelUserRepository.countByChannelId(channel.getId()))
                     .build());
         }
@@ -167,6 +168,7 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                         .channelSido(channel.getChannelSido())
                         .channelSigungu(channel.getChannelSigungu())
                         .channelMemo(channel.getChannelMemo())
+                        .channelType(channel.getChannelType())
                         .userCount(channelUserRepository.countByChannelId(channel.getId()))
                         .build()));
     }
@@ -178,13 +180,14 @@ public class GroupChannelServiceImpl implements GroupChannelService {
         List<GroupChannelResponseDto> groupChannelResponseList = channelUserList.stream()
                 .map(channel -> {
                     return GroupChannelResponseDto.builder()
-                            .channelId(channel.getId())
+                            .channelId(channel.getChannel().getId())
                             .userId(channel.getUser().getId())
                             .channelSido(channel.getChannel().getChannelSido())
                             .channelSigungu(channel.getChannel().getChannelSigungu())
                             .channelTitle(channel.getChannel().getChannelTitle())
                             .channelDescription(channel.getChannel().getChannelDescription())
                             .channelMemo(channel.getChannel().getChannelMemo())
+                            .channelType(channel.getChannel().getChannelType())
                             .build();
                 }).toList();
         return ResponseEntity.status(HttpStatus.OK)

@@ -1,6 +1,7 @@
 package com.wava.worcation.domain.channel.dto.response;
 
 
+import com.wava.worcation.domain.channel.enums.ChannelType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,5 +16,6 @@ public class GroupChannelResponseDto {
     private String channelTitle;
     private String channelDescription;
     private String channelMemo;
+    private String channelType;
     private int userCount;
 }

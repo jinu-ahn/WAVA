@@ -20,7 +20,7 @@ public interface ChannelRepository extends JpaRepository<Channel, Long> {
     List<Channel> findByChannelType(String channelType);
 
     @Query("SELECT c FROM Channel c WHERE c.channelType = :channelType ORDER BY CASE WHEN c.channelSido = :sido THEN 0 ELSE 1 END, c.channelTitle ASC")
-    List<Channel> findAllByChannelType(String channelType, @Param("sido") String sido);
+    List<Channel> findAllByChannelType(@Param("channelType")String channelType, @Param("sido") String sido);
 
     @Query("SELECT c FROM Channel c " +
             "WHERE c.channelType = :channelType " +
