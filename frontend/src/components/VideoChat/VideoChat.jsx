@@ -4,6 +4,16 @@ import React, { Component ,useEffect } from "react";
 import UserVideoComponent from "./UserVideoComponent";
 import useUserStore from "../../store/userStore";
 
+const OPENVIDU_SERVER_URL = process.env.REACT_APP_SERVER_ADDRESS;
+
+// const ChannelId = ({ channelId }) => {
+//   useEffect(() => {
+//     if (channelId) {
+//       console.log("Received channelId: ", channelId)
+//     }
+//   }, [channelId])
+// }
+
 const UserStoreWrapper = (props) => {
   const userInfo = useUserStore((state) => state.userInfo);
   useEffect(() => {
@@ -12,7 +22,6 @@ const UserStoreWrapper = (props) => {
   }, [userInfo]);
   return null;
 };
-const OPENVIDU_SERVER_URL = process.env.REACT_APP_SERVER_ADDRESS;
 
 class App extends Component {
   constructor(props) {
@@ -21,7 +30,6 @@ class App extends Component {
     const userInfo = props.userInfo || {};
     // 이 속성들은 state's 컴포넌트에 있어, 값이 변경될 때마다 HTML을 다시 렌더링합니다.
     this.state = {
-      mySessionId: "1",  // ---------------------------------해당 모임채널 id가 들어가야합니다. 
       myUserName: userInfo.nickName,
       session: undefined,
       mainStreamManager: undefined, // 페이지의 메인 비디오. 'publisher'나 'subscribers' 중 하나가 될 것임.
@@ -88,9 +96,8 @@ class App extends Component {
 
 
   async getToken() {
-    const channelId = "1"; // <---------------------------------------------- 나중에 현재 모임채널의 아이디로 수정
+    const channelId = this.props.channelId;
     const sessionId = await this.createSession(channelId);
-
     let token = await this.createToken(sessionId);
     return token;
   }
@@ -274,14 +281,20 @@ class App extends Component {
     }
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.userInfo && this.state.userInfo !== prevState.userInfo) {
+      this.joinSession();
+    }
+  }
+
   render() {
-    const mySessionId = this.state.mySessionId;
-    const myUserName = this.state.myUserName;
+    // const mySessionId = this.state.mySessionId;
+    // const myUserName = this.state.myUserName;
 
     return (
       <div className="container">
-        <UserStoreWrapper setUserInfo={async (userInfo) => await this.setState({ userInfo, myUserName: userInfo?.nickName })} />
-        {this.state.session === undefined ? (
+        <UserStoreWrapper setUserInfo={(userInfo) => this.setState({ userInfo, myUserName: userInfo?.nickName })} />
+        {/* {this.state.session === undefined ? (
           
           <div id="join">
                     <div id="join-dialog" className="jumbotron vertical-center">
@@ -290,7 +303,7 @@ class App extends Component {
                             <p>
                                 <label>Participant: </label>
                                 <span>{myUserName}</span>
-                                {/* <input
+                                <input
                                     className="form-control"
                                     type="text"
                                     id="userName"
@@ -298,7 +311,7 @@ class App extends Component {
                                     onChange={this.handleChangeUserName}
                                     
                                     required
-                                /> */}
+                                />
                             </p>
                             <p>
                                 <label> Session: </label>
@@ -317,7 +330,7 @@ class App extends Component {
                         </form>
                     </div>
                 </div>
-            ) : null}
+            ) : null} */}
 
             {this.state.session !== undefined ? (
                 <div id="session" className="bg-black">
