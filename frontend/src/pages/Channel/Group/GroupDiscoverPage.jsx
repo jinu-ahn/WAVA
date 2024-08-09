@@ -13,7 +13,6 @@ function GroupDiscoverPage() {
   useEffect(() => {
     const getData = async () => {
       const resp = await groupChannelAPI.getAllChannelList();
-      console.log(resp);
       if (resp) {
         setGroupList(resp.data);
       }
