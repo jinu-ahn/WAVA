@@ -1,4 +1,6 @@
 import { nanoid } from "nanoid";
+// import { useEffect } from "react";
+// import { groupChannelAPI } from "../../api/groupChannelAPI";
 import { NavLink } from "react-router-dom";
 
 function ChannelSubExplorer({ children, data, type, toolbarBtn = null }) {
@@ -14,7 +16,7 @@ function ChannelSubExplorer({ children, data, type, toolbarBtn = null }) {
               aria-hidden={true}
               key={nanoid()}
               draggable={false}
-              to={`/channel/${type}/${el.id}`}
+              to={`/channel/${type}/${el.channelId}`}
               className="w-full"
             >
               <button className="w-10 h-10 mx-auto bg-gray-200 rounded-full hover:bg-gray-300 transition-colors duration-200 flex items-center justify-center"></button>
