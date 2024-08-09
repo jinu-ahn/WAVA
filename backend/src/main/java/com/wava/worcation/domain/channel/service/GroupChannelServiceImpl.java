@@ -17,6 +17,7 @@ import com.wava.worcation.domain.channel.repository.ChannelUserRepository;
 import com.wava.worcation.domain.user.domain.User;
 import com.wava.worcation.domain.user.dto.response.UserResponseDto;
 import com.wava.worcation.domain.user.repository.UserRepository;
+import com.wava.worcation.domain.worcation.dao.WorcationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,7 @@ public class GroupChannelServiceImpl implements GroupChannelService {
     private final TokenProvider tokenProvider;
     private final ChannelUserRepository channelUserRepository;
     private final OpenViduService openViduService;
+    private final WorcationRepository worcationRepository;
 
 
     /**
@@ -95,8 +97,8 @@ public class GroupChannelServiceImpl implements GroupChannelService {
      */
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> showAllGroupChannel() {
-        List<Channel> channelList = channelRepository.findByChannelType(ChannelType.GROUP.getCode());
+    public ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> showAllGroupChannel(User user) {
+        List<Channel> channelList = channelRepository.findAllByChannelType(ChannelType.GROUP.getCode(),worcationRepository.findByUserId(user.getId()).getSido());
         List<GroupChannelResponseDto> groupChannelResponseDtoList = new ArrayList<>();
         for (Channel channel : channelList) {
             groupChannelResponseDtoList.add(GroupChannelResponseDto.builder()

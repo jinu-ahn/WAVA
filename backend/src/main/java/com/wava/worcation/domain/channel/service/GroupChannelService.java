@@ -2,7 +2,6 @@ package com.wava.worcation.domain.channel.service;
 
 
 import com.wava.worcation.common.response.ApiResponse;
-import com.wava.worcation.domain.channel.domain.Channel;
 import com.wava.worcation.domain.channel.dto.request.GroupChannelRequestDto;
 import com.wava.worcation.domain.channel.dto.response.GroupChannelResponseDto;
 import com.wava.worcation.domain.channel.dto.response.GroupDetailResponseDto;
@@ -14,7 +13,7 @@ import java.util.List;
 public interface GroupChannelService {
     ResponseEntity<ApiResponse<GroupChannelResponseDto>> createGroupChannel(final GroupChannelRequestDto groupChannelRequestDto, User user) throws Exception;
 
-    ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> showAllGroupChannel();
+    ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> showAllGroupChannel(User user);
 
     ResponseEntity<ApiResponse<GroupDetailResponseDto>> getGroupDetail(final Long channelId);
 
