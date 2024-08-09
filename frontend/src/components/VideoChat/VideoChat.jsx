@@ -6,14 +6,6 @@ import useUserStore from "../../store/userStore";
 
 const OPENVIDU_SERVER_URL = process.env.REACT_APP_SERVER_ADDRESS;
 
-// const ChannelId = ({ channelId }) => {
-//   useEffect(() => {
-//     if (channelId) {
-//       console.log("Received channelId: ", channelId)
-//     }
-//   }, [channelId])
-// }
-
 const UserStoreWrapper = (props) => {
   const userInfo = useUserStore((state) => state.userInfo);
   useEffect(() => {
@@ -287,59 +279,17 @@ class App extends Component {
     }
   }
 
-  render() {
-    // const mySessionId = this.state.mySessionId;
-    // const myUserName = this.state.myUserName;
+  changeMode() {
+          this.props.setMode(!this.props.mode);
+  }
 
+  render() {
     return (
       <div className="container">
         <UserStoreWrapper setUserInfo={(userInfo) => this.setState({ userInfo, myUserName: userInfo?.nickName })} />
-        {/* {this.state.session === undefined ? (
-          
-          <div id="join">
-                    <div id="join-dialog" className="jumbotron vertical-center">
-                        <h1> Join a video session </h1>
-                        <form className="form-group" onSubmit={this.joinSession}>
-                            <p>
-                                <label>Participant: </label>
-                                <span>{myUserName}</span>
-                                <input
-                                    className="form-control"
-                                    type="text"
-                                    id="userName"
-                                    value={myUserName}        
-                                    onChange={this.handleChangeUserName}
-                                    
-                                    required
-                                />
-                            </p>
-                            <p>
-                                <label> Session: </label>
-                                <input
-                                    className="form-control"
-                                    type="text"
-                                    id="sessionId"
-                                    value={mySessionId}
-                                    onChange={this.handleChangeSessionId}
-                                    required
-                                />
-                            </p>
-                            <p className="text-center">
-                                <input className="btn btn-lg btn-success" name="commit" type="submit" value="JOIN" />
-                            </p>
-                        </form>
-                    </div>
-                </div>
-            ) : null} */}
 
             {this.state.session !== undefined ? (
                 <div id="session" className="bg-black">
-                    {/* {this.state.mainStreamManager !== undefined ? (
-                        <div id="main-video" className="col-md-6">
-                            <UserVideoComponent streamManager={this.state.mainStreamManager} />
-
-                        </div>
-                    ) : null} */}
                     <div id="video-container" className="col-lg-12 p-1">
                         {this.state.publisher !== undefined ? (
                             <div className="stream-container col-md-6 col-xs-6" onClick={() => this.handleMainVideoStream(this.state.publisher)}>
@@ -356,23 +306,13 @@ class App extends Component {
                 </div>
             ) : null}
                 <div id="session-header" className="fixed bottom-0 h-10 opacity-0 hover:opacity-100 transition-opacity duration-300">
-                    {/* <h1 id="session-title">{mySessionId}</h1> */}
-                    <button className="bg-red-600" onClick={this.leaveSession} id="buttonLeaveSession">
-                    Leave session
+          <button className="bg-red-600" onClick={() => { this.leaveSession(); this.changeMode(); }} id="buttonLeaveSession">
+                      Leave session
                     </button>
-                    {/* <input
-                        className="btn btn-large btn-success"
-                        type="button"
-                        id="buttonSwitchCamera"
-                        onClick={this.switchCamera}
-                        value="Switch Camera"
-                    /> */}
                 </div>
         </div>
     );
-}
-
-
+  }
 }
 
 export default App;

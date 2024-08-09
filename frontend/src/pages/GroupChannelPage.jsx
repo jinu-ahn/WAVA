@@ -204,7 +204,7 @@ const GroupChannelPage = () => {
           </div>
         :  
           <div className="w-2/12 overflow-auto bg-black">
-            <VideoChat channelId={groupId}/>
+          <VideoChat channelId={groupId} mode={mode} setMode={setMode}/>
           </div>
         }
 
