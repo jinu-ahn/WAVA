@@ -76,6 +76,7 @@ function refreshToken() {
     .then((response) => {
       let accessToken = response.headers["authorization"];
       let refreshToken = response.headers["refreshtoken"];
+
       sessionStorage.setItem("accessToken", accessToken);
       sessionStorage.setItem("refreshToken", refreshToken);
 
