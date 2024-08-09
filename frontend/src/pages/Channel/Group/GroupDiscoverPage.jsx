@@ -20,13 +20,11 @@ function GroupDiscoverPage() {
     <div className="flex flex-col h-full">
       <FeedSearchBar searchHandle={searchHandle} />
 
-      <div className="flex-1 ">
-        <div className="flex-grow overflow-auto flex flex-col">
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 p-4">
-            {groupList.map((g) => (
-              <ChannelRoomItem key={g.channelId} roomInfo={g} />
-            ))}
-          </div>
+      <div className="flex-grow overflow-y-auto flex flex-col">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 p-4">
+          {groupList.map((g) => (
+            <ChannelRoomItem key={g.channelId} roomInfo={g} />
+          ))}
         </div>
       </div>
 
