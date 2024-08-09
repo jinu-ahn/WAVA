@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import useDeviceStore from "../../store/deviceStore";
 import { errorMonitor } from "ws";
+import SidoSigunguSelector from "../Worcation/SidoSigunguSelector";
 
 function SignupComponent() {
   const navigate = useNavigate();
@@ -157,14 +158,24 @@ function SignupComponent() {
     // }
   };
 
-  const onChangeSido = (e) => {
-    const currentSido = e.target.value;
-    setSido(currentSido);
+  const sidoChangeHandle = (e) => {
+    if (e === sido) {
+      return;
+    }
+    const elem = document.activeElement;
+    if (elem) {
+      elem?.blur();
+    }
+    setSido(e);
+    setSigungu("");
   };
 
-  const onChangeSigungu = (e) => {
-    const currentSigungu = e.target.value;
-    setSigungu(currentSigungu);
+  const sigunguChangeHandle = (e) => {
+    const elem = document.activeElement;
+    if (elem) {
+      elem?.blur();
+    }
+    setSigungu(e);
   };
 
   const userRegister = () => {
@@ -406,34 +417,12 @@ function SignupComponent() {
             >
               선호 워케이션 지역
             </label>
-            <div className="flex ">
-              <select
-                id="sido"
-                name="sido"
-                value={sido}
-                onChange={onChangeSido}
-                className="me-0.5 mb-3 bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-32 p-2.5"
-              >
-                <option value="">시/도 입력</option>
-                <option value="US">United States</option>
-                <option value="CA">Canada</option>
-                <option value="FR">France</option>
-                <option value="DE">Germany</option>
-              </select>
-              <select
-                id="sigungu"
-                name="sigungu"
-                value={sigungu}
-                onChange={onChangeSigungu}
-                className="ms-8 mb-3 bg-gray-50 border border-gray-300 text-gray-900 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-32 p-2.5"
-              >
-                <option value="">시/구/군 입력</option>
-                <option value="US">United States</option>
-                <option value="CA">Canada</option>
-                <option value="FR">France</option>
-                <option value="DE">Germany</option>
-              </select>
-            </div>
+            <SidoSigunguSelector
+              sido={sido}
+              sigungu={sigungu}
+              sidoChangeHandle={sidoChangeHandle}
+              sigunguChangeHandle={sigunguChangeHandle}
+            />
 
             <button
               type="button"

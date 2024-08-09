@@ -323,7 +323,7 @@ const MapComponent = () => {
           </button>
           <button
             onClick={resetMap}
-            className="p-2 bg-gray-600 text-white rounded hover:bg-gray-500"
+            className="p-2 bg-gray-600 text-white rounded hover:bg-red-600"
           >
             초기화
           </button>

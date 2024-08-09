@@ -1,6 +1,6 @@
 // import { localAxios as local } from "../util/http-commons";
 
-// const createGroupChannelAPI = async (channelName, success, fail) => {
+// const groupChannelAPI = async (channelName, success, fail) => {
 //   try {
 //     const response = await local.post("/api/channels/group", {
 //       name: channelName,
@@ -12,14 +12,14 @@
 //   }
 // };
 
-// export { createGroupChannelAPI };
+// export { groupChannelAPI };
 import { localAxios as local } from "../util/http-commons";
 
 import { handleRequest } from "./helper";
 
 const address = "/channel";
 // 그룹 채널 서비스 객체
-const createGroupChannelAPI = {
+const groupChannelAPI = {
   // 내가 가입한 채널 보기
   getMyChannel: async () => {
     return await handleRequest(() => local.get(address + "/userchannel"));
@@ -80,4 +80,4 @@ const createGroupChannelAPI = {
   // },
 };
 
-export { createGroupChannelAPI };
+export { groupChannelAPI };

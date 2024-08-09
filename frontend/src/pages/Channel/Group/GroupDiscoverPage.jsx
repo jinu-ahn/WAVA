@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 import FeedSearchBar from "../../../components/Channel/feed/FeedSearchbar";
-import { createGroupChannelAPI } from "../../../api/groupChannelAPI";
+import { groupChannelAPI } from "../../../api/groupChannelAPI";
 import ChannelRoomItem from "../../../components/Channel/group/ChannelRoomItem";
 
 function GroupDiscoverPage() {
   const [groupList, setGroupList] = useState([]);
   useEffect(() => {
     const getData = async () => {
-      const resp = await createGroupChannelAPI.getAllChannelList();
+      const resp = await groupChannelAPI.getAllChannelList();
       console.log(resp);
       if (resp) {
         setGroupList(resp.data);
@@ -27,12 +27,6 @@ function GroupDiscoverPage() {
           ))}
         </div>
       </div>
-
-      {/* <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 p-4">
-        {groupList.map((g) => (
-          <ChannelRoomItem key={g.channelId} roomInfo={g} />
-        ))}
-      </div> */}
     </div>
   );
 }

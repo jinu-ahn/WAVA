@@ -10,7 +10,13 @@ import {
 } from "../../../api/channelFeedApi";
 import useUserStore from "../../../store/userStore";
 
-const FeedHeader = ({ openCreateDrawer, userId, setUserInfo, userInfo }) => {
+const FeedHeader = ({
+  openCreateDrawer,
+  userId,
+  setUserInfo,
+  userInfo,
+  openDrawerRef,
+}) => {
   const isMobile = useDeviceStore((state) => state.isMobile);
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingBio, setIsEditingBio] = useState(false);
@@ -20,6 +26,7 @@ const FeedHeader = ({ openCreateDrawer, userId, setUserInfo, userInfo }) => {
   const [editProfile, setEditProfile] = useState(null);
 
   const loginedUserNickName = useUserStore((state) => state.userInfo?.nickName);
+  const setProfileImage = useUserStore((state) => state.setProfileImage);
   const ownerUserNickName = userInfo?.nickName;
 
   const handleNameChange = (e) =>
@@ -59,6 +66,7 @@ const FeedHeader = ({ openCreateDrawer, userId, setUserInfo, userInfo }) => {
     formData.append("image", editProfile?.file);
     const resp = await createProfileImageRequest(formData);
     if (resp) {
+      setProfileImage(resp.data);
       window.location.reload();
     }
   };
@@ -141,6 +149,7 @@ const FeedHeader = ({ openCreateDrawer, userId, setUserInfo, userInfo }) => {
             </div>
             {loginedUserNickName === ownerUserNickName && (
               <button
+                ref={openDrawerRef}
                 onClick={openCreateDrawer}
                 className={`px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 transition-colors ${
                   isMobile ? "w-full" : ""

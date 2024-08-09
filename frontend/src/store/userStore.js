@@ -97,6 +97,9 @@ const useUserStore = create(
       setWorcation: (worcation) => {
         set(() => ({ userInfo: { ...get().userInfo, worcation } }));
       },
+      setProfileImage: (profile) => {
+        set(() => ({ userInfo: { ...get().userInfo, profile } }));
+      },
     }),
     {
       name: "userStorage",
