@@ -47,6 +47,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             Authentication authentication = tokenProvider.getAuthentication(token);
             if (redisUtil.getData(token) != null) {
                 jwtExceptionHandler(response, ErrorCode.BLACK_LIST_TOKEN);
+                return;
             }
             SecurityContextHolder.getContext().setAuthentication(authentication);
         }
@@ -58,10 +59,10 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
         try {
-            String json = new ObjectMapper().writeValueAsString(ApiResponse.error(errorCode));
-            response.getWriter().write(json);
+            ApiResponse<String> apiResponse = ApiResponse.error(errorCode);
+            response.getWriter().write(apiResponse.toJson());
         } catch (Exception e) {
-            log.error(e.getMessage());
+            throw new JwtException(errorCode.getMessage());
         }
     }
 }
