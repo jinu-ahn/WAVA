@@ -1,8 +1,9 @@
 import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
-import React, { Component ,useEffect } from "react";
+import React, { Component, useEffect } from "react";
 import UserVideoComponent from "./UserVideoComponent";
 import useUserStore from "../../store/userStore";
+import { PhoneXMarkIcon } from "@heroicons/react/24/outline";
 
 const OPENVIDU_SERVER_URL = process.env.REACT_APP_SERVER_ADDRESS;
 
@@ -17,7 +18,6 @@ const UserStoreWrapper = (props) => {
 
 class App extends Component {
   constructor(props) {
-
     super(props);
     const userInfo = props.userInfo || {};
     // 이 속성들은 state's 컴포넌트에 있어, 값이 변경될 때마다 HTML을 다시 렌더링합니다.
@@ -37,9 +37,6 @@ class App extends Component {
     this.handleChangeUserName = this.handleChangeUserName.bind(this);
     this.handleMainVideoStream = this.handleMainVideoStream.bind(this);
     this.onbeforeunload = this.onbeforeunload.bind(this);
-
-    
-    
   }
 
   componentDidMount() {
@@ -85,15 +82,12 @@ class App extends Component {
     }
   }
 
-
-
   async getToken() {
     const channelId = this.props.channelId;
     const sessionId = await this.createSession(channelId);
     let token = await this.createToken(sessionId);
     return token;
   }
-
 
   async createSession(channelId) {
     const response = await axios.post(
@@ -134,7 +128,7 @@ class App extends Component {
 
           var sub = mySession.subscribe(event.stream, undefined);
           var subscribers = this.state.subscribers;
-          console.log(sub)
+          console.log(sub);
           subscribers.push(sub);
 
           // 새로운 구독자로 상태 업데이트
@@ -280,37 +274,57 @@ class App extends Component {
   }
 
   changeMode() {
-          this.props.setMode(!this.props.mode);
+    this.props.setMode(!this.props.mode);
   }
 
   render() {
     return (
       <div className="container">
-        <UserStoreWrapper setUserInfo={(userInfo) => this.setState({ userInfo, myUserName: userInfo?.nickName })} />
+        <UserStoreWrapper
+          setUserInfo={(userInfo) =>
+            this.setState({ userInfo, myUserName: userInfo?.nickName })
+          }
+        />
 
-            {this.state.session !== undefined ? (
-                <div id="session" className="bg-black">
-                    <div id="video-container" className="col-lg-12 p-1">
-                        {this.state.publisher !== undefined ? (
-                            <div className="stream-container col-md-6 col-xs-6" onClick={() => this.handleMainVideoStream(this.state.publisher)}>
-                                <UserVideoComponent
-                                    streamManager={this.state.publisher} />
-                            </div>
-                        ) : null}
-                        {this.state.subscribers.map((sub, i) => (
-                            <div key={sub.id} className="stream-container col-md-6 col-xs-6" onClick={() => this.handleMainVideoStream(sub)}>
-                                <UserVideoComponent streamManager={sub} />
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            ) : null}
-                <div id="session-header" className="fixed bottom-0 h-10 opacity-0 hover:opacity-100 transition-opacity duration-300">
-          <button className="bg-red-600" onClick={() => { this.leaveSession(); this.changeMode(); }} id="buttonLeaveSession">
-                      Leave session
+        {this.state.session !== undefined ? (
+          <div id="session" className="bg-black">
+            <div id="video-container" className="col-lg-12 p-1">
+              {this.state.publisher !== undefined ? (
+                <div
+                  className="stream-container col-md-6 col-xs-6 relative group"
+                  onClick={() =>
+                    this.handleMainVideoStream(this.state.publisher)
+                  }
+                >
+                  <UserVideoComponent streamManager={this.state.publisher} />
+                  <div className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <button
+                      className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-2 rounded-md inline-flex items-center"
+                      onClick={() => {
+                        this.leaveSession();
+                        this.changeMode();
+                      }}
+                      id="buttonLeaveSession"
+                    >
+                      <PhoneXMarkIcon className="h-5 w-5 mr-2" />
+                      통화 종료
                     </button>
+                  </div>
                 </div>
-        </div>
+              ) : null}
+              {this.state.subscribers.map((sub, i) => (
+                <div
+                  key={sub.id}
+                  className="stream-container col-md-6 col-xs-6"
+                  onClick={() => this.handleMainVideoStream(sub)}
+                >
+                  <UserVideoComponent streamManager={sub} />
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : null}
+      </div>
     );
   }
 }
