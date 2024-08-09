@@ -39,9 +39,7 @@ public class OpenViduService {
     public  ResponseEntity<ApiResponse<String>> generateToken(String sessionId) throws Exception {
         Session session = openvidu.getActiveSession(sessionId);
        String token= session.createConnection(new ConnectionProperties.Builder().build()).getToken();
-
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(token));
-
     }
 
 

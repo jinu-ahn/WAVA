@@ -15,6 +15,5 @@ public class GroupChannelResponseDto {
     private String channelTitle;
     private String channelDescription;
     private String channelMemo;
-    private String channelSessionId;
     private int userCount;
 }

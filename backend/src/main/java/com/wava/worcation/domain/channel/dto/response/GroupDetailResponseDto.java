@@ -12,6 +12,5 @@ public class GroupDetailResponseDto {
     private Long channelId;
     private String channelTitle;
     private String channelDescription;
-    private String channelSessionId;
     private List<UserResponseDto> user;
 }
