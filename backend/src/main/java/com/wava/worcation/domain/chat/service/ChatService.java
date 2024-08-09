@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface ChatService {
-    void saveChat(final ChatDto chatDto, final String token);
-    ResponseEntity<ApiResponse<List<ChatResponseDto>>> chatLogs(final Long ChannelId);
+    ChatDto saveChat(final ChatDto chatDto, final String token);
+    List<ChatResponseDto> chatLogs(final Long ChannelId);
 
 }

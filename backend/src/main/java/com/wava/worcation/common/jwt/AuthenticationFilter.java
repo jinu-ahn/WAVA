@@ -33,12 +33,14 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     private final RedisUtil redisUtil;
 
     /**
-     * 사용자의 요청을 처리 하기 전 JWT토큰을 확인하고, 유효한 경우 인증 정보를 설정
-     * @param request
-     * @param response
-     * @param filterChain
-     * @throws ServletException
-     * @throws IOException
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-08-08
+     * @ 설명     : 토큰이 사용가능한지, 블랙리스트에 있는 토큰인지 검증 후 ContextHolder에 저장
+     * @param request 헤더에서 토큰을 가져오기위한 servlet
+     * @param response 토큰을 헤더에 추가하기 위한 servlet
+     * @param filterChain filter
+     * @return
+     * @status 실패 : 401, 403
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -54,6 +56,16 @@ public class AuthenticationFilter extends OncePerRequestFilter {
 
         filterChain.doFilter(request, response);
     }
+
+    /**
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-08-08
+     * @ 설명     : JWT 토큰 에러 핸들링
+     * @param response 토큰을 헤더에 추가하기 위한 servlet
+     * @param errorCode 커스텀 에러 코드
+     * @return
+     * @status 실패 : 401, 403
+     */
     public void jwtExceptionHandler(HttpServletResponse response, ErrorCode errorCode) {
         response.setStatus(errorCode.getStatus().value());
         response.setContentType("application/json");

@@ -93,7 +93,6 @@ public class TokenProvider {
      */
     public Authentication getAuthentication(String accessToken) throws RuntimeException {
         Claims claims = parseClaims(accessToken);
-        log.info(claims.getSubject());
         UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(claims.getSubject());
 
         return new UsernamePasswordAuthenticationToken(userDetails, accessToken, userDetails.getAuthorities());
@@ -133,7 +132,6 @@ public class TokenProvider {
             log.debug("[TOKEN ERROR] : {}",ErrorCode.WRONG_TYPE_TOKEN.getMessage());
             throw new JwtException(ErrorCode.WRONG_TYPE_TOKEN.getMessage());
         } catch (ExpiredJwtException e) {
-            log.info("순서 4");
             log.debug("[TOKEN ERROR] : {}",ErrorCode.EXPIRED_TOKEN.getMessage());
             throw new JwtException(ErrorCode.EXPIRED_TOKEN.getMessage());
         } catch (UnsupportedJwtException e) {

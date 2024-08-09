@@ -45,9 +45,12 @@ public class UserServiceImpl implements UserService{
     private final ChannelRepository channelRepository;
 
     /**
-     * 유저 회원 가입
-     * @param requestDto
-     * @return ResponseEntity
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-07-29
+     * @ 설명     : 유저 회원 가입 및 개인 채널 생성
+     * @param requestDto 회원 가입 데이터
+     * @return 회원가입 된 유저 데이터
+     * @status 성공 : 200, 실패 : 409
      */
     @Override
     @Transactional
@@ -93,14 +96,21 @@ public class UserServiceImpl implements UserService{
     }
 
     /**
-     * 로그인 : 로그인 성공 시 토큰 발급 및 헤어데 토큰 추가
-     * @param requestDto
-     * @param response
-     * @return ResponseEntity
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-07-29
+     * @ 설명     : 로그인 시 토큰 발급 및 헤더에 Access, Refresh 토큰 추가
+     * @param requestDto 로그인할 이메일과 비밀번호
+     * @param response 토큰을 헤더에 추가하기 위한 servlet 데이터
+     * @return 데이터베이스에 저장된 유저 데이터
+     * @status 성공 : 200, 실패 : 401, 404
      */
     @Override
     @Transactional
     public ResponseEntity<ApiResponse<LoginResponseDto>> login(@Valid final LoginRequestDto requestDto, HttpServletResponse response) {
+        User user = userRepository.findByEmail(requestDto.getEmail()).orElseThrow(
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND)
+        );
+
         UsernamePasswordAuthenticationToken authenticationToken = new
                 UsernamePasswordAuthenticationToken(requestDto.getEmail(), requestDto.getPassword());
 
@@ -110,25 +120,30 @@ public class UserServiceImpl implements UserService{
         tokenToHeader(tokenDto, response);
 
         redisUtil.setData(requestDto.getEmail(), tokenDto.refreshToken(), tokenDto.refreshTokenExpiresIn());
-        Optional<User> userOpt = userRepository.findByEmail(requestDto.getEmail());
-        Worcation worcation = userOpt.get().getWorcation();
+        Worcation worcation = user.getWorcation();
 
-        WorcationResponseDto worcationResponseDto = null;
-        if (worcation != null) {
-            worcationResponseDto = WorcationResponseDto.builder()
-                    .worcation(worcation)
-                    .build();
-        }
+        WorcationResponseDto worcationResponseDto = Optional.ofNullable(user.getWorcation())
+                .map(w -> WorcationResponseDto.builder()
+                        .worcation(worcation)
+                        .build()).orElse(null);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(LoginResponseDto.builder()
-                                .nickName(userOpt.get().getNickName())
-                                .profile(userOpt.get().getProfileImg())
+                                .nickName(user.getNickName())
+                                .profile(user.getProfileImg())
                                 .isWorcation(worcation != null)
                                 .worcation(worcationResponseDto)
                                 .build()));
     }
 
+    /**
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-07-29
+     * @ 설명     : 로그아웃 시 사용한 AccessToken 블랙리스트 추가
+     * @param request 헤더에 있는 토큰을 가져올 수 있는 servlet
+     * @return 성공 메세지
+     * @status 성공 : 200, 실패 : 401, 403
+     */
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<String>> logout(final HttpServletRequest request) {
@@ -141,10 +156,13 @@ public class UserServiceImpl implements UserService{
     }
 
     /**
-     * 토큰 재발급
-     * @param request
-     * @param response
-     * @return
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-07-29
+     * @ 설명     : 만료된 Access토큰과 Refresh토큰을 검증 후 토큰 재발급
+     * @param request 헤더에 있는 토큰을 가져올 수 있는 servlet
+     * @param response 토큰을 헤더에 추가하기 위한 servlet
+     * @return 재발급 성공 메세지 및 헤더에 토큰 추가
+     * @status 성공 : 200, 실패 : 401, 403
      */
     @Override
     @Transactional(readOnly = true)
@@ -168,6 +186,14 @@ public class UserServiceImpl implements UserService{
                         .body(ApiResponse.success("토큰 재발급 성공"));
     }
 
+    /**
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-07-29
+     * @ 설명     : 닉네임 중복 체크
+     * @param nickName 사용할 닉네임
+     * @return 닉네임 사용 가능 여부 메세지
+     * @status 성공 : 200, 실패 : 409
+     */
     @Override
     @Transactional
     public ResponseEntity<ApiResponse<String>> nickNameCheck(String nickName) {
@@ -177,22 +203,57 @@ public class UserServiceImpl implements UserService{
                 .body(ApiResponse.success("사용가능한 닉네임 입니다."));
     }
 
+    /**
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-07-29
+     * @ 설명     : 이메일 중복 체크
+     * @param email 사용할 이메일
+     * @return
+     * @status 실패 : 409
+     */
     private void emailValidate(String email) {
         Optional<User> user = userRepository.findByEmail(email);
         if(user.isPresent()) {
             throw new CustomException(ErrorCode.DUPLICATE_EMAIL);
         }
     }
+
+    /**
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-07-29
+     * @ 설명     : 전화번호 중복 체크
+     * @param phone 사용할 이메일
+     * @return
+     * @status 실패 : 409
+     */
     private void phoneNumberValidate(String phone) {
         if(userRepository.findByPhone(phone) != null) {
             throw new CustomException(ErrorCode.DUPLICATE_PHONE_NUMBER);
         }
     }
+
+    /**
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-07-29
+     * @ 설명     : 닉네임 중복 체크
+     * @param nickName 사용할 이메일
+     * @return
+     * @status 실패 : 409
+     */
     private void nickNameValidate(String nickName) {
         if(userRepository.findByNickName(nickName) != null) {
             throw new CustomException(ErrorCode.DUPLICATE_NICKNAME);
         }
     }
+
+    /**
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-07-29
+     * @ 설명     : 헤더에  Access,Refresh토큰 추가
+     * @param tokenDto 로그인 시 발급한 토큰 데이터
+     * @param response 토큰을 헤더에 추가하기 위한 servlet
+     * @return
+     */
     private void tokenToHeader(TokenDto tokenDto, HttpServletResponse response){
         response.addHeader("Authorization",tokenDto.accessToken());
         response.addHeader("refreshToken",tokenDto.refreshToken());

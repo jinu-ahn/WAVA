@@ -24,6 +24,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserDetailsServiceImpl implements UserDetailsService {
     private final UserRepository userRepository;
 
+    /**
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-07-29
+     * @ 설명     : SecurityContextHolder에 저장할 유저 디테일 생성
+     * @param email 유저 이메일
+     * @return 유저 객체를 담고있는 Adapter
+     */
     @Transactional
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
