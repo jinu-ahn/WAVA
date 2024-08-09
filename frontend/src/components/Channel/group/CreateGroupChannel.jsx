@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Button } from "@headlessui/react";
 import useDeviceStore from "../../../store/deviceStore";
-import { createGroupChannelAPI } from "../../../api/groupChannelAPI";
+import { groupChannelAPI } from "../../../api/groupChannelAPI";
 import useUserStore from "../../../store/userStore";
 
 function CreateGroupChannel({ onClose }) {
@@ -18,7 +18,10 @@ function CreateGroupChannel({ onClose }) {
       channelTitle: channelTitle,
       channelDescription: channelDescription,
     };
-    await createGroupChannelAPI.createGroupChannel(data);
+    if (await groupChannelAPI.createGroupChannel(data)) {
+      // onClose();
+      window.location.reload();
+    }
   };
   return (
     <div
