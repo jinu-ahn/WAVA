@@ -33,7 +33,7 @@ const useTodoStore = create((set) => ({
       set({
         todayEvents,
       });
-      console.log(todayEvents)
+      console.log(todayEvents);
       return true;
     } else {
       console.log("server error-f");

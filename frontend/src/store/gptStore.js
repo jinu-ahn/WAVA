@@ -5,10 +5,10 @@ import { httpStatusCode } from "../util/http-status";
 import Swal from "sweetalert2";
 
 const useGptStore = create((set) => ({
-    comment: null,
-    setComments: (comment) => {
-        set(() => ({comment: comment}))
-    }
+  comment: null,
+  setComments: (comment) => {
+    set(() => ({ comment: comment }));
+  },
 }));
 
 export default useGptStore;
