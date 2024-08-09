@@ -13,8 +13,9 @@ import java.util.Optional;
 public interface ChannelRepository extends JpaRepository<Channel, Long> {
     Optional<Channel> findById(Long id);
 
-    @Query("select c from Channel c where c.user.id = :userId")
+    @Query("select c from Channel c where c.user.id = :userId and c.channelType='C002'  ")
     Channel findChannelByUserId (long userId);
+
     List<Object> findByUserId(long userId);
     List<Channel> findByChannelType(String channelType);
 
