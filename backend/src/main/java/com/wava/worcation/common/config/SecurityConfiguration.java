@@ -30,42 +30,60 @@ public class SecurityConfiguration {
     private final TokenProvider tokenProvider;
     private final RedisUtil redisUtil;
 
-    private final String[] PERMIT_ALL_ARRAY = {
+    private final String[] PERMIT_ALL_ARRAY = { // 허용할 API
             "/","/user/signup", "/user/login","/**"
     };
 
-    private final String[] CORS_API_METHOD = {
+    private final String[] CORS_API_METHOD = { // 허용할 Method
             "GET", "POST", "PATCH", "DELETE"
     };
 
-    private final String[] CORS_ALLOW_URL = {
+    private final String[] CORS_ALLOW_URL = { // 허용할 URL
             "http://localhost:3000", "https://i11c204.p.ssafy.io:443", "https://i11c204.p.ssafy.io"
     };
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
+                // CSRF 보호 비활성화
                 .csrf(AbstractHttpConfigurer::disable)
+                // HTTP Basic 인증 비활성화
                 .httpBasic(AbstractHttpConfigurer::disable)
+                // 폼 로그인 비활성화
                 .formLogin(AbstractHttpConfigurer::disable)
+                // CORS 설정 적용 (corsConfigurationSource 메서드에서 정의된 설정 사용)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                // 세션 관리 정책을 STATELESS로 설정 (서버에서 세션을 유지하지 않음)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                // 요청 권한 설정
                 .authorizeHttpRequests(request -> request
+                        // PERMIT_ALL_ARRAY에 정의된 모든 경로는 인증 없이 접근 허용
                         .requestMatchers(Arrays.stream(PERMIT_ALL_ARRAY)
                                 .map(AntPathRequestMatcher::antMatcher)
                                 .toArray(AntPathRequestMatcher[] :: new))
                         .permitAll()
+                        // "/admin/**" 경로는 ADMIN 역할을 가진 사용자만 접근 허용
                         .requestMatchers("/admin/**").hasRole("ADMIN")
+                        // 그 외 모든 요청은 인증 필요
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(new AuthenticationFilter(tokenProvider,redisUtil), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new JwtExceptionFilter(tokenProvider,redisUtil), AuthenticationFilter.class)
+
+                // UsernamePasswordAuthenticationFilter 전에 AuthenticationFilter 추가
+                .addFilterBefore(new AuthenticationFilter(tokenProvider, redisUtil), UsernamePasswordAuthenticationFilter.class)
+                // AuthenticationFilter 전에 JwtExceptionFilter 추가
+                .addFilterBefore(new JwtExceptionFilter(tokenProvider, redisUtil), AuthenticationFilter.class)
+                // 예외 처리 설정
                 .exceptionHandling(e -> {
+                    // 인증 실패 시 CustomAuthenticationEntryPoint 사용
                     e.authenticationEntryPoint(new CustomAuthenticationEntryPoint());
+                    // 접근 거부 시 CustomAccessDeniedHandler 사용
                     e.accessDeniedHandler(new CustomAccessDeniedHandler());
                 })
+                // SecurityFilterChain 객체 빌드 및 반환
                 .build();
     }
+
 
     /**
      * Swagger 사용
@@ -87,7 +105,7 @@ public class SecurityConfiguration {
     }
 
     /**
-     * cors 허용
+     * cors 설정
      * @return
      */
     @Bean

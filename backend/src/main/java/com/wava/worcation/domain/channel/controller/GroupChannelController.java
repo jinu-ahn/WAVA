@@ -45,7 +45,7 @@ public class GroupChannelController {
      * @return
      */
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse<GroupChannelResponseDto>> createGroupChannel (@RequestBody GroupChannelRequestDto groupChannelRequestDto, @AuthUser User user) throws Exception {
+    public ResponseEntity<ApiResponse<GroupChannelResponseDto>> createGroupChannel (@RequestBody GroupChannelRequestDto groupChannelRequestDto, @AuthUser User user) {
         return groupChannelServcice.createGroupChannel(groupChannelRequestDto,user);
 
     }

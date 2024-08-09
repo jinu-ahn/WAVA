@@ -5,7 +5,6 @@ import com.wava.worcation.common.response.ErrorCode;
 import com.wava.worcation.domain.channel.domain.Channel;
 import com.wava.worcation.domain.channel.domain.Companion;
 import com.wava.worcation.domain.channel.domain.MapPin;
-import com.wava.worcation.domain.channel.dto.request.CompanionRequestDto;
 import com.wava.worcation.domain.channel.dto.request.MapPinRequestDto;
 import com.wava.worcation.domain.channel.dto.response.MapPinResponseDto;
 import com.wava.worcation.domain.channel.repository.ChannelRepository;
@@ -17,11 +16,8 @@ import com.wava.worcation.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
+import org.springframework.stereotype.Service;;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +28,14 @@ public class MapPinServiceImpl implements MapPinService {
     private final UserRepository userRepository;
     private final CompanionRepository companionRepository;
 
+    /**
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-08-09
+     * @ 설명     : 공유 지도 핀 생성
+     * @param mapPinRequestDto 지도에 생성할 마커 데이터
+     * @return 생성한 핀 정보
+     * @status 성공 : 201, 실패 : 404, 409
+     */
     @Override
     @Transactional(rollbackOn = Exception.class)
     public MapPinResponseDto createPin(final MapPinRequestDto mapPinRequestDto) {
@@ -81,6 +85,15 @@ public class MapPinServiceImpl implements MapPinService {
                 .build();
     }
 
+    /**
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-08-09
+     * @ 설명     : 공유지도에 마킹되어있는 핀 수정 (동행자, 위치정보)
+     * @param pinId 핀 식별 아이디
+     * @param mapPinRequestDto 업데이트 할 마커 데이터
+     * @return 업데이트한 핀 정보
+     * @status 성공 : 200, 실패 : 404
+     */
     @Override
     @Transactional(rollbackOn = Exception.class)
     public MapPinResponseDto updatePin(Long pinId, MapPinRequestDto mapPinRequestDto) {
@@ -123,7 +136,16 @@ public class MapPinServiceImpl implements MapPinService {
                 .build();
     }
 
+    /**
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-08-09
+     * @ 설명     : 공유지도에 마킹된 핀 삭제
+     * @param pinId 핀 식별 아이디
+     * @return
+     * @status 성공 : 200
+     */
     @Override
+    @Transactional
     public void deletePin(Long pinId) {
         mapPinRepository.findById(pinId).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_MAP_PIN)
@@ -131,6 +153,14 @@ public class MapPinServiceImpl implements MapPinService {
         mapPinRepository.deleteById(pinId);
     }
 
+    /**
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-08-09
+     * @ 설명     : 채널 존재 여부 검증
+     * @param channelId 채널 식별 아이디
+     * @return 채널 엔티티
+     * @status 실패 : 404
+     */
     private Channel validateChannel(final Long channelId){
         Channel channel = channelRepository.findById(channelId).orElseThrow(
                 () -> new CustomException(ErrorCode.CHANNEL_NOT_FOUND)
@@ -138,6 +168,15 @@ public class MapPinServiceImpl implements MapPinService {
         return channel;
     }
 
+    /**
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-08-09
+     * @ 설명     : 해당 채널의 핀 순서 중복 검증
+     * @param channelId 채널 식별 아이디
+     * @param pinId 핀 식별 아이디
+     * @return
+     * @status 실패 : 409
+     */
     private void isPinOrder(final Long channelId, final Long pinId) {
         if(mapPinRepository.existsByPinOrderAndChannelId(pinId,channelId))
             throw new CustomException(ErrorCode.DUPLICATE_PIN_ORDER);

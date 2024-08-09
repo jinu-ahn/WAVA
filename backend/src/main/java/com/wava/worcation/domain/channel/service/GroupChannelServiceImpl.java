@@ -34,10 +34,7 @@ import java.util.List;
 public class GroupChannelServiceImpl implements GroupChannelService {
 
     private final ChannelRepository channelRepository;
-    private final UserRepository userRepository;
-    private final TokenProvider tokenProvider;
     private final ChannelUserRepository channelUserRepository;
-    private final OpenViduService openViduService;
     private final WorcationRepository worcationRepository;
 
 
@@ -53,7 +50,7 @@ public class GroupChannelServiceImpl implements GroupChannelService {
      */
     @Override
     @Transactional
-    public ResponseEntity<ApiResponse<GroupChannelResponseDto>> createGroupChannel(GroupChannelRequestDto groupChannelRequestDto, User user) throws Exception {
+    public ResponseEntity<ApiResponse<GroupChannelResponseDto>> createGroupChannel(final GroupChannelRequestDto groupChannelRequestDto, final User user) {
 
         Channel channel = Channel.builder()
                 .user(user)
@@ -93,11 +90,13 @@ public class GroupChannelServiceImpl implements GroupChannelService {
      * @ 작성자   : 이병수
      * @ 작성일   : 2024-08-04
      * @ 설명     : 모든 모임채널 보여주기
+     * @param user 유저 객체
      * @return 모든 모임채널 정보
+     * @status 성공 : 200
      */
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> showAllGroupChannel(User user) {
+    public ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> showAllGroupChannel(final User user) {
         List<Channel> channelList = channelRepository.findAllByChannelType(ChannelType.GROUP.getCode(),worcationRepository.findByUserId(user.getId()).getSido());
         List<GroupChannelResponseDto> groupChannelResponseDtoList = new ArrayList<>();
         for (Channel channel : channelList) {
@@ -117,9 +116,12 @@ public class GroupChannelServiceImpl implements GroupChannelService {
     }
 
     /**
-     * 채널 상세 보기
-     * @param channelId
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-08-09
+     * @ 설명     : 채널 상세 정보
+     * @param channelId 채널 식별 아이디
      * @return 채널 상세 정보 및 채널에 가입한 유저정보
+     * @status 성공 : 200 , 실패 : 404
      */
     @Override
     @Transactional(readOnly = true)
@@ -150,9 +152,19 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                         .build()));
     }
 
+    /**
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-08-09
+     * @ 설명     : 그룹 채널 내 공유 메모 업데이트 함수
+     * @param channelId 채널 식별 아이디
+     * @param memo 공유 지도에서 작성한 메모 데이터
+     * @return 업데이트한 메모 정보 및 기존 채널 정보
+     * @status 성공 : 200, 실패 : 404
+     */
+
     @Override
     @Transactional
-    public ResponseEntity<ApiResponse<GroupChannelResponseDto>> updateMemo(Long channelId, String memo) {
+    public ResponseEntity<ApiResponse<GroupChannelResponseDto>> updateMemo(final Long channelId, final String memo) {
         Channel channel = channelRepository.findById(channelId).orElseThrow(
                 () -> new CustomException(ErrorCode.CHANNEL_NOT_FOUND)
         );
@@ -173,8 +185,18 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                         .build()));
     }
 
+    /**
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-08-09
+     * @ 설명     : 유저가 가입한 채널 리스트 가져오기
+     * @param user 유저 객체
+     * @return 가입한 채널 리스트
+     * @status 성공 : 200
+     */
+
     @Override
-    public ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> userJoinChannel(User user) {
+    @Transactional
+    public ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> userJoinChannel(final User user) {
         List<ChannelUser> channelUserList = channelUserRepository.findByUserId(user.getId());
 
         List<GroupChannelResponseDto> groupChannelResponseList = channelUserList.stream()
@@ -195,8 +217,17 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                 .body(ApiResponse.success(groupChannelResponseList));
     }
 
+    /**
+     * @ 작성자   : 최승호
+     * @ 작성일   : 2024-08-09
+     * @ 설명     : 전체 채널 목록 중 현재 진행중인 워케이션 위치 기준으로 제목 및 내용에 검색어가 포함된 채널 검색
+     * @param user 유저 객체
+     * @param content 검색어
+     * @return 검색 채널 목록
+     * @status 성공 : 200
+     */
     @Override
-    public ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> searchChannel(User user, String content) {
+    public ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> searchChannel(final User user, final String content) {
         List<Channel> channelList = channelRepository.searchChannelByInsert(content, ChannelType.GROUP.getCode(),worcationRepository.findByUserId(user.getId()).getSido());
         List<GroupChannelResponseDto> groupChannelResponseDtoList = new ArrayList<>();
         for (Channel channel : channelList) {

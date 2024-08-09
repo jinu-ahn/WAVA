@@ -27,6 +27,16 @@ public class JwtExceptionFilter extends OncePerRequestFilter {
     private final TokenProvider tokenProvider;
     private final RedisUtil redisUtil;
 
+    /**
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-08-08
+     * @ 설명     : JWT 에러 핸들링
+     * @param request 헤더에서 토큰을 가져오기위한 servlet
+     * @param response 토큰을 헤더에 추가하기 위한 servlet
+     * @param filterChain filter
+     * @return
+     * @status 실패 : 400, 401, 403
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         response.setCharacterEncoding("UTF-8");

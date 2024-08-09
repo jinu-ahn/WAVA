@@ -11,14 +11,14 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface GroupChannelService {
-    ResponseEntity<ApiResponse<GroupChannelResponseDto>> createGroupChannel(final GroupChannelRequestDto groupChannelRequestDto, User user) throws Exception;
+    ResponseEntity<ApiResponse<GroupChannelResponseDto>> createGroupChannel(final GroupChannelRequestDto groupChannelRequestDto, final User user);
 
-    ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> showAllGroupChannel(User user);
+    ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> showAllGroupChannel(final User user);
 
     ResponseEntity<ApiResponse<GroupDetailResponseDto>> getGroupDetail(final Long channelId);
 
     ResponseEntity<ApiResponse<GroupChannelResponseDto>> updateMemo(final Long channelId, final String memo);
     ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> userJoinChannel(final User user);
 
-    ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> searchChannel(User user, String content);
+    ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> searchChannel(final User user, final String content);
 }
