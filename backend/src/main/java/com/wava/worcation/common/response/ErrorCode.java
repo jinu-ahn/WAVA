@@ -28,7 +28,8 @@ public enum ErrorCode {
     AUTHENTICATION_ERROR(HttpStatus.UNAUTHORIZED, "인증에 실패했습니다."),
     FEED_NOT_FOUND(HttpStatus.NOT_FOUND,"피드를 찾을 수 없습니다."),
     EXPIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED,"재 로그인이 필요합니다."),
-    ALREADY_EXIST_WORCATION(HttpStatus.CONFLICT, "진행중인 워케이션이 있습니다.");
+    ALREADY_EXIST_WORCATION(HttpStatus.CONFLICT, "진행중인 워케이션이 있습니다."),
+    FILE_TOO_LARGE(HttpStatus.PAYLOAD_TOO_LARGE,"파일의 최대용량이 초과되었습니다.");
 
     private HttpStatus status;
     private String message;
