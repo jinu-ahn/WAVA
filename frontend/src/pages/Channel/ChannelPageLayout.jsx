@@ -154,14 +154,14 @@ function ChannelPage() {
         <Explorer />
 
         {/* 여기부터 채널 탐색기 */}
-        <div className="flex flex-col w-16 bg-white shadow-lg h-screen">
+        <div className="flex flex-col w-16 bg-blue-50 shadow-lg h-screen">
           <div className="flex-shrink-0 text-center"></div>
 
           {/* 내채널 */}
           <div ref={myChannelRef} className="flex-shrink-0 text-center">
             <div>
               {isMobile && <MobileExplorer />}
-              <div className="sticky top-0 bg-white z-10">
+              <div className="sticky top-0 bg-blue-50 z-[2]">
                 <span>내 채널</span>
               </div>
             </div>
@@ -170,7 +170,7 @@ function ChannelPage() {
                 {userInfo?.profile ? (
                   <img
                     src={userInfo?.profile}
-                    className="w-10 h-10 mx-auto my-0.5 bg-gray-300 rounded-full"
+                    className="w-10 h-10 mx-auto my-0.5 bg-blue-50 rounded-full"
                   />
                 ) : (
                   <UserCircleIcon className="w-10 h-10 mx-auto my-0.5 rounded-full" />
@@ -183,7 +183,7 @@ function ChannelPage() {
           <div className="divider my-1 mx-2" />
           {/* 정보채널 */}
           <div ref={infoChannelsRef} className="overflow-y-auto text-center">
-            <div className="sticky top-0 bg-white z-10">
+            <div className="sticky top-0 bg-blue-50 z-[2]">
               <span className="text-sm">정보 채널</span>
             </div>
 
@@ -206,18 +206,18 @@ function ChannelPage() {
                 <div className="sticky top-0">
                   <div
                     onClick={handleChannelPortalOpen}
-                    className=" bg-white flex items-center justify-center"
+                    className=" bg-blue-50 flex items-center justify-center"
                   >
                     <div className="border cursor-pointer rounded-full h-10 w-10 hover border-gray-300 hover:bg-gray-100 transition-colors duration-200 ">
-                      <PlusIcon className="w-6 h-6 m-4 mx-auto my-2 " />
+                      <PlusIcon className="w-6 h-6 m-4 mx-auto my-2 text-mainTxt" />
                     </div>
                   </div>
                   <NavLink
                     to="/channel/group/discover-groups"
-                    className="py-2 bg-white flex items-center justify-center"
+                    className="py-2 bg-blue-50 flex items-center justify-center"
                   >
                     <div className="border cursor-pointer rounded-full h-10 w-10 hover border-gray-300 hover:bg-gray-100 transition-colors duration-200 ">
-                      <MagnifyingGlassIcon className="w-6 h-6 m-4 mx-auto my-2 " />
+                      <MagnifyingGlassIcon className="w-6 h-6 m-4 mx-auto my-2 text-mainTxt" />
                     </div>
                   </NavLink>
                 </div>
@@ -250,7 +250,7 @@ function ChannelPage() {
                 { id: "asdf" },
               ]}
             >
-              <div className="sticky top-0 bg-white z-10">
+              <div className="sticky top-0 bg-blue-50 z-[2]">
                 <span className="text-sm">모임 채널</span>
               </div>
             </ChannelSubExplorer>

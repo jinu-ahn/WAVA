@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
 import useDeviceStore from "../../store/deviceStore";
+import useUserStore from "../../store/userStore";
 import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 import {
+  CalendarIcon,
+  GlobeAltIcon,
+  ArrowLeftStartOnRectangleIcon,
   HomeIcon,
-  CalendarDaysIcon,
-  RectangleGroupIcon,
 } from "@heroicons/react/24/outline";
 
 const Explorer = () => {
   const isMobile = useDeviceStore((state) => state.isMobile);
+  const logoutFunc = useUserStore((state) => state.logoutFunc);
 
   const [animate, setAnimate] = useState(false);
 
@@ -28,10 +32,16 @@ const Explorer = () => {
           isMobile ? "w-[42px]" : "w-12 min-w-[48px]"
         } max-w-[110px]`}
       >
-        <div className={`bg-base-300 text-mainTxt h-full min-h-[500px]`}>
-          <NavLink className="hover:text-btnBlue " to="/">
+        <div
+          className={`text-mainTxt h-full min-h-[500px]`}
+          style={{
+            backgroundColor: "rgba(40, 57, 67, 0.7)", // 반투명 검은색 배경
+            // boxShadow: "0 4px 10px rgba(0, 0, 0, 0.25)", // 부드러운 그림자 효과
+          }}
+        >
+          <NavLink className="hover:text-black" to="/">
             <div
-              className="py-3.5 flex justify-center items-center tooltip tooltip-right  z-[11]"
+              className="py-3.5 flex justify-center items-center tooltip tooltip-right z-[11]"
               data-tip="Home"
             >
               <HomeIcon
@@ -39,31 +49,47 @@ const Explorer = () => {
               />
             </div>
           </NavLink>
-          <NavLink className="hover:text-btnBlue" to="/channel">
+          <NavLink className="hover:text-black" to="/channel">
             <div
               className="py-3.5 flex justify-center items-center tooltip tooltip-right  z-[11]"
               data-tip="Channels"
             >
-              <RectangleGroupIcon
+              <GlobeAltIcon
                 stroke="currentColor"
-                className={`size-8  hover:text-btnBlue  ${
+                className={`size-8  hover:text-black  ${
                   animate ? "animate-dropIn" : ""
                 }`}
               />
             </div>
           </NavLink>
-          <NavLink className="hover:text-btnBlue" to="/dashboard">
+          <NavLink className="hover:text-black" to="/dashboard">
             <div
               className="py-3.5 flex justify-center items-center tooltip tooltip-right  z-[11]"
               data-tip="Dashboard"
             >
-              <CalendarDaysIcon
-                className={`size-8  hover:text-btnBlue ${
+              <CalendarIcon
+                className={`size-8  hover:text-black ${
                   animate ? "animate-dropIn" : ""
                 }`}
               />
             </div>
           </NavLink>
+        </div>
+        <div
+          style={{ position: "absolute", bottom: 0, left: 0, width: "100%" }}
+        >
+          <Link className="hover:text-black" to="/" onClick={logoutFunc}>
+            <div
+              className="py-3.5 flex justify-center items-center tooltip tooltip-right z-[11]"
+              data-tip="Logout"
+            >
+              <ArrowLeftStartOnRectangleIcon
+                className={`size-8 hover:text-black ${
+                  animate ? "animate-dropIn" : ""
+                }`}
+              />
+            </div>
+          </Link>
         </div>
       </div>
     </>

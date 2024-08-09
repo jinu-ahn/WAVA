@@ -86,7 +86,11 @@ function WorcationPage() {
             width: "300px",
             timer: 2000,
           });
-          navigate("/");
+          if (isEdit) {
+            navigate("/dashboard");
+          } else {
+            navigate("/");
+          }
           return;
         } else {
           console.log(result);
