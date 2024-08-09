@@ -64,7 +64,6 @@ function WorcationPage() {
     try {
       let result = false;
       let newWorcationData = null;
-      console.log(data);
       if (validateWorcation(data)) {
         if (isEdit) {
           // 에딧 api 호출

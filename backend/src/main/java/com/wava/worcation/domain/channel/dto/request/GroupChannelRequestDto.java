@@ -7,8 +7,8 @@ import lombok.Setter;
 @Getter
 public class GroupChannelRequestDto {
 
-    private String sido;
-    private String gugun;
-    private String roomTitle;
-    private String description;
+    private String channelSido;
+    private String channelSigungu;
+    private String channelTitle;
+    private String channelDescription;
 }

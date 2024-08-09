@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import FeedSearchBar from "../../../components/Channel/feed/FeedSearchbar";
 import { createGroupChannelAPI } from "../../../api/groupChannelAPI";
+import ChannelRoomItem from "../../../components/Channel/group/ChannelRoomItem";
 
 function GroupDiscoverPage() {
   const [groupList, setGroupList] = useState([]);
@@ -16,15 +17,23 @@ function GroupDiscoverPage() {
   }, []);
   const searchHandle = async (searchText) => {};
   return (
-    <>
+    <div className="flex flex-col h-full">
       <FeedSearchBar searchHandle={searchHandle} />
 
-      <div>
-        {groupList.map((g) => (
-          <h1> {g.channelId}</h1>
-        ))}
+      <div className="flex-grow overflow-y-auto flex flex-col">
+        <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 p-4">
+          {groupList.map((g) => (
+            <ChannelRoomItem key={g.channelId} roomInfo={g} />
+          ))}
+        </div>
       </div>
-    </>
+
+      {/* <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 p-4">
+        {groupList.map((g) => (
+          <ChannelRoomItem key={g.channelId} roomInfo={g} />
+        ))}
+      </div> */}
+    </div>
   );
 }
 

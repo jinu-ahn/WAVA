@@ -177,6 +177,7 @@
 import React from "react";
 import ChatComponent from "../components/Chat/ChatComponent";
 import MapComponent from "../components/Channel/group/MapComponent";
+import VideoChat from "../components/VideoChat/VideoChat"
 
 const GroupChannelPage = () => {
   return (
@@ -187,8 +188,11 @@ const GroupChannelPage = () => {
       </div>
 
       {/* 채팅 컴포넌트 (1/4) */}
-      <div className="w-1/4 h-full">
+      {/* <div className="w-1/4 h-full">
         <ChatComponent />
+      </div> */}
+      <div className="w-1/4 max-h-">
+        <VideoChat />
       </div>
     </div>
   );
