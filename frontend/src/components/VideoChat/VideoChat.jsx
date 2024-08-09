@@ -2,7 +2,7 @@ import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
 import React, { Component ,useEffect } from "react";
 import UserVideoComponent from "./UserVideoComponent";
-import useUserStore from "../../../store/userStore";
+import useUserStore from "../../store/userStore";
 
 const UserStoreWrapper = (props) => {
   const userInfo = useUserStore((state) => state.userInfo);
@@ -22,7 +22,7 @@ class App extends Component {
     // 이 속성들은 state's 컴포넌트에 있어, 값이 변경될 때마다 HTML을 다시 렌더링합니다.
     this.state = {
       mySessionId: "1",  // ---------------------------------해당 모임채널 id가 들어가야합니다. 
-      myUserName: "Participant" +userInfo.nickName || "",
+      myUserName: userInfo.nickName,
       session: undefined,
       mainStreamManager: undefined, // 페이지의 메인 비디오. 'publisher'나 'subscribers' 중 하나가 될 것임.
       publisher: undefined,
@@ -132,9 +132,14 @@ class App extends Component {
         mySession.on("streamCreated", (event) => {
           // 스트림을 구독하여 수신합니다. 두 번째 매개변수가 정의되지 않으면
           // OpenVidu는 HTML 비디오를 단독으로 생성하지 않습니다.
-          var subscriber = mySession.subscribe(event.stream, undefined);
+          var sub = {
+            subscriber: mySession.subscribe(event.stream, undefined),
+            myUserName: this.state.myUserName
+          }
+          // var subscriber = mySession.subscribe(event.stream, undefined);
           var subscribers = this.state.subscribers;
-          subscribers.push(subscriber);
+          console.log(sub)
+          subscribers.push(sub);
 
           // 새로운 구독자로 상태 업데이트
           this.setState({
@@ -228,7 +233,7 @@ class App extends Component {
       session: undefined,
       subscribers: [],
       mySessionId: "SessionA", //여기도 채널아이디로 바꿔야합니다,.
-      myUserName: "Participant" + Math.floor(Math.random() * 100),
+      myUserName: this.state.myUserName,
       mainStreamManager: undefined,
       publisher: undefined,
     });
@@ -278,20 +283,17 @@ class App extends Component {
 
     return (
       <div className="container">
-        <UserStoreWrapper setUserInfo={(userInfo) => this.setState({ userInfo, myUserName: userInfo?.nickName })} />
+        <UserStoreWrapper setUserInfo={async (userInfo) => await this.setState({ userInfo, myUserName: userInfo?.nickName })} />
         {this.state.session === undefined ? (
           
           <div id="join">
-            
-                    <div id="img-div">
-                        <img src="resources/images/openvidu_grey_bg_transp_cropped.png" alt="OpenVidu logo" />
-                    </div>
                     <div id="join-dialog" className="jumbotron vertical-center">
                         <h1> Join a video session </h1>
                         <form className="form-group" onSubmit={this.joinSession}>
                             <p>
                                 <label>Participant: </label>
-                                <input
+                                <span>{myUserName}</span>
+                                {/* <input
                                     className="form-control"
                                     type="text"
                                     id="userName"
@@ -299,7 +301,7 @@ class App extends Component {
                                     onChange={this.handleChangeUserName}
                                     
                                     required
-                                />
+                                /> */}
                             </p>
                             <p>
                                 <label> Session: </label>
@@ -340,13 +342,13 @@ class App extends Component {
                         />
                     </div>
 
-                    {this.state.mainStreamManager !== undefined ? (
+                    {/* {this.state.mainStreamManager !== undefined ? (
                         <div id="main-video" className="col-md-6">
                             <UserVideoComponent streamManager={this.state.mainStreamManager} />
 
                         </div>
-                    ) : null}
-                    <div id="video-container" className="col-md-6">
+                    ) : null} */}
+                    <div id="video-container" className="col-lg-12">
                         {this.state.publisher !== undefined ? (
                             <div className="stream-container col-md-6 col-xs-6" onClick={() => this.handleMainVideoStream(this.state.publisher)}>
                                 <UserVideoComponent
@@ -354,9 +356,8 @@ class App extends Component {
                             </div>
                         ) : null}
                         {this.state.subscribers.map((sub, i) => (
-                            <div key={sub.id} className="stream-container col-md-6 col-xs-6" onClick={() => this.handleMainVideoStream(sub)}>
-                                <span>{sub.id}</span>
-                                <UserVideoComponent streamManager={sub} />
+                            <div key={sub.subscriber.id} className="stream-container col-lg-12" onClick={() => this.handleMainVideoStream(sub.subscriber)}>
+                                <UserVideoComponent streamManager={sub.subscriber} myUserName={this.state.myUserName} />
                             </div>
                         ))}
                     </div>

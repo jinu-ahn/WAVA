@@ -124,7 +124,6 @@ public class TokenProvider {
      */
     public boolean validateToken(String token) {
         try {
-            log.info("순서 3");
             Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()

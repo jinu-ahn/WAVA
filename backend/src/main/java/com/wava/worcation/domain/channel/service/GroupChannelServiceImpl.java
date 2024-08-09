@@ -57,11 +57,11 @@ public class GroupChannelServiceImpl implements GroupChannelService {
 
         Channel channel = Channel.builder()
                 .user(user)
-                .channelDescription(groupChannelRequestDto.getDescription())
-                .channelTitle(groupChannelRequestDto.getRoomTitle())
+                .channelDescription(groupChannelRequestDto.getChannelDescription())
+                .channelTitle(groupChannelRequestDto.getChannelTitle())
                 .channelType(ChannelType.GROUP.getCode())    //C001 : 그룹 ,  C002 : 피드
-                .channelSido(groupChannelRequestDto.getSido())
-                .channelSigungu(groupChannelRequestDto.getGugun())
+                .channelSido(groupChannelRequestDto.getChannelSido())
+                .channelSigungu(groupChannelRequestDto.getChannelSigungu())
                 .build();
 
          channelRepository.save(channel);

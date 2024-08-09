@@ -15,8 +15,11 @@ export default class UserVideoComponent extends Component {
         {this.props.streamManager !== undefined ? (
           <div className="streamcomponent">
             <OpenViduVideoComponent streamManager={this.props.streamManager} />
-            <div>
+            {/* <div>
               <p>{this.getNicknameTag()}</p>
+            </div> */}
+            <div>
+              <p>{this.props.myUserName ? this.props.myUserName : "none"}</p>
             </div>
           </div>
         ) : null}
