@@ -1,9 +1,9 @@
 import { create } from "zustand";
 
-const useTodoStore = create((set) => ({
+const useChannelStore = create((set) => ({
   followChannels: [],
   setFollowChannels: (channels) => {
     set(() => ({ followChannels: channels }));
   },
 }));
-export default useTodoStore;
+export default useChannelStore;

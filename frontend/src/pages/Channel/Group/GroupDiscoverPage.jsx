@@ -8,6 +8,7 @@ import CustomModal from "../../../components/common/customModal";
 function GroupDiscoverPage() {
   const [groupList, setGroupList] = useState([]);
   const [detailOpen, setDetailOpen] = useState(false);
+  const [selectedGroupId, setSelectedGroupId] = useState(null);
 
   useEffect(() => {
     const getData = async () => {
@@ -22,12 +23,14 @@ function GroupDiscoverPage() {
   const searchHandle = async (searchText) => {};
 
   // 그룹 상세보기 포탈 오픈
-  const handleChannelPortalOpen = () => {
+  const handleChannelPortalOpen = (id) => {
+    setSelectedGroupId(id);
     setDetailOpen(true);
   };
 
   // 그룹 상세보기 포탈 닫기
   const handleChannelPortalClose = () => {
+    setSelectedGroupId(null);
     setDetailOpen(false);
   };
   return (
@@ -39,7 +42,7 @@ function GroupDiscoverPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 p-4">
             {groupList.map((g) => (
               <ChannelRoomItem
-                onClick={handleChannelPortalOpen}
+                onClick={() => handleChannelPortalOpen(g.channelId)}
                 key={g.channelId}
                 roomInfo={g}
               />
@@ -54,7 +57,10 @@ function GroupDiscoverPage() {
         isOpen={detailOpen}
         onClose={handleChannelPortalClose}
       >
-        <GroupInfoModal />
+        <GroupInfoModal
+          onClose={handleChannelPortalClose}
+          groupId={selectedGroupId}
+        />
       </CustomModal>
     </>
   );

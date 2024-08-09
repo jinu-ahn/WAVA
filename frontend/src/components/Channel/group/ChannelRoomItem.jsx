@@ -1,4 +1,8 @@
+import useChannelStore from "../../../store/channelStore";
+
 function ChannelRoomItem({ roomInfo, onClick }) {
+  const isJoinedChannel = useChannelStore((state) => state.followChannels);
+  console.log(isJoinedChannel, roomInfo);
   const isFull = roomInfo.userCount > 3;
 
   const joinChannelHandle = () => {

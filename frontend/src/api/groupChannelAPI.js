@@ -39,7 +39,7 @@ const groupChannelAPI = {
     );
   },
 
-  // 채널 정보 가져오기
+  // 채널 정보 가져오기-하나
   getChannelInfo: async (channelId) => {
     return await handleRequest(
       () => local.get(`${address}/detail/${channelId}`),

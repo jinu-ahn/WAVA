@@ -20,10 +20,13 @@ import CustomModal from "../../components/common/customModal";
 import CreateGroupChannel from "../../components/Channel/group/CreateGroupChannel";
 import useUserStore from "../../store/userStore";
 import { groupChannelAPI } from "../../api/groupChannelAPI";
+import useChannelStore from "../../store/channelStore";
 
 function ChannelPage() {
   const isMobile = useDeviceStore((state) => state.isMobile);
   const userInfo = useUserStore((state) => state.userInfo);
+  const { followChannels, setFollowChannels } = useChannelStore();
+
   const myId = userInfo?.nickName;
 
   const myChannelRef = useRef(null);
@@ -35,7 +38,7 @@ function ChannelPage() {
   const location = useLocation();
 
   const [isCreateChannelOpen, setIsCreateChannelOpen] = useState(false);
-  const [myChannelList, setMyChannelList] = useState([]);
+  // const [myChannelList, setMyChannelList] = useState([]);
 
   useLayoutEffect(() => {
     // 현재 경로가 정확히 '/channel'일 때만 리다이렉트
@@ -47,7 +50,7 @@ function ChannelPage() {
   useEffect(() => {
     const getMyGroupData = async () => {
       const resp = await groupChannelAPI.getMyChannel();
-      if (resp) setMyChannelList(resp?.data);
+      if (resp) setFollowChannels(resp?.data);
     };
     getMyGroupData();
   }, []);
@@ -232,7 +235,7 @@ function ChannelPage() {
                 </div>
               }
               type="group"
-              data={myChannelList}
+              data={followChannels}
             >
               <div className="sticky top-0 bg-blue-50 z-[2]">
                 <span className="text-sm">모임 채널</span>
