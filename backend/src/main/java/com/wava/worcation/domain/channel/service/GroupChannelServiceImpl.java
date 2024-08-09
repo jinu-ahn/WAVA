@@ -188,6 +188,7 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                             .channelDescription(channel.getChannel().getChannelDescription())
                             .channelMemo(channel.getChannel().getChannelMemo())
                             .channelType(channel.getChannel().getChannelType())
+                            .userCount(channelUserRepository.countByChannelId(channel.getChannel().getId()))
                             .build();
                 }).toList();
         return ResponseEntity.status(HttpStatus.OK)
