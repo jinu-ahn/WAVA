@@ -31,12 +31,12 @@ public class Channel {
 
 
     @NotNull
-    @Column(name = "channel_sido", nullable = false, length = 4)
+    @Column(name = "channel_sido", nullable = false, length = 255)
     private String channelSido;
 
 
     @NotNull
-    @Column(name = "channel_sigungu", nullable = false, length = 4)
+    @Column(name = "channel_sigungu", nullable = false, length = 255)
     private String channelSigungu;
 
     @Size(max = 255)

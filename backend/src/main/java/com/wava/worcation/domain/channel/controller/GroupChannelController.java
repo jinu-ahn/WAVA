@@ -65,5 +65,10 @@ public class GroupChannelController {
         return groupChannelServcice.userJoinChannel(user);
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> searchGroupChannel (@RequestParam("content") String content, @AuthUser User user) {
+        return groupChannelServcice.searchChannel(user,content);
+    }
+
 
 }

@@ -191,5 +191,24 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                 .body(ApiResponse.success(groupChannelResponseList));
     }
 
+    @Override
+    public ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> searchChannel(User user, String content) {
+        List<Channel> channelList = channelRepository.searchChannelByInsert(content, ChannelType.GROUP.getCode(),worcationRepository.findByUserId(user.getId()).getSido());
+        List<GroupChannelResponseDto> groupChannelResponseDtoList = new ArrayList<>();
+        for (Channel channel : channelList) {
+            groupChannelResponseDtoList.add(GroupChannelResponseDto.builder()
+                    .channelId(channel.getId())
+                    .userId(channel.getUser().getId())
+                    .channelDescription(channel.getChannelDescription())
+                    .channelTitle(channel.getChannelTitle())
+                    .channelSido(channel.getChannelSido())
+                    .channelSigungu(channel.getChannelSigungu())
+                    .channelMemo(channel.getChannelMemo())
+                    .userCount(channelUserRepository.countByChannelId(channel.getId()))
+                    .build());
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(groupChannelResponseDtoList));
+    }
+
 
 }
