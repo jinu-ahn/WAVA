@@ -10,7 +10,13 @@ import {
 } from "../../../api/channelFeedApi";
 import useUserStore from "../../../store/userStore";
 
-const FeedHeader = ({ openCreateDrawer, userId, setUserInfo, userInfo }) => {
+const FeedHeader = ({
+  openCreateDrawer,
+  userId,
+  setUserInfo,
+  userInfo,
+  createFeedControl,
+}) => {
   const isMobile = useDeviceStore((state) => state.isMobile);
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingBio, setIsEditingBio] = useState(false);

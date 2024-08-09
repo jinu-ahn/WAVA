@@ -115,16 +115,18 @@ function FeedPersonalPage() {
     }
   };
 
+  const createFeedControl = () => {};
   return (
     <>
       <div className="flex h-full">
         <div className="flex flex-col flex-1">
           <FeedHeader
+            createFeedControl={createFeedControl}
             userInfo={userInfo}
             setUserInfo={setUserInfo}
             openCreateDrawer={() => setIsCreateDrawerOpen(true)}
           />
-          {isNoContent && <NoContent />}
+          {isNoContent && <NoContent createFeedControl={createFeedControl} />}
           <ContentItemGrid
             loadMore={loadMore}
             loading={loading}
