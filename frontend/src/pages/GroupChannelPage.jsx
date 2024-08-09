@@ -175,15 +175,16 @@
 // export default React.memo(GroupChannelComponent);
 
 import { React, useState } from "react";
+import { useParams } from "react-router-dom";
 import ChatComponent from "../components/Chat/ChatComponent";
 import MapComponent from "../components/Channel/group/MapComponent";
 import ControllerComponent from "../components/Channel/group/ControllerComponent";
 import VideoChat from "../components/VideoChat/VideoChat"
 
 const GroupChannelPage = () => {
-
+  const { groupId } = useParams();
   const [mode, setMode] = useState(true);
-
+  console.log(groupId)
   return (
     <div className="flex h-screen">
       {/* 지도 컴포넌트 (3/4) */}
@@ -203,7 +204,7 @@ const GroupChannelPage = () => {
           </div>
         :  
           <div className="w-2/12 overflow-auto bg-black">
-            <VideoChat />
+          <VideoChat channelId={groupId} mode={mode} setMode={setMode}/>
           </div>
         }
 
@@ -212,3 +213,5 @@ const GroupChannelPage = () => {
 };
 
 export default GroupChannelPage;
+
+

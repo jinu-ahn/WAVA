@@ -449,17 +449,31 @@ const ContentDrawer = ({
 
                       {feedContent?.comment?.map((item, index) => {
                         return (
-                          <div key={index}>
-                            {item?.profile ? (
-                              <img
-                                className="h-8 w-8 rounded-full object-cover inline"
-                                src={item?.profile}
-                                alt="프로필이미지"
-                              />
-                            ) : (
-                              <DefaultUserIcon className="w-8 h-8 rounded-full shadow-md inline" />
-                            )}
-                            {item?.nickName} : {item?.comment}
+                          <div
+                            key={index}
+                            className="flex items-start space-x-3 mb-4"
+                          >
+                            <div className="flex-shrink-0">
+                              {item?.profile ? (
+                                <img
+                                  className="h-8 w-8 rounded-full object-cover"
+                                  src={item?.profile}
+                                  alt="프로필이미지"
+                                />
+                              ) : (
+                                <DefaultUserIcon className="w-8 h-8 rounded-full shadow-md text-gray-400" />
+                              )}
+                            </div>
+                            <div className="flex-grow">
+                              <div className="flex items-center mb-1">
+                                <span className="font-bold text-sm mr-2">
+                                  {item?.nickName}
+                                </span>
+                              </div>
+                              <p className="text-sm text-gray-700">
+                                {item?.comment}
+                              </p>
+                            </div>
                           </div>
                         );
                       })}

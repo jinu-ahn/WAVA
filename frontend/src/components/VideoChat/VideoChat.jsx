@@ -4,6 +4,8 @@ import React, { Component ,useEffect } from "react";
 import UserVideoComponent from "./UserVideoComponent";
 import useUserStore from "../../store/userStore";
 
+const OPENVIDU_SERVER_URL = process.env.REACT_APP_SERVER_ADDRESS;
+
 const UserStoreWrapper = (props) => {
   const userInfo = useUserStore((state) => state.userInfo);
   useEffect(() => {
@@ -12,7 +14,6 @@ const UserStoreWrapper = (props) => {
   }, [userInfo]);
   return null;
 };
-const OPENVIDU_SERVER_URL = process.env.REACT_APP_SERVER_ADDRESS;
 
 class App extends Component {
   constructor(props) {
@@ -21,7 +22,6 @@ class App extends Component {
     const userInfo = props.userInfo || {};
     // 이 속성들은 state's 컴포넌트에 있어, 값이 변경될 때마다 HTML을 다시 렌더링합니다.
     this.state = {
-      mySessionId: "1",  // ---------------------------------해당 모임채널 id가 들어가야합니다. 
       myUserName: userInfo.nickName,
       session: undefined,
       mainStreamManager: undefined, // 페이지의 메인 비디오. 'publisher'나 'subscribers' 중 하나가 될 것임.
@@ -88,9 +88,8 @@ class App extends Component {
 
 
   async getToken() {
-    const channelId = "1"; // <---------------------------------------------- 나중에 현재 모임채널의 아이디로 수정
+    const channelId = this.props.channelId;
     const sessionId = await this.createSession(channelId);
-
     let token = await this.createToken(sessionId);
     return token;
   }
@@ -274,59 +273,23 @@ class App extends Component {
     }
   }
 
-  render() {
-    const mySessionId = this.state.mySessionId;
-    const myUserName = this.state.myUserName;
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.userInfo && this.state.userInfo !== prevState.userInfo) {
+      this.joinSession();
+    }
+  }
 
+  changeMode() {
+          this.props.setMode(!this.props.mode);
+  }
+
+  render() {
     return (
       <div className="container">
-        <UserStoreWrapper setUserInfo={async (userInfo) => await this.setState({ userInfo, myUserName: userInfo?.nickName })} />
-        {this.state.session === undefined ? (
-          
-          <div id="join">
-                    <div id="join-dialog" className="jumbotron vertical-center">
-                        <h1> Join a video session </h1>
-                        <form className="form-group" onSubmit={this.joinSession}>
-                            <p>
-                                <label>Participant: </label>
-                                <span>{myUserName}</span>
-                                {/* <input
-                                    className="form-control"
-                                    type="text"
-                                    id="userName"
-                                    value={myUserName}        
-                                    onChange={this.handleChangeUserName}
-                                    
-                                    required
-                                /> */}
-                            </p>
-                            <p>
-                                <label> Session: </label>
-                                <input
-                                    className="form-control"
-                                    type="text"
-                                    id="sessionId"
-                                    value={mySessionId}
-                                    onChange={this.handleChangeSessionId}
-                                    required
-                                />
-                            </p>
-                            <p className="text-center">
-                                <input className="btn btn-lg btn-success" name="commit" type="submit" value="JOIN" />
-                            </p>
-                        </form>
-                    </div>
-                </div>
-            ) : null}
+        <UserStoreWrapper setUserInfo={(userInfo) => this.setState({ userInfo, myUserName: userInfo?.nickName })} />
 
             {this.state.session !== undefined ? (
                 <div id="session" className="bg-black">
-                    {/* {this.state.mainStreamManager !== undefined ? (
-                        <div id="main-video" className="col-md-6">
-                            <UserVideoComponent streamManager={this.state.mainStreamManager} />
-
-                        </div>
-                    ) : null} */}
                     <div id="video-container" className="col-lg-12 p-1">
                         {this.state.publisher !== undefined ? (
                             <div className="stream-container col-md-6 col-xs-6" onClick={() => this.handleMainVideoStream(this.state.publisher)}>
@@ -343,23 +306,13 @@ class App extends Component {
                 </div>
             ) : null}
                 <div id="session-header" className="fixed bottom-0 h-10 opacity-0 hover:opacity-100 transition-opacity duration-300">
-                    {/* <h1 id="session-title">{mySessionId}</h1> */}
-                    <button className="bg-red-600" onClick={this.leaveSession} id="buttonLeaveSession">
-                    Leave session
+          <button className="bg-red-600" onClick={() => { this.leaveSession(); this.changeMode(); }} id="buttonLeaveSession">
+                      Leave session
                     </button>
-                    {/* <input
-                        className="btn btn-large btn-success"
-                        type="button"
-                        id="buttonSwitchCamera"
-                        onClick={this.switchCamera}
-                        value="Switch Camera"
-                    /> */}
                 </div>
         </div>
     );
-}
-
-
+  }
 }
 
 export default App;
