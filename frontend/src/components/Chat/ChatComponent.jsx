@@ -10,10 +10,10 @@ import useUserStore from "../../store/userStore";
 import { Stomp } from "@stomp/stompjs";
 import MessageDateComponent from "./message/MessageDateComponent";
 
-function ChatComponent() {
+function ChatComponent(props) {
   // URL에서 채팅방 ID를 가져옴
   // const { channelId } = useParams();
-  const channelId = 1;
+  const channelId = props.channelId;
   // 채팅 메시지 상태
   const [messages, setMessages] = useState([]);
   // 메시지 입력 상태
