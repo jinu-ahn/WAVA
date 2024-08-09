@@ -1,3 +1,7 @@
+// 풀방일 경우에 '가득찬 방' 이라고 버튼을 만들고
+// 채널 참여: 파랑, 참여한 채널: 초록 , 가득찬 방: 빨강
+// 기본 카드 배경: 흰색, 가득 찬 경우에 카드 배경 색상: 노란색? 구분 지으면 어떨까요??
+
 import useChannelStore from "../../../store/channelStore";
 
 function ChannelRoomItem({ roomInfo, onClick }) {

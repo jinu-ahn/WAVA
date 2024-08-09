@@ -199,7 +199,7 @@ const GroupChannelPage = () => {
             <ControllerComponent mode={mode} setMode={setMode} />
             </div>
             <div className="row-span-11">
-              <ChatComponent/>
+            <ChatComponent channelId={groupId} />
             </div>
           </div>
         :  
