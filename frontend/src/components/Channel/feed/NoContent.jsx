@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
 function NoContent({ createFeedControl, refStatus }) {
-  console.log(refStatus);
   const navigate = useNavigate(); // useNavigate 훅을 사용해 navigate 함수를 만듭니다.
 
   const handleExploreClick = () => {

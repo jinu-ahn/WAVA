@@ -26,6 +26,7 @@ const FeedHeader = ({
   const [editProfile, setEditProfile] = useState(null);
 
   const loginedUserNickName = useUserStore((state) => state.userInfo?.nickName);
+  const setProfileImage = useUserStore((state) => state.setProfileImage);
   const ownerUserNickName = userInfo?.nickName;
 
   const handleNameChange = (e) =>
@@ -64,8 +65,8 @@ const FeedHeader = ({
     const formData = new FormData();
     formData.append("image", editProfile?.file);
     const resp = await createProfileImageRequest(formData);
-    console.log(resp);
-    if (resp?.data === "OK") {
+    if (resp) {
+      setProfileImage(resp.data);
       window.location.reload();
     }
   };
