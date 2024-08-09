@@ -73,6 +73,7 @@ public class TokenProvider {
                 .compact(); // 위에서 설정한 정보를 사용하영 JWT를 생성하고 문자열로 반환
 
         String refreshToken = Jwts.builder()
+                .setSubject(authentication.getName())
                 .setExpiration(new Date(now.getTime() + refreshTokenExpTime))
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
@@ -92,7 +93,7 @@ public class TokenProvider {
      */
     public Authentication getAuthentication(String accessToken) throws RuntimeException {
         Claims claims = parseClaims(accessToken);
-
+        log.info(claims.getSubject());
         UserDetails userDetails = userDetailsServiceImpl.loadUserByUsername(claims.getSubject());
 
         return new UsernamePasswordAuthenticationToken(userDetails, accessToken, userDetails.getAuthorities());
@@ -123,6 +124,7 @@ public class TokenProvider {
      */
     public boolean validateToken(String token) {
         try {
+            log.info("순서 3");
             Jwts.parserBuilder()
                     .setSigningKey(key)
                     .build()
@@ -132,6 +134,7 @@ public class TokenProvider {
             log.debug("[TOKEN ERROR] : {}",ErrorCode.WRONG_TYPE_TOKEN.getMessage());
             throw new JwtException(ErrorCode.WRONG_TYPE_TOKEN.getMessage());
         } catch (ExpiredJwtException e) {
+            log.info("순서 4");
             log.debug("[TOKEN ERROR] : {}",ErrorCode.EXPIRED_TOKEN.getMessage());
             throw new JwtException(ErrorCode.EXPIRED_TOKEN.getMessage());
         } catch (UnsupportedJwtException e) {
