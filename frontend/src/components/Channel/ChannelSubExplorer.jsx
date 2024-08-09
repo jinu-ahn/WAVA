@@ -14,10 +14,12 @@ function ChannelSubExplorer({ children, data, type, toolbarBtn = null }) {
               aria-hidden={true}
               key={nanoid()}
               draggable={false}
-              to={`/channel/${type}/${el.id}`}
+              to={`/channel/${type}/${el.channelId}`}
               className="w-full"
             >
-              <button className="w-10 h-10 mx-auto bg-gray-200 rounded-full hover:bg-gray-300 transition-colors duration-200 flex items-center justify-center"></button>
+              <button className="w-10 font-bold h-10 mx-auto bg-gray-200 rounded-full hover:bg-gray-300 transition-colors duration-200 flex items-center justify-center">
+                {el?.channelTitle[0]}
+              </button>
             </NavLink>
           ))}
         </div>

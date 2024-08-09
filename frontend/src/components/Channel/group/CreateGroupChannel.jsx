@@ -1,20 +1,32 @@
 import React, { useState } from "react";
 import { Button } from "@headlessui/react";
 import useDeviceStore from "../../../store/deviceStore";
+import { groupChannelAPI } from "../../../api/groupChannelAPI";
+import useUserStore from "../../../store/userStore";
 
 function CreateGroupChannel({ onClose }) {
+  const userInfo = useUserStore((state) => state.userInfo);
   const isMobile = useDeviceStore((state) => state.isMobile);
 
   const [channelTitle, setChannelTitle] = useState("");
   const [channelDescription, setChannelDescription] = useState("");
 
-  const submitHandle = () => {
-    console.log("서브밋핸들");
+  const submitHandle = async () => {
+    const data = {
+      channelSido: userInfo?.worcation?.sido,
+      channelSigungu: userInfo?.worcation?.sigungu,
+      channelTitle: channelTitle,
+      channelDescription: channelDescription,
+    };
+    if (await groupChannelAPI.createGroupChannel(data)) {
+      // onClose();
+      window.location.reload();
+    }
   };
   return (
     <div
       className={`${
-        isMobile ? "scale-90 transform origin-top" : ""
+        isMobile ? "scale-90 transform origin-top " : ""
       } select-none p-5`}
     >
       <p className="text-2xl text-center font-bold">채널 생성</p>

@@ -17,6 +17,7 @@ import com.wava.worcation.domain.channel.repository.ChannelUserRepository;
 import com.wava.worcation.domain.user.domain.User;
 import com.wava.worcation.domain.user.dto.response.UserResponseDto;
 import com.wava.worcation.domain.user.repository.UserRepository;
+import com.wava.worcation.domain.worcation.dao.WorcationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -37,6 +38,7 @@ public class GroupChannelServiceImpl implements GroupChannelService {
     private final TokenProvider tokenProvider;
     private final ChannelUserRepository channelUserRepository;
     private final OpenViduService openViduService;
+    private final WorcationRepository worcationRepository;
 
 
     /**
@@ -55,11 +57,11 @@ public class GroupChannelServiceImpl implements GroupChannelService {
 
         Channel channel = Channel.builder()
                 .user(user)
-                .channelDescription(groupChannelRequestDto.getDescription())
-                .channelTitle(groupChannelRequestDto.getRoomTitle())
+                .channelDescription(groupChannelRequestDto.getChannelDescription())
+                .channelTitle(groupChannelRequestDto.getChannelTitle())
                 .channelType(ChannelType.GROUP.getCode())    //C001 : 그룹 ,  C002 : 피드
-                .channelSido(groupChannelRequestDto.getSido())
-                .channelSigungu(groupChannelRequestDto.getGugun())
+                .channelSido(groupChannelRequestDto.getChannelSido())
+                .channelSigungu(groupChannelRequestDto.getChannelSigungu())
                 .build();
 
          channelRepository.save(channel);
@@ -95,8 +97,8 @@ public class GroupChannelServiceImpl implements GroupChannelService {
      */
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> showAllGroupChannel() {
-        List<Channel> channelList = channelRepository.findByChannelType(ChannelType.GROUP.getCode());
+    public ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> showAllGroupChannel(User user) {
+        List<Channel> channelList = channelRepository.findAllByChannelType(ChannelType.GROUP.getCode(),worcationRepository.findByUserId(user.getId()).getSido());
         List<GroupChannelResponseDto> groupChannelResponseDtoList = new ArrayList<>();
         for (Channel channel : channelList) {
             groupChannelResponseDtoList.add(GroupChannelResponseDto.builder()
@@ -187,6 +189,25 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                 }).toList();
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(groupChannelResponseList));
+    }
+
+    @Override
+    public ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> searchChannel(User user, String content) {
+        List<Channel> channelList = channelRepository.searchChannelByInsert(content, ChannelType.GROUP.getCode(),worcationRepository.findByUserId(user.getId()).getSido());
+        List<GroupChannelResponseDto> groupChannelResponseDtoList = new ArrayList<>();
+        for (Channel channel : channelList) {
+            groupChannelResponseDtoList.add(GroupChannelResponseDto.builder()
+                    .channelId(channel.getId())
+                    .userId(channel.getUser().getId())
+                    .channelDescription(channel.getChannelDescription())
+                    .channelTitle(channel.getChannelTitle())
+                    .channelSido(channel.getChannelSido())
+                    .channelSigungu(channel.getChannelSigungu())
+                    .channelMemo(channel.getChannelMemo())
+                    .userCount(channelUserRepository.countByChannelId(channel.getId()))
+                    .build());
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(groupChannelResponseDtoList));
     }
 
 

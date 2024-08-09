@@ -1,5 +1,5 @@
 import Explorer from "../../components/common/Explorer";
-import React, { useLayoutEffect, useRef, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import MobileExplorer from "../../components/common/MobileExplorer";
 import useDeviceStore from "../../store/deviceStore";
 import ChannelSubExplorer from "../../components/Channel/ChannelSubExplorer";
@@ -13,13 +13,13 @@ import {
 import {
   GlobeAltIcon,
   UserCircleIcon,
-  EllipsisHorizontalIcon,
   MagnifyingGlassIcon,
 } from "@heroicons/react/24/solid";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import CustomModal from "../../components/common/customModal";
 import CreateGroupChannel from "../../components/Channel/group/CreateGroupChannel";
 import useUserStore from "../../store/userStore";
+import { groupChannelAPI } from "../../api/groupChannelAPI";
 
 function ChannelPage() {
   const isMobile = useDeviceStore((state) => state.isMobile);
@@ -35,6 +35,7 @@ function ChannelPage() {
   const location = useLocation();
 
   const [isCreateChannelOpen, setIsCreateChannelOpen] = useState(false);
+  const [myChannelList, setMyChannelList] = useState([]);
 
   useLayoutEffect(() => {
     // 현재 경로가 정확히 '/channel'일 때만 리다이렉트
@@ -42,6 +43,14 @@ function ChannelPage() {
       navigate(`/channel/feed/${myId}`);
     }
   }, [location.pathname, navigate, userId]);
+
+  useEffect(() => {
+    const getMyGroupData = async () => {
+      const resp = await groupChannelAPI.getMyChannel();
+      if (resp) setMyChannelList(resp?.data);
+    };
+    getMyGroupData();
+  }, []);
 
   const handleMouseEvents = (ref) => {
     let isDown = false;
@@ -223,32 +232,7 @@ function ChannelPage() {
                 </div>
               }
               type="group"
-              data={[
-                { id: 2 },
-                { id: "asdf" },
-                { id: "asdf" },
-                { id: "asdf" },
-                { id: "asdf" },
-                { id: "1`23" },
-                { id: "asdf" },
-                { id: "asdf" },
-                { id: "asdf" },
-                { id: "asdf" },
-                { id: "asdf" },
-                { id: "asdf" },
-                { id: "asdf" },
-                { id: "asdf" },
-                { id: "asdf" },
-                { id: "asdf" },
-                { id: "asdf" },
-                { id: "asdf" },
-                { id: "asdf" },
-                { id: "asdf" },
-                { id: "asdf" },
-                { id: "asdf" },
-                { id: "asdf" },
-                { id: "asdf" },
-              ]}
+              data={myChannelList}
             >
               <div className="sticky top-0 bg-blue-50 z-[2]">
                 <span className="text-sm">모임 채널</span>

@@ -15,7 +15,7 @@ import FeedAroundPage from "./pages/Channel/Feed/FeedAroundPage";
 import FeedPersonalPage from "./pages/Channel/Feed/FeedPersonalPage";
 import ChatPage from "./pages/ChatPage";
 import AuthenticatedRouter from "./components/common/AuthenticatedRouter";
-import VideoChat from "./pages/Channel/Group/VideoChat";
+import VideoChat from "./components/VideoChat/VideoChat";
 import GroupDiscoverPage from "./pages/Channel/Group/GroupDiscoverPage";
 
 function App() {
@@ -47,26 +47,23 @@ function App() {
             <Route path="/video-chat" element={<VideoChat />} />
 
             {/* 중첩 라우팅 */}
-            <Route path="/channel" element={<ChannelPageLayout />}>
+            <Route
+              path="/channel"
+              element={<AuthenticatedRouter element={<ChannelPageLayout />} />}
+            >
               {/* 그룹 시작 / 그룹 검색, 그룹 방 */}
               <Route
                 path="/channel/group/discover-groups"
-                // element={<AuthenticatedRouter element={<GroupDiscoverPage />} />}
                 element={<GroupDiscoverPage />}
               />
               <Route
                 path="/channel/group/:groupId"
-                // element={<AuthenticatedRouter element={<GroupChannelPage />} />}
                 element={<GroupChannelPage />}
               />
               {/* 그룹 끝 */}
 
               {/* 피드 시작 / 둘러보기, 개인 피드 */}
-              <Route
-                path="/channel/feed"
-                // element={<AuthenticatedRouter element={<FeedAroundPage />} />}
-                element={<FeedAroundPage />}
-              />
+              <Route path="/channel/feed" element={<FeedAroundPage />} />
               <Route
                 path="/channel/feed/:userId"
                 element={<FeedPersonalPage />}

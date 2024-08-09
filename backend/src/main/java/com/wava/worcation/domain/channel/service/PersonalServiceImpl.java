@@ -42,7 +42,6 @@ public class PersonalServiceImpl implements PersonalService {
         Long userId = userRepository.findByNickName(nickName).getId();
         Channel channel = channelRepository.findChannelByUserId(userId);
         int feedcount = infoService.feedCount(userId);
-
         ResponseEntity<ApiResponse<PersonalResponseDto>> response = ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(PersonalResponseDto.builder()
                 .id(channel.getId())
                 .userId(userId)

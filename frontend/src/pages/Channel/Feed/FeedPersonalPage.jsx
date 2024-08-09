@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLocation, useParams } from "react-router-dom";
 import ContentDrawer from "../../../components/Channel/feed/ContentDrawer";
 import ContentItemGrid from "../../../components/Channel/feed/ContentItemGrid";
@@ -28,6 +28,8 @@ function FeedPersonalPage() {
 
   const location = useLocation();
 
+  const openDrawerRef = useRef(null);
+
   useEffect(() => {
     const getData = async () => {
       try {
@@ -39,6 +41,8 @@ function FeedPersonalPage() {
           setMaxPage(feedContResp?.data?.totalPages - 1); // 0부터 -1까지
           setContents(feedContResp.data.data);
         } else {
+          setMaxPage(-1);
+          setContents([]);
           setIsNoContent(true);
         }
       } catch (error) {
@@ -115,16 +119,26 @@ function FeedPersonalPage() {
     }
   };
 
+  const createFeedControl = () => {
+    openDrawerRef.current.click();
+  };
   return (
     <>
       <div className="flex h-full">
         <div className="flex flex-col flex-1">
           <FeedHeader
+            openDrawerRef={openDrawerRef}
+            createFeedControl={createFeedControl}
             userInfo={userInfo}
             setUserInfo={setUserInfo}
             openCreateDrawer={() => setIsCreateDrawerOpen(true)}
           />
-          {isNoContent && <NoContent />}
+          {isNoContent && (
+            <NoContent
+              refStatus={openDrawerRef.current ? true : false}
+              createFeedControl={createFeedControl}
+            />
+          )}
           <ContentItemGrid
             loadMore={loadMore}
             loading={loading}
