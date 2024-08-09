@@ -174,26 +174,39 @@
 
 // export default React.memo(GroupChannelComponent);
 
-import React from "react";
+import { React, useState } from "react";
 import ChatComponent from "../components/Chat/ChatComponent";
 import MapComponent from "../components/Channel/group/MapComponent";
+import ControllerComponent from "../components/Channel/group/ControllerComponent";
 import VideoChat from "../components/VideoChat/VideoChat"
 
 const GroupChannelPage = () => {
+
+  const [mode, setMode] = useState(true);
+
   return (
     <div className="flex h-screen">
       {/* 지도 컴포넌트 (3/4) */}
-      <div className="w-3/4 h-full">
+      <div className="w-11/12 h-full">
         <MapComponent />
       </div>
 
       {/* 채팅 컴포넌트 (1/4) */}
-      {/* <div className="w-1/4 h-full">
-        <ChatComponent />
-      </div> */}
-      <div className="w-1/4 max-h-">
-        <VideoChat />
-      </div>
+      {mode
+        ? <div className="w-1/4 h-full grid grid-rows-12">
+            <div className="row-span-1">
+            <ControllerComponent mode={mode} setMode={setMode} />
+            </div>
+            <div className="row-span-11">
+              <ChatComponent/>
+            </div>
+          </div>
+        :  
+          <div className="w-2/12 overflow-auto bg-black">
+            <VideoChat />
+          </div>
+        }
+
     </div>
   );
 };

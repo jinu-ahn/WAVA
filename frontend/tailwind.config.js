@@ -5,6 +5,10 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
+      height: {
+        '1/11': '9.09%',  // 1/11 높이
+        '2-5/11': '22.73%',  // 2.5/11 높이 (2.5 ÷ 11 = 0.2273)
+      },
       keyframes: {
         // 우측에서 좌측으로 이동
         slideIn: {

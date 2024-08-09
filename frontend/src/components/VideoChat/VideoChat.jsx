@@ -132,11 +132,8 @@ class App extends Component {
         mySession.on("streamCreated", (event) => {
           // 스트림을 구독하여 수신합니다. 두 번째 매개변수가 정의되지 않으면
           // OpenVidu는 HTML 비디오를 단독으로 생성하지 않습니다.
-          var sub = {
-            subscriber: mySession.subscribe(event.stream, undefined),
-            myUserName: this.state.myUserName
-          }
-          // var subscriber = mySession.subscribe(event.stream, undefined);
+
+          var sub = mySession.subscribe(event.stream, undefined);
           var subscribers = this.state.subscribers;
           console.log(sub)
           subscribers.push(sub);
@@ -323,32 +320,14 @@ class App extends Component {
             ) : null}
 
             {this.state.session !== undefined ? (
-                <div id="session">
-                    <div id="session-header">
-                        <h1 id="session-title">{mySessionId}</h1>
-                        <input
-                            className="btn btn-large btn-danger"
-                            type="button"
-                            id="buttonLeaveSession"
-                            onClick={this.leaveSession}
-                            value="Leave session"
-                        />
-                        <input
-                            className="btn btn-large btn-success"
-                            type="button"
-                            id="buttonSwitchCamera"
-                            onClick={this.switchCamera}
-                            value="Switch Camera"
-                        />
-                    </div>
-
+                <div id="session" className="bg-black">
                     {/* {this.state.mainStreamManager !== undefined ? (
                         <div id="main-video" className="col-md-6">
                             <UserVideoComponent streamManager={this.state.mainStreamManager} />
 
                         </div>
                     ) : null} */}
-                    <div id="video-container" className="col-lg-12">
+                    <div id="video-container" className="col-lg-12 p-1">
                         {this.state.publisher !== undefined ? (
                             <div className="stream-container col-md-6 col-xs-6" onClick={() => this.handleMainVideoStream(this.state.publisher)}>
                                 <UserVideoComponent
@@ -356,13 +335,26 @@ class App extends Component {
                             </div>
                         ) : null}
                         {this.state.subscribers.map((sub, i) => (
-                            <div key={sub.subscriber.id} className="stream-container col-lg-12" onClick={() => this.handleMainVideoStream(sub.subscriber)}>
-                                <UserVideoComponent streamManager={sub.subscriber} myUserName={this.state.myUserName} />
+                            <div key={sub.id} className="stream-container col-md-6 col-xs-6" onClick={() => this.handleMainVideoStream(sub)}>
+                                <UserVideoComponent streamManager={sub} />
                             </div>
                         ))}
                     </div>
                 </div>
             ) : null}
+                <div id="session-header" className="fixed bottom-0 h-10 opacity-0 hover:opacity-100 transition-opacity duration-300">
+                    {/* <h1 id="session-title">{mySessionId}</h1> */}
+                    <button className="bg-red-600" onClick={this.leaveSession} id="buttonLeaveSession">
+                    Leave session
+                    </button>
+                    {/* <input
+                        className="btn btn-large btn-success"
+                        type="button"
+                        id="buttonSwitchCamera"
+                        onClick={this.switchCamera}
+                        value="Switch Camera"
+                    /> */}
+                </div>
         </div>
     );
 }
