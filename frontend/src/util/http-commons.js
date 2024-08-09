@@ -64,7 +64,7 @@ function refreshToken() {
   // 토큰을 갱신하는 로직을 작성
   return axios
     .post(
-      "/api/user/reissue",
+      process.env.REACT_APP_SERVER_ADDRESS + "/user/reissue",
       {},
       {
         headers: {
