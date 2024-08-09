@@ -1,10 +1,12 @@
 import useChannelStore from "../../../store/channelStore";
 
 function ChannelRoomItem({ roomInfo, onClick }) {
-  const isJoinedChannel = useChannelStore((state) => state.followChannels);
-  console.log(isJoinedChannel, roomInfo);
+  const isJoinedChannel = useChannelStore((state) => state.followChannels).some(
+    (el) => el.channelId === roomInfo.channelId
+  );
   const isFull = roomInfo.userCount > 3;
 
+  const isActive = isJoinedChannel ? false : isFull ? false : true;
   const joinChannelHandle = () => {
     onClick();
   };
@@ -20,14 +22,14 @@ function ChannelRoomItem({ roomInfo, onClick }) {
       </div>
       <p className="text-gray-600 mb-4">{roomInfo.channelDescription}</p>
       <button
-        onClick={isFull ? null : joinChannelHandle}
+        onClick={isActive ? joinChannelHandle : null}
         className={`${
           isFull
             ? "bg-gray-500 hover:bg-gray-600"
             : "bg-blue-500 hover:bg-blue-600"
         }  text-white px-4 py-2 rounded  transition-colors`}
       >
-        채널 참여
+        {isJoinedChannel ? "참여한 채널" : "채널 참여"}
       </button>
     </div>
   );

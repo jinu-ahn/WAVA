@@ -22,6 +22,7 @@
     "chart.js": "^4.4.3",
     "dayjs": "^1.11.12",
     "framer-motion": "^11.3.24",
+    "lodash.throttle": "^4.1.1",
     "lucide-react": "^0.419.0",
     "nanoid": "^5.0.7",
     "npm": "^10.8.2",
@@ -56,6 +57,9 @@
     "workbox-strategies": "^6.6.0",
     "workbox-streams": "^6.6.0",
     "ws": "^8.18.0",
+    "y-presence": "^0.2.3",
+    "y-websocket": "^2.0.4",
+    "yjs": "^13.6.18",
     "zustand": "^4.5.4"
   },
   "scripts": {
