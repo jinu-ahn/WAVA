@@ -72,7 +72,10 @@ const FeedHeader = ({
   };
 
   return (
-    <div className={isMobile ? "p-4" : "p-6"}>
+    <div
+      className={isMobile ? "p-4" : "p-6"}
+      style={{ fontFamily: "'IBM Plex Sans KR', sans-serif" }}
+    >
       <div
         className={`flex ${isMobile ? "flex-col items-center" : "items-start"}`}
       >

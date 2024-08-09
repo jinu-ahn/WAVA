@@ -15,11 +15,11 @@ NOTE: for old browsers, will need to restart watcher after changing a variable
   --fc-page-bg-color: #fff;
   --fc-neutral-bg-color: rgba(208, 208, 208, 0.3);
   --fc-neutral-text-color: #808080;
-  --fc-border-color: #ddd;
+  --fc-border-color: #000000b7;
 
   --fc-event-bg-color: rgb(47, 102, 144);
   --fc-event-border-color: rgb(47, 102, 144);
-  --fc-event-text-color: white;
+  --fc-event-text-color: rgb(255, 255, 255);
   --fc-event-selected-overlay-color: rgba(0, 0, 0, 0.25);
 
   --fc-more-link-bg-color: #d0d0d0;
@@ -53,6 +53,19 @@ NOTE: for old browsers, will need to restart watcher after changing a variable
   /* daygrid 전용 */
   --fc-daygrid-event-dot-width: 8px;
   /* 끝 */
+}
+.fc {
+  font-family: "Soyodanpoongche";
+}
+
+.fc-event-title,
+.fc-daygrid-day-number,
+.fc-header-toolbar {
+  font-family: "Soyodanpoongche";
+}
+
+.fc-col-header-cell {
+  background-color: rgb(180, 180, 180);
 }
 
 .fc-button {
