@@ -64,7 +64,8 @@ const FeedHeader = ({
     const formData = new FormData();
     formData.append("image", editProfile?.file);
     const resp = await createProfileImageRequest(formData);
-    if (resp) {
+    console.log(resp);
+    if (resp?.data === "OK") {
       window.location.reload();
     }
   };

@@ -130,15 +130,14 @@ export const readFollowerUserRequest = async (nickName) => {
 export const createProfileImageRequest = async (data) => {
   const token = sessionStorage.getItem("accessToken");
   if (token) {
-    return (
-      await handleRequest(() =>
-        local.post(`/channel/personal/profile`, data, {
+    return await handleRequest(
+      () =>
+        local.patch(`/channel/personal/profile`, data, {
           headers: {
             "Content-Type": "multipart/form-data",
             Authorization: `Bearer ${token}`,
           },
-        })
-      ),
+        }),
       "프사 저장"
     );
   } else {
