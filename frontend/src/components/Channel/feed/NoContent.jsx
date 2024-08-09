@@ -3,7 +3,8 @@ import { FaRegFrown } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
-function NoContent({ createFeedControl }) {
+function NoContent({ createFeedControl, refStatus }) {
+  console.log(refStatus);
   const navigate = useNavigate(); // useNavigate 훅을 사용해 navigate 함수를 만듭니다.
 
   const handleExploreClick = () => {
@@ -43,15 +44,17 @@ function NoContent({ createFeedControl }) {
       </motion.p>
 
       {/* 행동 유도 버튼들 */}
-      <motion.button
-        onClick={createFeedControl}
-        initial={{ y: 20, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 1, delay: 0.5 }}
-        className="px-4 py-2 mt-6 text-white bg-blue-500 rounded-md shadow hover:bg-blue-600"
-      >
-        피드 작성하기
-      </motion.button>
+      {refStatus && (
+        <motion.button
+          onClick={createFeedControl}
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 1, delay: 0.5 }}
+          className="px-4 py-2 mt-6 text-white bg-blue-500 rounded-md shadow hover:bg-blue-600"
+        >
+          피드 작성하기
+        </motion.button>
+      )}
       <motion.button
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}

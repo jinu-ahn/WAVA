@@ -163,7 +163,7 @@ function ChannelPage() {
         <Explorer />
 
         {/* 여기부터 채널 탐색기 */}
-        <div className="flex flex-col w-16 bg-white shadow-lg h-screen">
+        <div className="flex flex-col w-16 bg-white h-screen">
           <div className="flex-shrink-0 text-center"></div>
 
           {/* 내채널 */}
@@ -234,7 +234,7 @@ function ChannelPage() {
               type="group"
               data={myChannelList}
             >
-              <div className="sticky top-0 bg-white z-10">
+              <div className="sticky top-0 bg-white">
                 <span className="text-sm">모임 채널</span>
               </div>
             </ChannelSubExplorer>

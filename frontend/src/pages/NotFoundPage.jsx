@@ -53,9 +53,9 @@ function NotFoundPage() {
           Oops! It seems you're lost. Let's play a game!
         </motion.p>
       </motion.div>
-      <diV className="mt-6">
+      <div className="mt-6">
         <DinoGame />
-      </diV>
+      </div>
     </div>
   );
 }
