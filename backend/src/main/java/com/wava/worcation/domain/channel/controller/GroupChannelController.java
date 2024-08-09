@@ -31,8 +31,8 @@ public class GroupChannelController {
      * @return
      */
     @GetMapping
-    public ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> showAllGroupChannel () {
-        return groupChannelServcice.showAllGroupChannel();
+    public ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> showAllGroupChannel (@AuthUser User user) {
+        return groupChannelServcice.showAllGroupChannel(user);
     }
 
 
@@ -64,5 +64,6 @@ public class GroupChannelController {
     public ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> getUserChannel (@AuthUser User user) {
         return groupChannelServcice.userJoinChannel(user);
     }
+
 
 }

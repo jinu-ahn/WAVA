@@ -3,6 +3,7 @@ package com.wava.worcation.domain.channel.repository;
 import com.wava.worcation.domain.channel.domain.Channel;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,5 +16,6 @@ public interface ChannelRepository extends JpaRepository<Channel, Long> {
     Channel findChannelByUserId (long userId);
     List<Object> findByUserId(long userId);
     List<Channel> findByChannelType(String channelType);
-    int countByUserId(long userId);
+    @Query("SELECT c FROM Channel c WHERE c.channelType = :channelType ORDER BY CASE WHEN c.channelSido = :sido THEN 0 ELSE 1 END, c.channelTitle ASC")
+    List<Channel> findAllByChannelType(String channelType, @Param("sido") String sido);
 }
