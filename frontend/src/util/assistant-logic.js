@@ -56,9 +56,9 @@ async function mainLogic() {
 
                         아래에 현재 시각과 데이터를 제공해드리겠습니다.
                         
-                        현재 대한민국 서울 시각은 "2024-08-08 23:16:43" 입니다.
+                        현재 대한민국 서울 시각은 "${getCurrentDate()}" 입니다.
                         사용자의 하루 일정 정보는
-                        "[{"id":22,"title":"회의 준비","content":"프로젝트 주제 사전 점검, 주제 관련 기사 서칭","start":"2024-08-08T00:00:00.000Z","end":"2024-08-08T01:00:00.000Z","important":"HIGH","type":"WORK","className":"HIGH","isFinish":false},{"id":23,"title":"이메일 확인","content":"동료 직원들 이메일 확인 후 특이사항 체크","start":"2024-08-08T00:30:00.000Z","end":"2024-08-08T01:00:00.000Z","important":"MID","type":"WORK","className":"MID","isFinish":false},{"id":24,"title":"점심 식사","content":"할멈 탕수육","start":"2024-08-08T03:00:00.000Z","end":"2024-08-08T04:00:00.000Z","important":"MID","type":"REST","className":"MID","isFinish":false},{"id":25,"title":"프로젝트 회의","content":"오전에 조사한 내용 전달, 현재 문제 상황 점검","start":"2024-08-08T05:00:00.000Z","end":"2024-08-08T06:30:00.000Z","important":"HIGH","type":"REST","className":"HIGH","isFinish":false},{"id":26,"title":"보고서 작성","content":"회의 내용 및 안건 요약 보고서 작성","start":"2024-08-08T07:00:00.000Z","end":"2024-08-08T08:30:00.000Z","important":"HIGH","type":"WORK","className":"HIGH","isFinish":false},{"id":27,"title":"운동","content":"풀업 5세트, 랫풀 다운 4세트","start":"2024-08-08T09:00:00.000Z","end":"2024-08-08T10:00:00.000Z","important":"HIGH","type":"REST","className":"HIGH","isFinish":false},{"id":28,"title":"저녁 식사","content":"제육 볶음 만들기","start":"2024-08-08T10:30:00.000Z","end":"2024-08-08T11:30:00.000Z","important":"MID","type":"REST","className":"MID","isFinish":false},{"id":29,"title":"일정 정리","content":"오늘 업무 내용 회고","start":"2024-08-08T12:00:00.000Z","end":"2024-08-08T12:30:00.000Z","important":"HIGH","type":"WORK","className":"HIGH","isFinish":false},{"id":30,"title":"수면","content":"꿀잠","start":"2024-08-08T13:00:00.000Z","end":"2024-08-08T22:00:00.000Z","important":"MID","type":"REST","className":"MID","isFinish":false}]"
+                        "${todayEvents}"
                         입니다.
 
                         제공한 시간과 데이터를 기반으로 아래의 과정에 대한 답만 순서대로 출력해주세요. 대신 순서를 뜻하는 숫자는 제외하고 출력해주세요.
