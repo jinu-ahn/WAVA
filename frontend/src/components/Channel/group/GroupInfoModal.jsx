@@ -2,9 +2,12 @@ import { useEffect, useState } from "react";
 import useDeviceStore from "../../../store/deviceStore";
 import { groupChannelAPI } from "../../../api/groupChannelAPI";
 import { useNavigate } from "react-router-dom";
+import useChannelStore from "../../../store/channelStore";
 
 function GroupInfoModal({ onClose, groupId }) {
   const isMobile = useDeviceStore((state) => state.isMobile);
+  const { addFollowChannels } = useChannelStore();
+
   const [channelData, setChannelData] = useState({});
   const navigate = useNavigate();
 
@@ -16,9 +19,12 @@ function GroupInfoModal({ onClose, groupId }) {
     getData();
   }, [groupId]);
 
-  const joinHandle = () => {
-    // groupChannelAPI.
-    navigate("/");
+  const joinHandle = async () => {
+    const resp = await groupChannelAPI.joinGroupRequest(groupId);
+    if (resp.status === "OK") {
+      addFollowChannels(resp.data);
+      navigate("/");
+    }
     console.log("join");
   };
 

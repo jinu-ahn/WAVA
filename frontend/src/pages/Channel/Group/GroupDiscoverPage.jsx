@@ -50,7 +50,7 @@ function GroupDiscoverPage() {
         </div>
       </div>
 
-      {/* 그룹 상세보기 모달 */}
+      {/* 그룹 상세보기 모달(가입창) */}
       <CustomModal
         styles={"backdrop-blur-sm"}
         isOpen={detailOpen}
