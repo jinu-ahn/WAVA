@@ -32,7 +32,6 @@ const groupChannelAPI = {
 
   // 그룹 채널 생성
   createGroupChannel: async (data) => {
-    console.log(data);
     return await handleRequest(
       () => local.post(`${address}/create`, data),
       "그룹 채널 생성"

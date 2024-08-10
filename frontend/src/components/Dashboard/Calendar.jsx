@@ -145,6 +145,7 @@ const Calendar = ({ calendarRef }) => {
             whiteSpace: "nowrap",
             overflow: "hidden",
             textOverflow: "ellipsis",
+            fontFamily: "Soyodanpoongche",
           }}
         >
           {eventInfo.event.title}
@@ -352,7 +353,7 @@ const Calendar = ({ calendarRef }) => {
           threeDays: {
             type: "timeGrid",
             duration: { days: 3 },
-            buttonText: "3day",
+            buttonText: "3Day",
           },
         }}
         allDaySlot={false}
@@ -384,6 +385,12 @@ const Calendar = ({ calendarRef }) => {
             click: openModal,
           },
           filtersButton: renderFiltersButton(),
+        }}
+        buttonText={{
+          today: "Today",
+          month: "Month",
+          week: "Week",
+          day: "Day",
         }}
         editable={true}
         initialView="threeDays"
