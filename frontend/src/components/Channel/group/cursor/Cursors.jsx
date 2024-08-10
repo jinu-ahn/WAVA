@@ -75,7 +75,7 @@ const Cursors = (props) => {
       const { x, y } = users[key];
       const position = new window.kakao.maps.LatLng(x, y);
       const pixelPosition = map.getProjection().pointFromCoords(position);
-      return <Cursor key={key} color="blue" point={[pixelPosition.x, pixelPosition.y]} nickName={key.nickName} />;
+      return <Cursor key={key} color="blue" point={[pixelPosition.x, pixelPosition.y]} nickName={key} />;
     });
   }, [users, nickName]);
 
