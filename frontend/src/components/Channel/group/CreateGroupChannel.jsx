@@ -4,15 +4,19 @@ import useDeviceStore from "../../../store/deviceStore";
 import { groupChannelAPI } from "../../../api/groupChannelAPI";
 import useUserStore from "../../../store/userStore";
 import LoadingSpinner from "../LoadingSpinner";
+import { useNavigate } from "react-router-dom";
+import useChannelStore from "../../../store/channelStore";
 
 function CreateGroupChannel({ onClose }) {
   const userInfo = useUserStore((state) => state.userInfo);
   const isMobile = useDeviceStore((state) => state.isMobile);
+  const { addFollowChannels } = useChannelStore();
 
   const [channelTitle, setChannelTitle] = useState("");
   const [channelDescription, setChannelDescription] = useState("");
 
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const submitHandle = async () => {
     setLoading(true);
@@ -23,8 +27,14 @@ function CreateGroupChannel({ onClose }) {
       channelDescription: channelDescription,
     };
     try {
-      if (await groupChannelAPI.createGroupChannel(data)) {
-        window.location.reload();
+      const resp = await groupChannelAPI.createGroupChannel(data);
+      if (resp.status === "OK") {
+        addFollowChannels(resp.data);
+        navigate("/channel/group/" + resp?.data?.channelId);
+        onClose();
+        // if (await groupChannelAPI.createGroupChannel(data)) {
+        //   window.location.reload();
+        // }
       }
     } catch (error) {
       console.error("Error creating channel:", error);

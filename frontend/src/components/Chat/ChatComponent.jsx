@@ -140,7 +140,7 @@ function ChatComponent(props) {
       ).padStart(2, "0")}`;
 
       const messageObj = {
-        channelId: 1,
+        channelId: channelId,
         nickName: nickName,
         registTime: formattedDate,
         message: inputValue,

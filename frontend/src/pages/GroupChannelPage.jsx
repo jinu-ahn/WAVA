@@ -189,7 +189,7 @@ const GroupChannelPage = () => {
     <div className="flex h-screen">
       {/* 지도 컴포넌트 (3/4) */}
       <div className="w-11/12 h-full">
-        <MapComponent />
+        <MapComponent channelId={groupId} />
       </div>
 
       {/* 채팅 컴포넌트 (1/4) */}

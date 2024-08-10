@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/channel/map")
@@ -35,6 +37,12 @@ public class MapPinController {
         mapPinService.deletePin(pinId);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success("PIN_DELETE_SUCCESS"));
+    }
+
+    @GetMapping("detail/{channelId}")
+    private ResponseEntity<ApiResponse<List<MapPinResponseDto>>> detail(@PathVariable("channelId") Long channelId) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.success(mapPinService.getChannelPins(channelId)));
     }
 
 }

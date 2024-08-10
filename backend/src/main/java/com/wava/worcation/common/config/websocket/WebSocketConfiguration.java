@@ -20,6 +20,8 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
         registry.addEndpoint("/ws") // 웹소켓 엔드포인트
                 .setAllowedOriginPatterns("*"); // CORS 허용
 //                .withSockJS();
+        registry.addEndpoint("/cursor")
+                .setAllowedOriginPatterns("*");
     }
 
     @Override
@@ -30,6 +32,6 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
-        registration.interceptors(stompHandler); // STOMP 필터
+//        registration.interceptors(stompHandler); // STOMP 필터
     }
 }

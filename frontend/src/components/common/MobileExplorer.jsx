@@ -6,7 +6,7 @@ const MobileExplorer = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="bg-white inline-flex">
+    <nav className="inline-flex">
       <div className="inline items-center justify-between">
         {/* 햄버거 버튼 */}
         <button

@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import Swal from "sweetalert2";
-// import { Cursors } from "./cursor/Cursors";
+import Cursors from "./cursor/Cursors";
 // import { useUsers } from "y-presence";
 // import { awareness } from "./cursor/y";
 // import { USER_COLORS } from "./cursor/constants";
 
-const MapComponent = () => {
+const MapComponent = (props) => {
   const mapContainer = useRef(null);
   const [map, setMap] = useState(null);
   const [drawingManager, setDrawingManager] = useState(null);
@@ -17,6 +17,7 @@ const MapComponent = () => {
   const infowindow = useRef(null);
 
   // const currentUser = useUsers(awareness)[awareness.clientID];
+
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -374,7 +375,7 @@ const MapComponent = () => {
         </div>
       </div>
       <div ref={mapContainer} className="flex-grow h-screen">
-        {/* <Cursors /> */}
+        <Cursors channelId={props.channelId} />
       </div>
       <div className="absolute bottom-0 left-0 w-full p-4 bg-white bg-opacity-60 z-10 max-h-40 overflow-y-auto">
         <ul>

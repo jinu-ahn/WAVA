@@ -19,7 +19,7 @@ const FeedHeader = ({
   openDrawerRef,
 }) => {
   const isMobile = useDeviceStore((state) => state.isMobile);
-  const [isEditingName, setIsEditingName] = useState(false);
+  // const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [isFollowDrawerOpen, setIsFollowDrawerOpen] = useState(false);
   const [followDrawerTab, setFollowDrawerTab] = useState("followers");
@@ -31,15 +31,15 @@ const FeedHeader = ({
   const setProfileImage = useUserStore((state) => state.setProfileImage);
   const ownerUserNickName = userInfo?.nickName;
 
-  const handleNameChange = (e) =>
-    setUserInfo((state) => ({ ...state, nickname: e.target.value }));
+  // const handleNameChange = (e) =>
+  //   setUserInfo((state) => ({ ...state, nickname: e.target.value }));
 
   const handleBioChange = (e) =>
     setUserInfo((state) => ({ ...state, description: e.target.value }));
 
-  const handleNameSubmit = () => {
-    setIsEditingName(false);
-  };
+  // const handleNameSubmit = () => {
+  //   setIsEditingName(false);
+  // };
 
   const handleBioSubmit = async () => {
     await updateFeedDescription(userInfo.description);
