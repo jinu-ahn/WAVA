@@ -10,6 +10,7 @@ import { WebsocketProvider } from "y-websocket";
 
 const Cursors = (props) => {
   const channelId = props.channelId;
+  const map = props.map;
   const [users, setUsers] = useState({});
   const socketUrl = process.env.REACT_APP_CURSOR_WEBSOCKET_ADDRESS;
   const [isConnected, setIsConnected] = useState(false);
@@ -47,8 +48,10 @@ const Cursors = (props) => {
     );
 
     const handlePointerMove = throttle((e) => {
-      if (isConnected && nickName) {
-        const cursorPosition = { channelId, nickName, x: e.clientX, y: e.clientY };
+      if (isConnected && nickName && map) {
+
+        const latlng = map.getProjection().coordsFromPoint(new window.kakao.maps.Point(e.clientX, e.clientY));
+        const cursorPosition = { channelId, nickName, x: latlng.getLat(), y: latlng.getLng() };
         stompClient.current.send(
           `/pub/position`,
           { Authorization: `Bearer ${sessionStorage.getItem("accessToken")}` },
@@ -64,13 +67,15 @@ const Cursors = (props) => {
       window.removeEventListener('mousemove', handlePointerMove);
       stompClient.current.disconnect();
     };
-  }, [nickName, socketUrl, channelId, isConnected]);
+  }, [nickName, socketUrl, channelId, isConnected, map]);
 
   const renderCursors = useCallback(() => {
     return Object.keys(users).map((key) => {
       if (key === nickName) return null;
       const { x, y } = users[key];
-      return <Cursor key={key} color="blue" point={[x, y]} nickName={nickName} />;
+      const position = new window.kakao.maps.LatLng(x, y);
+      const pixelPosition = map.getProjection().pointFromCoords(position);
+      return <Cursor key={key} color="blue" point={[pixelPosition.x, pixelPosition.y]} nickName={key.nickName} />;
     });
   }, [users, nickName]);
 

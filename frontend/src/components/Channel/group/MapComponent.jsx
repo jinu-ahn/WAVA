@@ -375,7 +375,7 @@ const MapComponent = (props) => {
         </div>
       </div>
       <div ref={mapContainer} className="flex-grow h-screen">
-        <Cursors channelId={props.channelId} />
+        {map && <Cursors channelId={props.channelId} map={map} />}
       </div>
       <div className="absolute bottom-0 left-0 w-full p-4 bg-white bg-opacity-60 z-10 max-h-40 overflow-y-auto">
         <ul>
