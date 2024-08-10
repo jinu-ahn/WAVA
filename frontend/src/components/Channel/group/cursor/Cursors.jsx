@@ -23,6 +23,9 @@ const Cursors = (props) => {
   };
 
   useEffect(() => {
+
+    getUserNickName();
+
     const socket = new WebSocket(socketUrl);
     stompClient.current = Stomp.over(socket);
 
@@ -44,7 +47,7 @@ const Cursors = (props) => {
     );
 
     const handlePointerMove = throttle((e) => {
-      if (isConnected && stompClient.current && stompClient.current.connected) {
+      if (isConnected && nickName) {
         const cursorPosition = { channelId, nickName, x: e.clientX, y: e.clientY };
         stompClient.current.send(
           `/pub/position`,
@@ -53,7 +56,7 @@ const Cursors = (props) => {
       }
     }, 100);
 
-    getUserNickName();
+    // getUserNickName();
 
     window.addEventListener('mousemove', handlePointerMove);
 
@@ -61,7 +64,7 @@ const Cursors = (props) => {
       window.removeEventListener('mousemove', handlePointerMove);
       stompClient.current.disconnect();
     };
-  }, [nickName, socketUrl]);
+  }, [nickName, socketUrl, channelId, isConnected]);
 
   const renderCursors = useCallback(() => {
     return Object.keys(users).map((key) => {
