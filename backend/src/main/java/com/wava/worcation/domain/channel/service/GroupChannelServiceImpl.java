@@ -9,6 +9,7 @@ import com.wava.worcation.domain.channel.domain.ChannelUser;
 import com.wava.worcation.domain.channel.domain.MapPin;
 import com.wava.worcation.domain.channel.dto.request.GroupChannelRequestDto;
 import com.wava.worcation.domain.channel.dto.response.GroupChannelResponseDto;
+import com.wava.worcation.domain.channel.dto.response.GroupChannelValidResponseDto;
 import com.wava.worcation.domain.channel.dto.response.GroupDetailResponseDto;
 import com.wava.worcation.domain.channel.dto.response.MapPinResponseDto;
 import com.wava.worcation.domain.channel.enums.ChannelType;
@@ -127,9 +128,7 @@ public class GroupChannelServiceImpl implements GroupChannelService {
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<ApiResponse<GroupDetailResponseDto>> getGroupInfo(final Long channelId) {
-        Channel channel = channelRepository.findById(channelId).orElseThrow(
-                () -> new CustomException(ErrorCode.CHANNEL_NOT_FOUND)
-        );
+        Channel channel = validateChannel(channelId);
 
         List<GroupUserResponseDto> groupUserList = channelUserRepository.findByChannelId(channelId)
                 .stream()
@@ -166,9 +165,7 @@ public class GroupChannelServiceImpl implements GroupChannelService {
     @Override
     @Transactional
     public ResponseEntity<ApiResponse<GroupChannelResponseDto>> updateMemo(final Long channelId, final String memo) {
-        Channel channel = channelRepository.findById(channelId).orElseThrow(
-                () -> new CustomException(ErrorCode.CHANNEL_NOT_FOUND)
-        );
+        Channel channel = validateChannel(channelId);
 
         channel.memoUpdate(memo);
 
@@ -249,7 +246,7 @@ public class GroupChannelServiceImpl implements GroupChannelService {
     /**
      * @ 작성자   : 안진우
      * @ 작성일   : 2024-08-10
-     * @ 설명     : 채널에 가입가능 여부 확인
+     * @ 설명     : 채널에 가입
      * @param user      유저 객체
      * @param channelId 채널 식별 아이디
      * @return 등록된 채널 정보
@@ -257,13 +254,20 @@ public class GroupChannelServiceImpl implements GroupChannelService {
      */
     @Override
     @Transactional
-    public ResponseEntity<ApiResponse<GroupChannelResponseDto>> validateChannelLimit(final User user, final Long channelId) {
-        Channel channel = channelRepository.findById(channelId).orElseThrow(
-                () -> new CustomException(ErrorCode.CHANNEL_NOT_FOUND)
-        );
+    public ResponseEntity<ApiResponse<GroupChannelResponseDto>> initiateJoinChannel(final User user, final Long channelId) {
+        Channel channel = validateChannel(channelId);
 
-        if(!channelUserRepository.existsChannelUserByChannelIdAndUserId(channel.getId(),user.getId())&&channelUserRepository.countByChannelId(channelId) >= 4) {
+        boolean isJoined = channelUserRepository.existsChannelUserByChannelIdAndUserId(channel.getId(),user.getId());
+
+        if(!isJoined &&channelUserRepository.countByChannelId(channelId) >= 4) {
             throw new CustomException(ErrorCode.CHANNEL_LIMIT_EXCEED);
+        }
+
+        if(!isJoined) {
+            channelUserRepository.save(ChannelUser.builder()
+                    .channel(channel)
+                    .user(user)
+                    .build());
         }
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -280,4 +284,23 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                 .build()));
     }
 
+    @Override
+    @Transactional
+    public ResponseEntity<ApiResponse<GroupChannelValidResponseDto>> channelJoinUserValidate(Long channelId, User user) {
+        Channel channel = validateChannel(channelId);
+
+        Boolean isJoined = channelUserRepository.existsChannelUserByChannelIdAndUserId(channel.getId(),user.getId());
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.success(GroupChannelValidResponseDto.builder()
+                        .isJoin(isJoined)
+                        .build()));
+    }
+
+    private Channel validateChannel(Long channelId) {
+        Channel channel = channelRepository.findById(channelId).orElseThrow(
+                () -> new CustomException(ErrorCode.CHANNEL_NOT_FOUND)
+        );
+        return channel;
+    }
 }

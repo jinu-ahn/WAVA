@@ -3,6 +3,7 @@ package com.wava.worcation.domain.channel.controller;
 import com.wava.worcation.common.response.ApiResponse;
 import com.wava.worcation.domain.channel.dto.request.GroupChannelRequestDto;
 import com.wava.worcation.domain.channel.dto.response.GroupChannelResponseDto;
+import com.wava.worcation.domain.channel.dto.response.GroupChannelValidResponseDto;
 import com.wava.worcation.domain.channel.dto.response.GroupDetailResponseDto;
 import com.wava.worcation.domain.channel.service.GroupChannelService;
 import com.wava.worcation.domain.user.domain.AuthUser;
@@ -72,7 +73,12 @@ public class GroupChannelController {
 
     @PostMapping("/join")
     public ResponseEntity<ApiResponse<GroupChannelResponseDto>> initiateJoinChannel(@AuthUser User user, @RequestBody Map<String,Long> map){
-        return groupChannelServcice.validateChannelLimit(user,map.get("channelId"));
+        return groupChannelServcice.initiateJoinChannel(user,map.get("channelId"));
+    }
+
+    @GetMapping("/join/valid/{channelId}")
+    public ResponseEntity<ApiResponse<GroupChannelValidResponseDto>> channelJoinUserValidate(@PathVariable("channelId") Long channelId, @AuthUser User user) {
+        return groupChannelServcice.channelJoinUserValidate(channelId,user);
     }
 
 
