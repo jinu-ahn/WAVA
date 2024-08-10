@@ -5,5 +5,8 @@ const useChannelStore = create((set) => ({
   setFollowChannels: (channels) => {
     set(() => ({ followChannels: channels }));
   },
+  addFollowChannels: (newChannel) => {
+    set((state) => ({ followChannels: [...state.followChannels, newChannel] }));
+  },
 }));
 export default useChannelStore;
