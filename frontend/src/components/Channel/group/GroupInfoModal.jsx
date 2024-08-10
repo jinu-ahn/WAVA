@@ -1,10 +1,13 @@
 import { useEffect, useState } from "react";
 import useDeviceStore from "../../../store/deviceStore";
 import { groupChannelAPI } from "../../../api/groupChannelAPI";
+import { useNavigate } from "react-router-dom";
 
 function GroupInfoModal({ onClose, groupId }) {
   const isMobile = useDeviceStore((state) => state.isMobile);
   const [channelData, setChannelData] = useState({});
+  const navigate = useNavigate();
+
   useEffect(() => {
     const getData = async () => {
       const resp = await groupChannelAPI.getChannelInfo(groupId);
@@ -12,6 +15,12 @@ function GroupInfoModal({ onClose, groupId }) {
     };
     getData();
   }, [groupId]);
+
+  const joinHandle = () => {
+    // groupChannelAPI.
+    navigate("/");
+    console.log("join");
+  };
 
   return (
     <div
@@ -48,7 +57,10 @@ function GroupInfoModal({ onClose, groupId }) {
       <div className="mt-6 text-center">
         <p className="mb-4 font-medium">채널에 참여하시겠습니까?</p>
         <div className="flex justify-center space-x-4">
-          <button className="px-4 py-2 bg-blue-600 text-white rounded-md">
+          <button
+            onClick={joinHandle}
+            className="px-4 py-2 bg-blue-600 text-white rounded-md"
+          >
             확인
           </button>
           <button
