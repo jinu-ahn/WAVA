@@ -9,6 +9,7 @@ import {
   readFeedInfoRequest,
 } from "../../../api/channelFeedApi";
 import NoContent from "../../../components/Channel/feed/NoContent";
+import LoadingSpinner from "../../../components/Channel/LoadingSpinner";
 
 function FeedPersonalPage() {
   const { userId } = useParams(); // URL에서 userId를 가져옵니다
@@ -133,31 +134,37 @@ function FeedPersonalPage() {
             setUserInfo={setUserInfo}
             openCreateDrawer={() => setIsCreateDrawerOpen(true)}
           />
-          {isNoContent && (
-            <NoContent
-              refStatus={openDrawerRef.current ? true : false}
-              createFeedControl={createFeedControl}
-            />
+          {loading ? (
+            <LoadingSpinner message="피드를 로딩중입니다." /> // 추가: 로딩 중일 때 스피너 표시
+          ) : (
+            <>
+              {isNoContent && (
+                <NoContent
+                  refStatus={openDrawerRef.current ? true : false}
+                  createFeedControl={createFeedControl}
+                />
+              )}
+              <ContentItemGrid
+                loadMore={loadMore}
+                loading={loading}
+                contents={contents}
+                onSelectContent={handleSelectContent}
+              />
+              <ContentDrawer
+                isOpen={isDrawerOpen}
+                onClose={handleCloseDrawer}
+                onEdit={handleEditContent}
+                onDelete={handleDeleteContent}
+                originChangeHandle={handleChange}
+                feedId={selectedFeedId}
+              />
+              <CreateContentDrawer
+                addItem={addItem}
+                onClose={() => setIsCreateDrawerOpen(false)}
+                isOpen={isCreateDrawerOpen}
+              />
+            </>
           )}
-          <ContentItemGrid
-            loadMore={loadMore}
-            loading={loading}
-            contents={contents}
-            onSelectContent={handleSelectContent}
-          />
-          <ContentDrawer
-            isOpen={isDrawerOpen}
-            onClose={handleCloseDrawer}
-            onEdit={handleEditContent}
-            onDelete={handleDeleteContent}
-            originChangeHandle={handleChange}
-            feedId={selectedFeedId}
-          />
-          <CreateContentDrawer
-            addItem={addItem}
-            onClose={() => setIsCreateDrawerOpen(false)}
-            isOpen={isCreateDrawerOpen}
-          />
         </div>
       </div>
     </>

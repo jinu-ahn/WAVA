@@ -1,7 +1,6 @@
-import { ChevronDoubleRightIcon } from "@heroicons/react/24/outline";
-import useDeviceStore from "../../../store/deviceStore";
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
+  ChevronDoubleRightIcon,
   XMarkIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
@@ -9,7 +8,9 @@ import {
 } from "@heroicons/react/24/outline";
 import Swal from "sweetalert2";
 import { createFeedRequest } from "../../../api/channelFeedApi";
+import useDeviceStore from "../../../store/deviceStore";
 import useUserStore from "../../../store/userStore";
+import LoadingSpinner from "../LoadingSpinner";
 
 function CreateContentDrawer({ isOpen, onClose, addItem }) {
   const isMobile = useDeviceStore((state) => state.isMobile);
@@ -18,6 +19,7 @@ function CreateContentDrawer({ isOpen, onClose, addItem }) {
   const [images, setImages] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [textContent, setTextContent] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleImageChange = (e) => {
     if (e.target?.files?.length === 0) return;
@@ -61,7 +63,7 @@ function CreateContentDrawer({ isOpen, onClose, addItem }) {
       Swal.fire({
         position: "center",
         icon: "error",
-        title: "사진과 글을 입력해주세요!",
+        title: "사진 또는 글을 입력해주세요!",
         showConfirmButton: false,
         timer: 2000,
       });
@@ -69,6 +71,7 @@ function CreateContentDrawer({ isOpen, onClose, addItem }) {
       return;
     }
 
+    setLoading(true); // 로딩 시작
     const formData = new FormData();
     images.forEach((img) => {
       formData.append("image", img?.file);
@@ -76,17 +79,18 @@ function CreateContentDrawer({ isOpen, onClose, addItem }) {
     formData.append("content", textContent);
     formData.append("sido", userInfo?.worcation?.sido);
     formData.append("sigungu", userInfo?.worcation?.sigungu);
-    const resp = await createFeedRequest(formData);
-    console.log(resp);
-    if (resp) {
-      // addItem();
-      setImages([]);
-      setTextContent("");
-      setCurrentIndex(0);
-      onClose();
-
-      addItem();
-    } else {
+    try {
+      const resp = await createFeedRequest(formData);
+      if (resp) {
+        setImages([]);
+        setTextContent("");
+        setCurrentIndex(0);
+        onClose();
+        addItem();
+      } else {
+        throw new Error("Upload failed");
+      }
+    } catch (error) {
       Swal.fire({
         position: "center",
         icon: "error",
@@ -94,6 +98,8 @@ function CreateContentDrawer({ isOpen, onClose, addItem }) {
         showConfirmButton: false,
         timer: 2000,
       });
+    } finally {
+      setLoading(false); // 로딩 종료
     }
   };
 
@@ -125,79 +131,85 @@ function CreateContentDrawer({ isOpen, onClose, addItem }) {
             </button>
 
             <div className="flex-grow flex flex-col items-center overflow-y-auto">
-              <div className="w-full max-w-lg aspect-square relative mb-6">
-                {images.length === 0 ? (
-                  <div
-                    onClick={() => imgInput.current.click()}
-                    className="w-full h-full border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-pointer hover:border-gray-400 transition-colors"
-                  >
-                    <span className="text-gray-500">이미지 등록</span>
-                  </div>
-                ) : (
-                  <>
-                    <img
-                      src={images[currentIndex]?.url}
-                      alt={`uploaded ${currentIndex}`}
-                      className="w-full h-full object-contain rounded-lg"
-                    />
-                    {images.length > 1 && (
+              {loading ? (
+                <LoadingSpinner message="피드를 게시중입니다." />
+              ) : (
+                <>
+                  <div className="w-full max-w-lg aspect-square relative mb-6">
+                    {images.length === 0 ? (
+                      <div
+                        onClick={() => imgInput.current.click()}
+                        className="w-full h-full border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center cursor-pointer hover:border-gray-400 transition-colors"
+                      >
+                        <span className="text-gray-500">이미지 등록</span>
+                      </div>
+                    ) : (
                       <>
+                        <img
+                          src={images[currentIndex]?.url}
+                          alt={`uploaded ${currentIndex}`}
+                          className="w-full h-full object-contain rounded-lg"
+                        />
+                        {images.length > 1 && (
+                          <>
+                            <button
+                              onClick={() => navigateImage("prev")}
+                              className="absolute top-1/2 left-2 -translate-y-1/2 bg-white rounded-full p-1 shadow-md"
+                            >
+                              <ChevronLeftIcon className="h-6 w-6" />
+                            </button>
+                            <button
+                              onClick={() => navigateImage("next")}
+                              className="absolute top-1/2 right-2 -translate-y-1/2 bg-white rounded-full p-1 shadow-md"
+                            >
+                              <ChevronRightIcon className="h-6 w-6" />
+                            </button>
+                          </>
+                        )}
                         <button
-                          onClick={() => navigateImage("prev")}
-                          className="absolute top-1/2 left-2 -translate-y-1/2 bg-white rounded-full p-1 shadow-md"
+                          onClick={() => handleRemoveImage(currentIndex)}
+                          className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 shadow-lg"
                         >
-                          <ChevronLeftIcon className="h-6 w-6" />
+                          <XMarkIcon className="h-5 w-5" />
                         </button>
-                        <button
-                          onClick={() => navigateImage("next")}
-                          className="absolute top-1/2 right-2 -translate-y-1/2 bg-white rounded-full p-1 shadow-md"
-                        >
-                          <ChevronRightIcon className="h-6 w-6" />
-                        </button>
+                        <span className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded-full text-sm">
+                          {currentIndex + 1}/{images.length}
+                        </span>
                       </>
                     )}
                     <button
-                      onClick={() => handleRemoveImage(currentIndex)}
-                      className="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1 shadow-lg"
+                      onClick={() => imgInput.current.click()}
+                      className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-toDoMid text-white rounded-full p-2 shadow-lg"
                     >
-                      <XMarkIcon className="h-5 w-5" />
+                      <PlusCircleIcon className="h-6 w-6" />
                     </button>
-                    <span className="absolute bottom-2 left-2 bg-black bg-opacity-50 text-white px-2 py-1 rounded-full text-sm">
-                      {currentIndex + 1}/{images.length}
-                    </span>
-                  </>
-                )}
-                <button
-                  onClick={() => imgInput.current.click()}
-                  className="absolute bottom-2 left-1/2 -translate-x-1/2 bg-toDoMid text-white rounded-full p-2 shadow-lg"
-                >
-                  <PlusCircleIcon className="h-6 w-6" />
-                </button>
-              </div>
+                  </div>
 
-              <div className="w-full max-w-lg">
-                <div className="flex items-center mb-2">
-                  <div className="flex-grow border-t border-gray-300" />
-                  <span className="px-4 text-sm font-medium text-gray-700">
-                    공유하고 싶은 내용을 적어주세요.
-                  </span>
-                  <div className="flex-grow border-t border-gray-300" />
-                </div>
-                <input
-                  type="text"
-                  value={textContent}
-                  onChange={(e) => setTextContent(e.target.value)}
-                  className="w-full h-48 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-0.5 focus:ring-mainBlue focus:border-mainBlue"
-                  placeholder="내용을 입력하세요"
-                />
-              </div>
+                  <div className="w-full max-w-lg">
+                    <div className="flex items-center mb-2">
+                      <div className="flex-grow border-t border-gray-300" />
+                      <span className="px-4 text-sm font-medium text-gray-700">
+                        공유하고 싶은 내용을 적어주세요.
+                      </span>
+                      <div className="flex-grow border-t border-gray-300" />
+                    </div>
+                    <input
+                      type="text"
+                      value={textContent}
+                      onChange={(e) => setTextContent(e.target.value)}
+                      className="w-full h-48 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-0.5 focus:ring-mainBlue focus:border-mainBlue"
+                      placeholder="내용을 입력하세요"
+                    />
+                  </div>
 
-              <button
-                onClick={submitHandle}
-                className="mt-6 w-full max-w-lg bg-mainBlue hover:bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors"
-              >
-                작성
-              </button>
+                  <button
+                    onClick={submitHandle}
+                    className="mt-6 w-full max-w-lg bg-mainBlue hover:bg-blue-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors"
+                  >
+                    작성
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>
@@ -209,7 +221,6 @@ function CreateContentDrawer({ isOpen, onClose, addItem }) {
         multiple
         accept="image/*"
         onChange={handleImageChange}
-        // className="mb-4"
       />
     </>
   );

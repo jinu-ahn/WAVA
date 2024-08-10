@@ -162,15 +162,15 @@ const MapComponent = () => {
       text: "이 마커를 삭제하시겠습니까?",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
       confirmButtonText: "삭제",
       cancelButtonText: "취소",
     }).then((result) => {
       if (result.isConfirmed) {
         customMarker.marker.setMap(null);
         setCustomMarkers((prev) => prev.filter((cm) => cm !== customMarker));
-        Swal.fire("삭제됨", "마커가 삭제되었습니다.", "success");
+        Swal.fire("", "마커가 삭제되었습니다.", "success");
       }
     });
   }, []);

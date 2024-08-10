@@ -9,6 +9,7 @@ import {
   updateFeedDescription,
 } from "../../../api/channelFeedApi";
 import useUserStore from "../../../store/userStore";
+import LoadingSpinner from "../LoadingSpinner";
 
 const FeedHeader = ({
   openCreateDrawer,
@@ -24,6 +25,7 @@ const FeedHeader = ({
   const [followDrawerTab, setFollowDrawerTab] = useState("followers");
 
   const [editProfile, setEditProfile] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
 
   const loginedUserNickName = useUserStore((state) => state.userInfo?.nickName);
   const setProfileImage = useUserStore((state) => state.setProfileImage);
@@ -62,12 +64,19 @@ const FeedHeader = ({
 
   const handleSubmitProfilePicChange = async () => {
     if (!editProfile) return;
+    setIsUploading(true); // 업로드 시작
     const formData = new FormData();
     formData.append("image", editProfile?.file);
-    const resp = await createProfileImageRequest(formData);
-    if (resp) {
-      setProfileImage(resp.data);
-      window.location.reload();
+    try {
+      const resp = await createProfileImageRequest(formData);
+      if (resp) {
+        setProfileImage(resp.data);
+        window.location.reload();
+      }
+    } catch (error) {
+      console.error("Error uploading profile image:", error);
+    } finally {
+      setIsUploading(false); // 업로드 완료
     }
   };
 
@@ -147,7 +156,7 @@ const FeedHeader = ({
                   isMobile ? "text-xl" : "text-2xl"
                 } font-bold mr-2`}
               >
-                {userInfo?.nickName || " "}
+                {userInfo?.nickName || " - - - - - "}
               </h1>
             </div>
             {loginedUserNickName === ownerUserNickName && (
@@ -182,7 +191,7 @@ const FeedHeader = ({
             ) : (
               <div className="flex items-center">
                 <p className="text-gray-700 mr-2">
-                  {userInfo?.description || " "}
+                  {userInfo?.description || " - - - - - - - - - - "}
                 </p>
                 {loginedUserNickName === ownerUserNickName && (
                   <button
@@ -235,6 +244,9 @@ const FeedHeader = ({
         userId={userId}
         initialTab={followDrawerTab}
       />
+      {isUploading && (
+        <LoadingSpinner message="프로필 사진을 변경중입니다." /> // 추가: 프로필 사진 변경 중 로딩 스피너 표시
+      )}
     </div>
   );
 };
