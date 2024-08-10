@@ -29,6 +29,7 @@ const Cursors = (props) => {
     stompClient.current.connect(
       { Authorization: `Bearer ${sessionStorage.getItem("accessToken")}` },
       () => {
+        setIsConnected(true)
         stompClient.current.subscribe(
           `/sub/cursorroom/${channelId}`,
           (message) => {
