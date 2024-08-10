@@ -62,15 +62,15 @@ function CreateGroupChannel({ onClose }) {
           <input
             type="text"
             onChange={(e) => setChannelTitle(e.target.value)}
-            className="w-full mb-2 border-gray-300 py-1 px-2 border rounded-md shadow-sm focus:outline-none focus:ring-0.5 focus:ring-mainBlue focus:border-mainBlue"
+            className="w-full mb-2 border-gray-300 py-1 px-2 border rounded-md shadow-sm focus:outline-none focus:ring-0.5 focus:ring-mainBlue focus:border-mainBlue text-sm"
             value={channelTitle}
-            placeholder="채널명을 입력해 주세요."
+            placeholder="채널명을 입력해 주세요.(지역을 포함하면 검색이 쉬워집니다!)"
           />
           <textarea
             value={channelDescription}
             onChange={(e) => setChannelDescription(e.target.value)}
             className="w-full h-36 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-0.5 focus:ring-mainBlue focus:border-mainBlue"
-            placeholder="설명을 입력하세요"
+            placeholder="설명을 입력하세요."
           />
           <div className="divider my-4" />
           <div className="flex flex-wrap gap-2 mt-6">
