@@ -12,8 +12,7 @@ const Cursors = (props) => {
   const channelId = props.channelId;
   const [users, setUsers] = useState({});
   const socketUrl = process.env.REACT_APP_CURSOR_WEBSOCKET_ADDRESS;
-  const serverUrl = socketUrl.substring(0, 25);
-  const room = socketUrl.substring(25);
+  const [isConnected, setIsConnected] = useState(false);
   const [nickName, setNickName] = useState("");
   const stompClient = useRef(null);
 
@@ -44,11 +43,13 @@ const Cursors = (props) => {
     );
 
     const handlePointerMove = throttle((e) => {
-      const cursorPosition = { channelId, nickName, x: e.clientX, y: e.clientY };
-      stompClient.current.send(
-        `/pub/position`,
-        { Authorization: `Bearer ${sessionStorage.getItem("accessToken")}` },
-        JSON.stringify(cursorPosition));
+      if (isConnected && stompClient.current && stompClient.current.connected) {
+        const cursorPosition = { channelId, nickName, x: e.clientX, y: e.clientY };
+        stompClient.current.send(
+          `/pub/position`,
+          { Authorization: `Bearer ${sessionStorage.getItem("accessToken")}` },
+          JSON.stringify(cursorPosition));
+      }
     }, 100);
 
     getUserNickName();
