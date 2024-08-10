@@ -6,9 +6,11 @@ import com.wava.worcation.common.response.ApiResponse;
 import com.wava.worcation.common.response.ErrorCode;
 import com.wava.worcation.domain.channel.domain.Channel;
 import com.wava.worcation.domain.channel.domain.ChannelUser;
+import com.wava.worcation.domain.channel.domain.MapPin;
 import com.wava.worcation.domain.channel.dto.request.GroupChannelRequestDto;
 import com.wava.worcation.domain.channel.dto.response.GroupChannelResponseDto;
 import com.wava.worcation.domain.channel.dto.response.GroupDetailResponseDto;
+import com.wava.worcation.domain.channel.dto.response.MapPinResponseDto;
 import com.wava.worcation.domain.channel.enums.ChannelType;
 import com.wava.worcation.domain.channel.repository.ChannelRepository;
 import com.wava.worcation.domain.channel.repository.ChannelUserRepository;
@@ -254,6 +256,7 @@ public class GroupChannelServiceImpl implements GroupChannelService {
      * @status 성공 : 200 , 실패 : 403, 404
      */
     @Override
+    @Transactional
     public ResponseEntity<ApiResponse<GroupChannelResponseDto>> validateChannelLimit(final User user, final Long channelId) {
         Channel channel = channelRepository.findById(channelId).orElseThrow(
                 () -> new CustomException(ErrorCode.CHANNEL_NOT_FOUND)
@@ -276,6 +279,5 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                 .userCount(channelUserRepository.countByChannelId(channel.getId()))
                 .build()));
     }
-
 
 }
