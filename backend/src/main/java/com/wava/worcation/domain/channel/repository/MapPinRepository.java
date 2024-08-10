@@ -8,4 +8,5 @@ import java.util.List;
 public interface MapPinRepository extends JpaRepository<MapPin, Long> {
     Boolean existsByPinOrderAndChannelId(Long pinOrder, Long channelId);
     void deleteById(Long pinId);
+    List<MapPin> findByChannelId(Long channelId);
 }
