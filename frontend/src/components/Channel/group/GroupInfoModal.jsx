@@ -3,6 +3,7 @@ import useDeviceStore from "../../../store/deviceStore";
 import { groupChannelAPI } from "../../../api/groupChannelAPI";
 import { useNavigate } from "react-router-dom";
 import useChannelStore from "../../../store/channelStore";
+import { UserCircleIcon } from "@heroicons/react/24/solid";
 
 function GroupInfoModal({ onClose, groupId }) {
   const isMobile = useDeviceStore((state) => state.isMobile);
@@ -23,7 +24,7 @@ function GroupInfoModal({ onClose, groupId }) {
     const resp = await groupChannelAPI.joinGroupRequest(groupId);
     if (resp.status === "OK") {
       addFollowChannels(resp.data);
-      navigate("/");
+      navigate("/channel/group/" + resp.data.channelId);
     }
     console.log("join");
   };
@@ -35,10 +36,10 @@ function GroupInfoModal({ onClose, groupId }) {
       } select-none p-5`}
     >
       <p className="text-2xl text-center font-bold">
-        {channelData?.channelTitle || "loading..."}
+        {channelData?.channelTitle || "LOADING..."}
       </p>
       <div className="divider" />
-      <p>{channelData?.channelDescription || "loading..."}</p>
+      <p>{channelData?.channelDescription || "LOADING..."}</p>
 
       <div className="divider" />
       <div>
@@ -47,11 +48,15 @@ function GroupInfoModal({ onClose, groupId }) {
             key={person.nickName}
             className="flex w-full items-center space-x-3"
           >
-            <img
-              src={person.profile}
-              alt={person.nickName}
-              className="h-10 w-10 rounded-full"
-            />
+            {person.profile ? (
+              <img
+                src={person.profile}
+                alt={person.nickName}
+                className="h-10 w-10 rounded-full"
+              />
+            ) : (
+              <UserCircleIcon className="h-10 w-10 rounded-full" />
+            )}
             <div>
               <p className="text-sm font-medium">{person.nickName}</p>
               <p className="text-xs text-gray-500">{person.role || ""}</p>

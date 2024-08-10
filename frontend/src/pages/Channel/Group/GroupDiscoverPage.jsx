@@ -28,7 +28,15 @@ function GroupDiscoverPage() {
     getData();
   }, []);
 
-  const searchHandle = async (searchText) => {};
+  const searchHandle = async (searchText) => {
+    try {
+      setLoading(true);
+      const resp = await groupChannelAPI.getSearchedChannelList(searchText);
+      setGroupList(resp.data);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // 그룹 상세보기 포탈 오픈
   const handleChannelPortalOpen = (id) => {

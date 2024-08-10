@@ -21,6 +21,8 @@ function CreateContentDrawer({ isOpen, onClose, addItem }) {
   const [textContent, setTextContent] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const [isFetching, setIsFetching] = useState(false);
+
   const handleImageChange = (e) => {
     if (e.target?.files?.length === 0) return;
 
@@ -59,47 +61,49 @@ function CreateContentDrawer({ isOpen, onClose, addItem }) {
 
   const submitHandle = async (e) => {
     e.preventDefault();
-    if (images.length === 0 || textContent === "") {
-      Swal.fire({
-        position: "center",
-        icon: "error",
-        title: "사진 또는 글을 입력해주세요!",
-        showConfirmButton: false,
-        timer: 2000,
-      });
-
-      return;
-    }
-
-    setLoading(true); // 로딩 시작
-    const formData = new FormData();
-    images.forEach((img) => {
-      formData.append("image", img?.file);
-    });
-    formData.append("content", textContent);
-    formData.append("sido", userInfo?.worcation?.sido);
-    formData.append("sigungu", userInfo?.worcation?.sigungu);
+    if (isFetching) return;
     try {
+      setIsFetching(true);
+      if (images.length === 0 || textContent === "") {
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "사진 또는 글을 입력해주세요!",
+          showConfirmButton: false,
+          timer: 2000,
+        });
+
+        return;
+      }
+
+      const formData = new FormData();
+      images.forEach((img) => {
+        formData.append("image", img?.file);
+      });
+      formData.append("content", textContent);
+      formData.append("sido", userInfo?.worcation?.sido);
+      formData.append("sigungu", userInfo?.worcation?.sigungu);
       const resp = await createFeedRequest(formData);
+      console.log(resp);
       if (resp) {
+        // addItem();
         setImages([]);
         setTextContent("");
         setCurrentIndex(0);
         onClose();
+
         addItem();
       } else {
-        throw new Error("Upload failed");
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "알 수 없는 에러!",
+          showConfirmButton: false,
+          timer: 2000,
+        });
       }
-    } catch (error) {
-      Swal.fire({
-        position: "center",
-        icon: "error",
-        title: "알 수 없는 에러!",
-        showConfirmButton: false,
-        timer: 2000,
-      });
     } finally {
-      setLoading(false); // 로딩 종료
+      setIsFetching(false);
     }
   };
 

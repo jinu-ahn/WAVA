@@ -33,7 +33,7 @@ const groupChannelAPI = {
   // 채널 검색
   getSearchedChannelList: async (keyword) => {
     return await handleRequest(
-      () => local.get(address + "/search"),
+      () => local.get(address + "/search?content=" + keyword),
       "채널 검색하기"
     );
   },
@@ -72,7 +72,7 @@ const groupChannelAPI = {
   // 그룹 채널 참가하기
   joinGroupRequest: async (channelId) => {
     return await handleRequest(
-      () => local.post(address + "/join", channelId),
+      () => local.post(address + "/join", { channelId: channelId }),
       "그룹 채널 참가하기"
     );
   },

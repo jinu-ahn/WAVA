@@ -19,7 +19,7 @@ function ChannelRoomItem({ roomInfo, onClick }) {
 
   let titleText = "채널 참여";
   if (isFull) titleText = "참여 불가";
-  if (isJoinedChannel) titleText = "참여한 채널";
+  if (isJoinedChannel) titleText = "채널로 이동";
 
   let btnColor = "bg-blue-500 hover:bg-blue-600";
   if (isFull) btnColor = "bg-red-500 hover:bg-red-600";
