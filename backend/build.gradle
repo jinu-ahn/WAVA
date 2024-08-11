@@ -58,6 +58,9 @@ dependencies {
 
 	//openvidu
 	implementation 'io.openvidu:openvidu-java-client:2.30.0'
+
+	// AOP
+	implementation 'org.springframework.boot:spring-boot-starter-aop:3.3.2'
 }
 
 tasks.named('test') {
