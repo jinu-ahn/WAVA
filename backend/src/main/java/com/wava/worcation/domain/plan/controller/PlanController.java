@@ -35,7 +35,7 @@ public class PlanController {
         }
     }
     @DeleteMapping("/delete/{planId}")
-    public ResponseEntity<ApiResponse<String>> deletePlan(@PathVariable Long planId){
+    public ResponseEntity<ApiResponse<String>> deletePlan(@PathVariable(value = "planId") Long planId){
         try {
             planService.deletePlan(planId);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(ApiResponse.success("Success"));

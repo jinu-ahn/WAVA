@@ -9,6 +9,7 @@ import com.wava.worcation.domain.channel.repository.FollowRepository;
 import com.wava.worcation.domain.user.domain.User;
 import com.wava.worcation.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +19,13 @@ import java.util.*;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class FollowServiceImpl implements com.wava.worcation.domain.channel.service.FollowService {
 
     private static final Logger log = LoggerFactory.getLogger(FollowServiceImpl.class);
-    FollowRepository followRepository;
-    ChannelRepository channelRepository;
-    UserRepository userRepository;
+    private final FollowRepository followRepository;
+    private final ChannelRepository channelRepository;
+    private final UserRepository userRepository;
 
     @Override
     public Map<String, Object> follow(Long channelId, Long userId) {

@@ -29,13 +29,13 @@ public class PersonalController {
     
 
     @GetMapping("/{nickName}/info")
-    public ResponseEntity<ApiResponse<PersonalResponseDto>> info(@PathVariable("nickName") String nickName,@AuthUser User user) {
+    public ResponseEntity<ApiResponse<PersonalResponseDto>> info(@PathVariable(value = "nickName") String nickName,@AuthUser User user) {
         return personalService.ChannelInfo(nickName,user);
     }
 
     @GetMapping("/{nickName}/feed")
-    public ResponseEntity<ApiResponse<?>> personalFeed(@PathVariable String nickName,
-                                                     @RequestParam(defaultValue = "0") int page,
+    public ResponseEntity<ApiResponse<?>> personalFeed(@PathVariable(value = "nickName") String nickName,
+                                                     @RequestParam(value = "page",defaultValue = "0") int page,
                                                      @AuthUser User user) {
         try {
             // 페이지 네이션된 피드를 검색
@@ -63,7 +63,7 @@ public class PersonalController {
     }
 
     @PatchMapping("/profile")
-    public ResponseEntity<ApiResponse<?>> changeProfile(@RequestParam("image") MultipartFile file, @AuthUser User user){
+    public ResponseEntity<ApiResponse<?>> changeProfile(@RequestParam(value = "image") MultipartFile file, @AuthUser User user){
         try {
             if (file.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponse.error(HttpStatus.BAD_REQUEST,"잘못된 요청"));

@@ -12,6 +12,7 @@ function FeedAroundPage() {
 
   const [contents, setContents] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [itemLoading, setItemLoading] = useState(false);
 
   const [pages, setPages] = useState(0);
   const [maxPage, setMaxPage] = useState(-1);
@@ -85,8 +86,10 @@ function FeedAroundPage() {
   };
 
   const loadMore = async () => {
-    if (pages + 1 > maxPage) return;
+    if (itemLoading) return;
     try {
+      if (pages + 1 > maxPage) return;
+      setItemLoading(true);
       const feedContResp = await searchFeedRequest(searchKeyword, pages + 1);
       if (feedContResp?.data) {
         setContents((state) => [...state, ...feedContResp?.data?.data]);
@@ -94,6 +97,8 @@ function FeedAroundPage() {
       }
     } catch (e) {
       console.log(e);
+    } finally {
+      setItemLoading(false);
     }
   };
 
@@ -116,7 +121,7 @@ function FeedAroundPage() {
             <ContentItemGrid
               loadMore={loadMore}
               contents={contents}
-              loading={loading}
+              loading={itemLoading}
               onSelectContent={handleSelectContent}
             />
             <ContentDrawer

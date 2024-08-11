@@ -8,7 +8,7 @@ function ChannelSubExplorer({ children, data, type, toolbarBtn = null }) {
         <div className="flex flex-col items-center space-y-2 px-2 pt-2">
           {toolbarBtn}
           {data.map((el) => (
-            <ChannelSubIcon type={type} el={el} />
+            <ChannelSubIcon key={el?.channelId} type={type} el={el} />
           ))}
         </div>
       </div>
