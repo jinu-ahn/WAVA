@@ -284,6 +284,15 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                 .build()));
     }
 
+    /**
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-08-10
+     * @ 설명     : 채널 가입 유무 확인
+     * @param channelId 채널 식별 아이디
+     * @param user      유저 객체
+     * @return 가입중 : true , 미가입 : false
+     * @status 성공 : 200 , 실패 : 404
+     */
     @Override
     @Transactional
     public ResponseEntity<ApiResponse<GroupChannelValidResponseDto>> channelJoinUserValidate(Long channelId, User user) {
@@ -297,6 +306,14 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                         .build()));
     }
 
+    /**
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-08-10
+     * @ 설명     : 채널 존재 여부
+     * @param channelId 채널 식별 아이디
+     * @return 채널 객체
+     * @status 성공 : 200 , 실패 : 404
+     */
     private Channel validateChannel(Long channelId) {
         Channel channel = channelRepository.findById(channelId).orElseThrow(
                 () -> new CustomException(ErrorCode.CHANNEL_NOT_FOUND)
