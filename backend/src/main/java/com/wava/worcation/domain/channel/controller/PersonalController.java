@@ -34,7 +34,7 @@ public class PersonalController {
     }
 
     @GetMapping("/{nickName}/feed")
-    public ResponseEntity<ApiResponse<?>> personalFeed(@PathVariable String nickName,
+    public ResponseEntity<ApiResponse<?>> personalFeed(@PathVariable("nickName") String nickName,
                                                      @RequestParam(defaultValue = "0") int page,
                                                      @AuthUser User user) {
         try {
