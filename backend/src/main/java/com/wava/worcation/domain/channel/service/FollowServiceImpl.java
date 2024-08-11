@@ -7,7 +7,6 @@ import com.wava.worcation.common.response.ErrorCode;
 import com.wava.worcation.domain.channel.domain.Channel;
 import com.wava.worcation.domain.channel.domain.Follow;
 import com.wava.worcation.domain.channel.dto.info.FollowInfoDto;
-import com.wava.worcation.domain.channel.dto.info.FollowRequestDto;
 import com.wava.worcation.domain.channel.dto.info.FollowResponseDto;
 import com.wava.worcation.domain.channel.repository.ChannelRepository;
 import com.wava.worcation.domain.channel.repository.FollowRepository;
@@ -17,7 +16,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -27,19 +25,17 @@ import java.util.*;
 @RequiredArgsConstructor
 public class FollowServiceImpl implements com.wava.worcation.domain.channel.service.FollowService {
 
-    private static final Logger log = LoggerFactory.getLogger(FollowServiceImpl.class);
     private final FollowRepository followRepository;
     private final ChannelRepository channelRepository;
     private final UserRepository userRepository;
-    private final CustomExceptionHandler customExceptionHandler;
 
     /**
      *
      * @ 작성자   : 최승호
      * @ 작성일   : 2024-08-11
      * @ 설명     : 팔로우 등록
-     * @param nickname
-     * @param user
+     * @param nickname 팔로우할 유저닉네임
+     * @param user 팔로우를 거는 유저객체
      * @return followResponseDto
      */
     @Override
@@ -72,6 +68,17 @@ public class FollowServiceImpl implements com.wava.worcation.domain.channel.serv
                 .build();
     }
 
+    @Override
+    public void unFollow(String nickname, User user) {
+        Channel channel = channelRepository.findChannelByUserId(userRepository.findByNickName(nickname).getId());
+
+        if (followRepository.existsByChannelAndUser(channel,user)){
+            throw new CustomException(ErrorCode.ALREADY_FOLLOWING);
+        }
+        else{
+            //followRepository.delete(followRepository.findByChannelAndUser);
+        }
+    }
     /**
      *
      * @ 작성자   : 최승호
@@ -108,7 +115,7 @@ public class FollowServiceImpl implements com.wava.worcation.domain.channel.serv
      * @ 작성일   : 2024-08-11
      * @ 설명     : 이 사람이 팔로 하는 계정들 목록 Dto
      * @param usernickname 채널 주인 닉네임
-     * @return
+     * @return 팔로하는 계정들 정보 리스트
      */
     @Override
     public FollowInfoDto getFollowings(String usernickname, User authUser) {
@@ -131,4 +138,5 @@ public class FollowServiceImpl implements com.wava.worcation.domain.channel.serv
                 .userList(followerDtos)
                 .build();
     }
+
 }

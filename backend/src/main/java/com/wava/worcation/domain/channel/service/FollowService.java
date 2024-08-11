@@ -15,4 +15,6 @@ public interface FollowService {
     FollowInfoDto getFollowers(String usernickname, User user);
 
     FollowInfoDto getFollowings(String usernickname, User user);
+
+    void unFollow(String nickname, User user);
 }
