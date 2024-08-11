@@ -10,11 +10,13 @@ import { WebsocketProvider } from "y-websocket";
 
 const Cursors = (props) => {
   const channelId = props.channelId;
+  const map = props.map;
   const [users, setUsers] = useState({});
   const socketUrl = process.env.REACT_APP_CURSOR_WEBSOCKET_ADDRESS;
   const [isConnected, setIsConnected] = useState(false);
   const [nickName, setNickName] = useState("");
   const stompClient = useRef(null);
+  const cursorMarkers = useRef({});
 
   const getUserNickName = () => {
     const userObjectString = localStorage.getItem("userStorage");
@@ -47,8 +49,11 @@ const Cursors = (props) => {
     );
 
     const handlePointerMove = throttle((e) => {
-      if (isConnected && nickName) {
-        const cursorPosition = { channelId, nickName, x: e.clientX, y: e.clientY };
+      if (isConnected && nickName && map) {
+
+        const latlng = map.getProjection().coordsFromContainerPoint(new window.kakao.maps.Point(e.clientX, e.clientY));
+        console.log("위도: " + latlng.getLat() + " 경도: " + latlng.getLng());
+        const cursorPosition = { channelId, nickName, x: latlng.getLat(), y: latlng.getLng() };
         stompClient.current.send(
           `/pub/position`,
           { Authorization: `Bearer ${sessionStorage.getItem("accessToken")}` },
@@ -64,19 +69,52 @@ const Cursors = (props) => {
       window.removeEventListener('mousemove', handlePointerMove);
       stompClient.current.disconnect();
     };
-  }, [nickName, socketUrl, channelId, isConnected]);
+  }, [nickName, socketUrl, channelId, isConnected, map]);
 
-  const renderCursors = useCallback(() => {
-    return Object.keys(users).map((key) => {
-      if (key === nickName) return null;
-      const { x, y } = users[key];
-      return <Cursor key={key} color="blue" point={[x, y]} nickName={nickName} />;
-    });
-  }, [users, nickName]);
+  // const renderCursors = useCallback(() => {
+  //   return Object.keys(users).map((key) => {
+  //     if (key === nickName) return null;
+  //     const { x, y } = users[key];
+  //     const position = new window.kakao.maps.LatLng(x, y);
+  //     const pixelPosition = map.getProjection().pointFromCoords(position);
+  //     return <Cursor key={key} color="blue" point={[pixelPosition.x, pixelPosition.y]} nickName={key} />;
+  //   });
+  // }, [users, nickName]);
+  
+  useEffect(() => {
+    if (map && users) {
+      Object.keys(users).forEach((key) => {
+        if (key === nickName) return;
+
+        const { x, y } = users[key];
+        const position = new window.kakao.maps.LatLng(x, y);
+        console.log("position: " + position)
+
+        // 기존 마커가 없으면 새로 생성
+        if (!cursorMarkers.current[key]) {
+          const content =
+            `<div class="bg-white border border-gray-400 rounded-lg px-2 py-1 text-sm shadow-md">
+                ${key}
+            </div>`;
+          const marker = new window.kakao.maps.CustomOverlay({
+            position,
+            content,
+            map,
+            yAnchor: 1,
+            zIndex: 10,
+          });
+          cursorMarkers.current[key] = marker;
+        } else {
+          // 기존 마커 위치 업데이트
+          cursorMarkers.current[key].setPosition(position);
+        }
+      });
+    }
+  }, [users, map, nickName]);
 
   return (
     <div className="cursors" style={{ position: 'relative', zIndex: 10 }}>
-      {renderCursors()}
+      {/* {renderCursors()} */}
     </div>
   );
 };
