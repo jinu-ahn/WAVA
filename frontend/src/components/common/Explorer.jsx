@@ -68,7 +68,7 @@ const Explorer = () => {
               data-tip="Dashboard"
             >
               <CalendarIcon
-                className={`size-8  hover:text-black ${
+                className={`size-8  hover:text-mainBlue ${
                   animate ? "animate-dropIn" : ""
                 }`}
               />
@@ -84,7 +84,7 @@ const Explorer = () => {
               data-tip="Logout"
             >
               <ArrowLeftStartOnRectangleIcon
-                className={`size-8 hover:text-black ${
+                className={`size-8 hover:text-mainBlue ${
                   animate ? "animate-dropIn" : ""
                 }`}
               />

@@ -68,7 +68,10 @@ function HomePage() {
   };
   return (
     <>
-      <div className="w-full mx-auto">
+      <div
+        className="w-full mx-auto"
+        style={{ fontFamily: "'IBM Plex Sans KR', sans-serif" }}
+      >
         {/* 메인 Section */}
         <section
           id="서비스 소개"

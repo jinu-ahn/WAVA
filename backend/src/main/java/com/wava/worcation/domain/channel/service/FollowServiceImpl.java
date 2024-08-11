@@ -1,9 +1,13 @@
 package com.wava.worcation.domain.channel.service;
 
+import com.wava.worcation.common.exception.CustomException;
+import com.wava.worcation.common.exception.CustomExceptionHandler;
 import com.wava.worcation.common.exception.ResourceNotFoundException;
+import com.wava.worcation.common.response.ErrorCode;
 import com.wava.worcation.domain.channel.domain.Channel;
 import com.wava.worcation.domain.channel.domain.Follow;
 import com.wava.worcation.domain.channel.dto.info.FollowInfoDto;
+import com.wava.worcation.domain.channel.dto.info.FollowResponseDto;
 import com.wava.worcation.domain.channel.repository.ChannelRepository;
 import com.wava.worcation.domain.channel.repository.FollowRepository;
 import com.wava.worcation.domain.user.domain.User;
@@ -12,7 +16,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -22,55 +25,60 @@ import java.util.*;
 @RequiredArgsConstructor
 public class FollowServiceImpl implements com.wava.worcation.domain.channel.service.FollowService {
 
-    private static final Logger log = LoggerFactory.getLogger(FollowServiceImpl.class);
     private final FollowRepository followRepository;
     private final ChannelRepository channelRepository;
     private final UserRepository userRepository;
 
+    /**
+     *
+     * @ 작성자   : 최승호
+     * @ 작성일   : 2024-08-11
+     * @ 설명     : 팔로우 등록
+     * @param nickname 팔로우할 유저닉네임
+     * @param user 팔로우를 거는 유저객체
+     * @return followResponseDto
+     */
     @Override
-    public Map<String, Object> follow(Long channelId, Long userId) {
-        Map<String, Object> map = new HashMap<>();
+    public FollowResponseDto follow(String nickname, User user) {
+        // 닉네임으로 들어온 채널
+        Channel channel = channelRepository.findChannelByUserId(userRepository.findByNickName(nickname).getId());
 
-        // 채널과 사용자 존재 여부 확인 및 팔로우 객체 생성
-        if (
-                !followRepository.existsByChannelAndUser(
-                    channelRepository.findById(channelId)
-                    .orElseThrow(() -> new ResourceNotFoundException("채널 없음")),
-                    userRepository.findById(userId)
-                    .orElseThrow(() -> new ResourceNotFoundException("유저 없음"))
-                    )
-        ){
-            Follow follow = Follow.builder()
-                .user(userRepository.findById(userId)
-                        .orElseThrow(() -> new ResourceNotFoundException("유저 없음")))
-                .channel(channelRepository.findById(channelId)
-                        .orElseThrow(() -> new ResourceNotFoundException("채널 없음")))
+        if (followRepository.existsByChannelAndUser(channel,user)){
+            throw new CustomException(ErrorCode.ALREADY_FOLLOWING);
+        }
+        Follow follow = Follow.builder()
+                .user(user)
+                .channel(channel)
                 .build();
-            followRepository.save(follow);
-        }
-        else{
-            log.info("존재하지 않음");
-        }
-
+        followRepository.save(follow);
 
         // 팔로우 및 팔로워 수 계산
-        int followNum = Optional.ofNullable(followRepository.findByUser(userRepository.findById(userId)
-                        .orElseThrow(() -> new ResourceNotFoundException("유저 없음"))))
+        int followNum = Optional.ofNullable(followRepository.findByUser(user))
                 .map(List::size)
                 .orElse(0);
 
-        int followerNum = Optional.ofNullable(followRepository.findByChannel(channelRepository.findById(channelId)
-                        .orElseThrow(() -> new ResourceNotFoundException("채널 없음"))))
+        int followerNum = Optional.ofNullable(followRepository.findByChannel(channel))
                 .map(List::size)
                 .orElse(0);
 
-        // map에 결과 저장
-        map.put("follow", followNum);
-        map.put("follower", followerNum);  // 'follower'로 수정
-
-        return map;
+        return FollowResponseDto.builder()
+                .nickname(nickname)
+                .followingCount(followNum)
+                .followerCount(followerNum)
+                .build();
     }
 
+    @Override
+    public void unFollow(String nickname, User user) {
+        Channel channel = channelRepository.findChannelByUserId(userRepository.findByNickName(nickname).getId());
+
+        if (!followRepository.existsByChannelAndUser(channel,user)){
+            throw new CustomException(ErrorCode.ALREADY_FOLLOWING);
+        }
+        else{
+            followRepository.deleteByChannelAndUser(channel, user);
+        }
+    }
     /**
      *
      * @ 작성자   : 최승호
@@ -107,7 +115,7 @@ public class FollowServiceImpl implements com.wava.worcation.domain.channel.serv
      * @ 작성일   : 2024-08-11
      * @ 설명     : 이 사람이 팔로 하는 계정들 목록 Dto
      * @param usernickname 채널 주인 닉네임
-     * @return
+     * @return 팔로하는 계정들 정보 리스트
      */
     @Override
     public FollowInfoDto getFollowings(String usernickname, User authUser) {
@@ -130,4 +138,5 @@ public class FollowServiceImpl implements com.wava.worcation.domain.channel.serv
                 .userList(followerDtos)
                 .build();
     }
+
 }

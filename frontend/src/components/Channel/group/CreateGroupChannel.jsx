@@ -84,7 +84,7 @@ function CreateGroupChannel({ onClose }) {
               className="flex-grow sm:flex-grow-0 inline-flex justify-center items-center gap-2 rounded-md bg-mainBlue py-2 px-4 text-sm font-semibold text-white shadow-md shadow-[#ff93ac]/20 transition-colors duration-300 hover:bg-subBlue focus:outline-none"
               onClick={submitHandle}
             >
-              작성
+              생성
             </Button>
           </div>
         </>
