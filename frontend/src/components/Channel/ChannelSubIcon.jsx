@@ -1,5 +1,4 @@
 import { NavLink } from "react-router-dom";
-import "./ChannelSubIcon.css";
 
 function ChannelSubIcon({ type, el }) {
   const bg = `rgba(${el.r},${el.g},${el.b},0.2)`;
