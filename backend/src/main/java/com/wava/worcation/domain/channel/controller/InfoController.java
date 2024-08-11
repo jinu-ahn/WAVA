@@ -39,10 +39,10 @@ public class InfoController{
 
     @PostMapping("/create")
     public ResponseEntity<?> createInfo(
-            @RequestParam("image") List<MultipartFile> images,
-            @RequestParam("content") String content,
-            @RequestParam("sido") String sido,
-            @RequestParam("sigungu") String sigungu,
+            @RequestParam(value = "image") List<MultipartFile> images,
+            @RequestParam(value = "content") String content,
+            @RequestParam(value = "sido") String sido,
+            @RequestParam(value = "sigungu") String sigungu,
             @AuthUser User user) throws Exception {
         List<String> imgUrls = new ArrayList<>();
         try {
@@ -63,7 +63,7 @@ public class InfoController{
     }
 
     @GetMapping("/{feedId}")
-    public ResponseEntity<?> viewFeed(@PathVariable("feedId") Long feedId, @AuthUser User user) {
+    public ResponseEntity<?> viewFeed(@PathVariable(value = "feedId") Long feedId, @AuthUser User user) {
         log.info("{}",feedId);
         try {
             FeedResponseDto feedResponseDto = infoService.viewFeed(feedId,user);
@@ -80,7 +80,7 @@ public class InfoController{
     }
 
     @DeleteMapping("{feedId}/update")
-    public ResponseEntity<?> updateFeed(@PathVariable("feedId") Long feedId, @AuthUser User user) throws Exception {
+    public ResponseEntity<?> updateFeed(@PathVariable(value = "feedId") Long feedId, @AuthUser User user) throws Exception {
         try {
             infoService.deleteFeed(feedId,user);
             return ResponseEntity.ok().body("성공적으로 업데이트 완료");
@@ -94,7 +94,7 @@ public class InfoController{
     }
 
     @DeleteMapping("{feedId}/delete")
-    public ResponseEntity<?> deleteFeed(@PathVariable("feedId") Long feedId, @AuthUser User user) throws Exception {
+    public ResponseEntity<?> deleteFeed(@PathVariable(value = "feedId") Long feedId, @AuthUser User user) throws Exception {
         try {
             infoService.deleteFeed(feedId,user);
             return ResponseEntity.ok().body("성공적으로 삭제완료");
@@ -108,7 +108,7 @@ public class InfoController{
     }
 
     @PostMapping("/{feedId}/like")
-    public ResponseEntity<?> likeAdd (@PathVariable("feedId") Long feedId, @AuthUser User user){
+    public ResponseEntity<?> likeAdd (@PathVariable(value = "feedId") Long feedId, @AuthUser User user){
         try{
             infoService.likeAdd(feedId,user);
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
@@ -118,7 +118,7 @@ public class InfoController{
     }
 
     @DeleteMapping("/{feedId}/dislike")
-    public ResponseEntity<?> dislike (@PathVariable("feedId") Long feedId, @AuthUser User user){
+    public ResponseEntity<?> dislike (@PathVariable(value = "feedId") Long feedId, @AuthUser User user){
         try{
             infoService.likeDistract(feedId,user);
             return ResponseEntity.status(HttpStatus.ACCEPTED).build();
@@ -128,7 +128,7 @@ public class InfoController{
     }
 
     @PostMapping("/{feedId}/comment")
-    public ResponseEntity<?> createComment(@PathVariable("feedId") Long feedId, @RequestBody CommentRequestDto comment, @AuthUser User user) {
+    public ResponseEntity<?> createComment(@PathVariable(value = "feedId") Long feedId, @RequestBody CommentRequestDto comment, @AuthUser User user) {
         try {
             Long userId = user.getId();
             Map<String, Object> commentMap = infoService.createComment(userId, feedId, comment.getComment());
@@ -140,8 +140,8 @@ public class InfoController{
     }
 
     @GetMapping("/search")
-    public ResponseEntity<ApiResponse<?>> searchFeed(@RequestParam(defaultValue = "0") int page,
-                                                     @RequestParam String content,
+    public ResponseEntity<ApiResponse<?>> searchFeed(@RequestParam(value = "page",defaultValue = "0") int page,
+                                                     @RequestParam(value = "content") String content,
                                                      @AuthUser User user) {
         try {
             // 페이지 네이션된 피드를 검색
