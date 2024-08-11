@@ -28,9 +28,9 @@ public class FollowController {
     }
 
     @DeleteMapping("/{nickname}/unfollow")
-    public ResponseEntity<?> unFollow(@PathVariable(value ="nickname") String nickname, @AuthUser User user){
+    public ResponseEntity<ApiResponse<?>> unFollow(@PathVariable(value ="nickname") String nickname, @AuthUser User user){
         followService.unFollow(nickname,user);
-        return ResponseEntity.ok().body("삭제 성공");
+        return ResponseEntity.ok().body(ApiResponse.success("삭제 성공"));
     }
 
     @GetMapping("/{nickname}/follower")

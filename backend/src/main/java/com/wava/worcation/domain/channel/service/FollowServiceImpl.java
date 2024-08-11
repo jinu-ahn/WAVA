@@ -72,11 +72,11 @@ public class FollowServiceImpl implements com.wava.worcation.domain.channel.serv
     public void unFollow(String nickname, User user) {
         Channel channel = channelRepository.findChannelByUserId(userRepository.findByNickName(nickname).getId());
 
-        if (followRepository.existsByChannelAndUser(channel,user)){
+        if (!followRepository.existsByChannelAndUser(channel,user)){
             throw new CustomException(ErrorCode.ALREADY_FOLLOWING);
         }
         else{
-            //followRepository.delete(followRepository.findByChannelAndUser);
+            followRepository.deleteByChannelAndUser(channel, user);
         }
     }
     /**
