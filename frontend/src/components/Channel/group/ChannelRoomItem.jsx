@@ -25,6 +25,9 @@ function ChannelRoomItem({ roomInfo, onClick }) {
     "url('/글래스5.png')",
     "url('/글래스7.png')",
     "url('/글래스6.png')",
+    "url('/글래스8.png')",
+    "url('/글래스9.png')",
+    "url('/글래스10.png')",
   ];
 
   const [backgroundImage, setBackgroundImage] = useState("");
