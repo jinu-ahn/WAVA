@@ -78,7 +78,7 @@ public class FollowServiceImpl implements com.wava.worcation.domain.channel.serv
      * @return 채널 닉네임, 팔로워 리스트
      */
     @Override
-    public FollowInfoDto getFollowers(String usernickname) {
+    public FollowInfoDto getFollowers(String usernickname, User authUser) {
         Channel channel = channelRepository.findChannelByUserId(userRepository.findByNickName(usernickname).getId());
         List<FollowInfoDto.UserFollowInfoDto> followerDtos = new ArrayList<>();
         List<Follow> followers = followRepository.findByChannel(channel);
@@ -89,6 +89,7 @@ public class FollowServiceImpl implements com.wava.worcation.domain.channel.serv
                     .userId(user.getId())
                     .profile(user.getProfileImg())
                     .nickname(user.getNickName())
+                    .isFollower(followRepository.existsByChannelAndUser(channel,authUser))
                     .build();
             followerDtos.add(dto);
         }
@@ -107,7 +108,7 @@ public class FollowServiceImpl implements com.wava.worcation.domain.channel.serv
      * @return
      */
     @Override
-    public FollowInfoDto getFollowings(String usernickname) {
+    public FollowInfoDto getFollowings(String usernickname, User authUser) {
         Channel channel = channelRepository.findChannelByUserId(userRepository.findByNickName(usernickname).getId());
         List<FollowInfoDto.UserFollowInfoDto> followerDtos = new ArrayList<>();
         User userInfo = channelRepository.findById(channel.getId()).orElseThrow(()-> new ResourceNotFoundException("채널검색실패")).getUser();
@@ -118,6 +119,7 @@ public class FollowServiceImpl implements com.wava.worcation.domain.channel.serv
                     .userId(user.getId())
                     .profile(user.getProfileImg())
                     .nickname(user.getNickName())
+                    .isFollower(followRepository.existsByChannelAndUser(channel,authUser))
                     .build();
             followerDtos.add(dto);
         }

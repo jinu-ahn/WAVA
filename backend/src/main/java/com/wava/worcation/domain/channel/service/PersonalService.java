@@ -8,7 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 
 public interface PersonalService {
-    public ResponseEntity<ApiResponse<PersonalResponseDto>> ChannelInfo(String nickName);
+    public ResponseEntity<ApiResponse<PersonalResponseDto>> ChannelInfo(String nickName,User user);
 
     Page<FeedSortResponseDto> personalFeed(int pages, String nickname, User user);
 

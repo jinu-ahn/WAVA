@@ -29,8 +29,8 @@ public class PersonalController {
     
 
     @GetMapping("/{nickName}/info")
-    public ResponseEntity<ApiResponse<PersonalResponseDto>> info(@PathVariable("nickName") String nickName) {
-        return personalService.ChannelInfo(nickName);
+    public ResponseEntity<ApiResponse<PersonalResponseDto>> info(@PathVariable("nickName") String nickName,@AuthUser User user) {
+        return personalService.ChannelInfo(nickName,user);
     }
 
     @GetMapping("/{nickName}/feed")

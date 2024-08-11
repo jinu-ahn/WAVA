@@ -24,5 +24,6 @@ public class FollowInfoDto {
         private Long userId;
         private String profile;
         private String nickname;
+        private boolean isFollower;
     }
 }
