@@ -1,10 +1,13 @@
 package com.wava.worcation.domain.channel.service;
 
+import com.wava.worcation.common.exception.CustomException;
 import com.wava.worcation.common.response.ApiResponse;
+import com.wava.worcation.common.response.ErrorCode;
 import com.wava.worcation.domain.channel.domain.Channel;
 import com.wava.worcation.domain.channel.domain.ChannelUser;
 import com.wava.worcation.domain.channel.dto.request.GroupChannelRequestDto;
 import com.wava.worcation.domain.channel.dto.response.GroupChannelResponseDto;
+import com.wava.worcation.domain.channel.dto.response.GroupChannelValidResponseDto;
 import com.wava.worcation.domain.channel.dto.response.GroupDetailResponseDto;
 import com.wava.worcation.domain.channel.enums.ChannelType;
 import com.wava.worcation.domain.channel.repository.ChannelRepository;
@@ -49,11 +52,18 @@ class GroupChannelServiceImplTest {
 
 
     // 클래스 인스턴스 변수로 선언
+
     private User user;
     private GroupChannelRequestDto groupChannelRequestDto;
+    private Channel channel ;
+    private ChannelUser  channelUser;
+    private Worcation worcation;
+
+
 
     @BeforeEach
     public void setUp() {
+        // 공통적으로 필요한 설정
         user = User.builder()
                 .id(63L)
                 .email("test1586@test.com")
@@ -70,6 +80,25 @@ class GroupChannelServiceImplTest {
         groupChannelRequestDto.setChannelSigungu("경기");
         groupChannelRequestDto.setChannelTitle("나는 바로 옵티머스 프라임 웅~치킨 웅~치킨");
         groupChannelRequestDto.setChannelDescription("no Transactional annotation");
+
+         channel = Channel.builder()
+                .id(56L)
+                .user(User.builder().id(63L).build())
+                .channelSido("서울특별시")
+                .channelSigungu("강동구")
+                .channelTitle("나는야퉁퉁이")
+                .channelDescription("나는야퉁퉁이님의 채널 입니다.")
+                .channelType("C002")
+                .build();
+        channelUser = ChannelUser.builder()
+                .id(1L)
+                .user(user)
+                .build();
+
+
+         worcation = Worcation.builder()
+                .sido("서울특별시")
+                .build();
 
     }
     /**
@@ -213,6 +242,8 @@ class GroupChannelServiceImplTest {
                 ))
                 .build();
 
+
+
         //then
         assertEquals(HttpStatus.OK , groupInfo.getStatusCode());
         assertNotNull(groupInfo.getBody().getData());
@@ -220,6 +251,119 @@ class GroupChannelServiceImplTest {
         assertEquals(expectedResponse, groupInfo.getBody().getData());
 
 
+    }
+
+
+    @Test
+    void updateMemo(){
+
+        //given
+        String memo = "채널 업데이트 테스트입니다.";
+        Channel expectedChannel = Channel.builder()
+                .id(56L)
+                .user(User.builder().id(63L).build())
+                .channelSido("서울특별시")
+                .channelSigungu("강동구")
+                .channelTitle("나는야퉁퉁이")
+                .channelDescription("나는야퉁퉁이님의 채널 입니다.")
+                .channelType("C002")
+                .channelMemo(memo)
+                .build();
+
+
+        ChannelUser channelUser = ChannelUser.builder()
+                .id(1L)
+                .user(user)
+                .build();
+
+
+        List<ChannelUser> channelList = Collections.singletonList(channelUser);
+        when(channelUserRepository.countByChannelId(expectedChannel.getId())).thenReturn(1);
+        when(channelRepository.findById(expectedChannel.getId())).thenReturn(Optional.of(expectedChannel));
+
+        //when
+        ResponseEntity<ApiResponse<GroupChannelResponseDto>> response = groupChannelServiceImpl.updateMemo(expectedChannel.getId(), memo);
+
+        //then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody().getData());
+        assertEquals(memo, response.getBody().getData().getChannelMemo());
+    }
+
+    @Test
+    void serachChannel(){
+
+        //given
+        String content = "서울특별시";
+        List<Channel> channelList = Collections.singletonList(channel);
+
+        when(worcationRepository.findByUserId(user.getId())).thenReturn(worcation);
+        when(channelUserRepository.countByChannelId(channel.getId())).thenReturn(3);
+        when(channelRepository.searchChannelByInsert(content,ChannelType.GROUP.getCode(),worcationRepository.findByUserId(user.getId()).getSido() )).thenReturn(channelList);
+
+        //when
+        ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> response = groupChannelServiceImpl.searchChannel(user, content);
+
+        //then
+        log.info("channelList : " + channelList.get(0) );
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody().getData());
+        assertEquals(3,response.getBody().getData().get(0).getUserCount());
+    }
+
+    @Test
+    void initiateJoinChannel(){
+        //given
+        when(channelRepository.findById(channel.getId())).thenReturn(Optional.of(channel));
+        when(channelUserRepository.existsChannelUserByChannelIdAndUserId(channel.getId(),user.getId())).thenReturn(false);
+        when(channelUserRepository.save(any(ChannelUser.class))).thenReturn(channelUser);
+        when(channelUserRepository.countByChannelId(channel.getId()))
+                .thenReturn(3)  // 3명인 경우
+                .thenReturn(4); // 가입 후 4명으로 증가
+
+        //when
+        ResponseEntity<ApiResponse<GroupChannelResponseDto>> response = groupChannelServiceImpl.initiateJoinChannel(user, channel.getId());
+
+        //then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody().getData());
+        assertEquals(4,response.getBody().getData().getUserCount());
+        assertEquals("나는야퉁퉁이", response.getBody().getData().getChannelTitle());
+
+        // Verify: save 메서드가 한 번 호출되었는지 확인
+        verify(channelUserRepository, times(1)).save(any(ChannelUser.class));
+        verify(channelUserRepository, times(2)).countByChannelId(channel.getId()); // count 호출이 2번 발생했는지 확인
+
+    }
+
+    @Test
+    void channelJoinUserValidate(){
+        //given
+        when(channelUserRepository.existsChannelUserByChannelIdAndUserId(channel.getId(),user.getId())).thenReturn(true);
+        when(channelRepository.findById(channel.getId())).thenReturn(Optional.of(channel));
+        //when
+        ResponseEntity<ApiResponse<GroupChannelValidResponseDto>> response = groupChannelServiceImpl.channelJoinUserValidate(channel.getId(), user);
+
+        //then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody().getData());
+        assertEquals(true,response.getBody().getData().getIsJoin());
+    }
+
+    @Test
+    void validateChannel(){
+        //given
+        when(channelRepository.findById(channel.getId())).thenReturn(Optional.empty());
+
+        //when
+        // When & Then: 예외가 발생하는지 확인
+        // when & then: 예외가 발생하는지 확인
+        CustomException exception = assertThrows(CustomException.class, () -> {
+            groupChannelServiceImpl.getGroupInfo(channel.getId());
+        });
+
+
+        assertEquals(exception.getErrorCode(), ErrorCode.CHANNEL_NOT_FOUND);
     }
 
 
