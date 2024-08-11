@@ -74,7 +74,7 @@ function HomePage() {
           id="서비스 소개"
           className="py-2 text-center px-6 bg-cover bg-center bg-no-repeat flex flex-col justify-center items-center overflow-hidden"
           style={{
-            backgroundImage: "url('/assets/메인/talk.jpg')",
+            backgroundImage: "url('/assets/메인/talk.webp')",
             height: "75vh",
           }}
         >
@@ -94,10 +94,10 @@ function HomePage() {
         <section className="container mx-auto px-4 py-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              "진행중인 워케이션.png",
-              "대시보드.png",
-              "모임 채널.png",
-              "개인 채널.png",
+              "진행중인 워케이션.webp",
+              "대시보드.webp",
+              "모임 채널.webp",
+              "개인 채널.webp",
             ].map((img, index) => (
               <div key={index} className="aspect-w-4 aspect-h-3">
                 <img
@@ -115,7 +115,7 @@ function HomePage() {
           id="워케이션 소개"
           className="relative py-2 text-center px-6 bg-cover bg-center bg-no-repeat flex flex-col justify-center items-center overflow-hidden"
           style={{
-            backgroundImage: "url('/assets/메인/fire.jpg')",
+            backgroundImage: "url('/assets/메인/fire.webp')",
             height: "95vh",
           }}
         >
@@ -164,7 +164,7 @@ function HomePage() {
         <section
           id="진행중인 워케이션"
           className="py-16 text-center px-6 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/assets/bgbg.jpg')" }}
+          style={{ backgroundImage: "url('/assets/bgbg.webp')" }}
         >
           <h2 className="text-3xl font-semibold mb-5 text-white">
             진행중인 워케이션
@@ -179,7 +179,7 @@ function HomePage() {
               <h2 className="text-3xl font-semibold">기대효과</h2>
               <div className="aspect-w-4 aspect-h-3">
                 <img
-                  src="/assets/기대효과/기대효과.png"
+                  src="/assets/기대효과/기대효과.webp"
                   alt="기대효과"
                   className="object-cover w-full h-full p-2 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
                 />
@@ -193,28 +193,28 @@ function HomePage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="aspect-w-4 aspect-h-3">
                 <img
-                  src="/assets/기대효과/도표/생산성 향상.png"
+                  src="/assets/기대효과/도표/생산성 향상.webp"
                   alt="생산성 향상"
                   className="object-cover w-full h-full rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
                 />
               </div>
               <div className="aspect-w-4 aspect-h-3">
                 <img
-                  src="/assets/기대효과/도표/삶의 질 개선.png"
+                  src="/assets/기대효과/도표/삶의 질 개선.webp"
                   alt="삶의 질 개선"
                   className="object-cover w-full h-full rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
                 />
               </div>
               <div className="aspect-w-4 aspect-h-3">
                 <img
-                  src="/assets/기대효과/도표/직무 만족도 증대.png"
+                  src="/assets/기대효과/도표/직무 만족도 증대.webp"
                   alt="직무 만족도"
                   className="object-cover w-full h-full rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
                 />
               </div>
               <div className="aspect-w-4 aspect-h-3">
                 <img
-                  src="/assets/기대효과/도표/직원 복지 향상.png"
+                  src="/assets/기대효과/도표/직원 복지 향상.webp"
                   alt="직원 복지 향상"
                   className="object-cover w-full h-full rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
                 />
@@ -225,7 +225,7 @@ function HomePage() {
             <div className="my-3">
               <div className="aspect-w-4 aspect-h-3">
                 <img
-                  src="/assets/기대효과/도표/chart.png"
+                  src="/assets/기대효과/도표/chart.webp"
                   alt="재참여 및 이유"
                   className="object-cover w-full h-full rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
                 />

@@ -39,7 +39,7 @@ const Explorer = () => {
             // boxShadow: "0 4px 10px rgba(0, 0, 0, 0.25)", // 부드러운 그림자 효과
           }}
         >
-          <NavLink className="hover:text-black" to="/">
+          <NavLink className="hover:text-mainBlue" to="/">
             <div
               className="py-3.5 flex justify-center items-center tooltip tooltip-right z-[11]"
               data-tip="Home"
@@ -49,14 +49,14 @@ const Explorer = () => {
               />
             </div>
           </NavLink>
-          <NavLink className="hover:text-black" to="/channel">
+          <NavLink className="hover:text-mainBlue" to="/channel">
             <div
               className="py-3.5 flex justify-center items-center tooltip tooltip-right  z-[11]"
               data-tip="Channels"
             >
               <GlobeAltIcon
                 stroke="currentColor"
-                className={`size-8  hover:text-black  ${
+                className={`size-8  hover:text-mainBlue  ${
                   animate ? "animate-dropIn" : ""
                 }`}
               />
