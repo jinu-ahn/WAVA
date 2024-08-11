@@ -1,15 +1,14 @@
-package com.wava.worcation.domain.worcation.application;
+package com.wava.worcation.domain.worcation.service;
 
 import com.wava.worcation.common.exception.CustomException;
 import com.wava.worcation.common.response.ErrorCode;
 import com.wava.worcation.domain.user.domain.User;
-import com.wava.worcation.domain.worcation.dao.WorcationRepository;
+import com.wava.worcation.domain.worcation.repository.WorcationRepository;
 import com.wava.worcation.domain.worcation.domain.Worcation;
 import com.wava.worcation.domain.worcation.dto.WorcationRequestDto;
 import com.wava.worcation.domain.worcation.dto.WorcationResponseDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 

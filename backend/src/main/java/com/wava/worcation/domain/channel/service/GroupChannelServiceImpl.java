@@ -6,20 +6,16 @@ import com.wava.worcation.common.response.ApiResponse;
 import com.wava.worcation.common.response.ErrorCode;
 import com.wava.worcation.domain.channel.domain.Channel;
 import com.wava.worcation.domain.channel.domain.ChannelUser;
-import com.wava.worcation.domain.channel.domain.MapPin;
 import com.wava.worcation.domain.channel.dto.request.GroupChannelRequestDto;
 import com.wava.worcation.domain.channel.dto.response.GroupChannelResponseDto;
 import com.wava.worcation.domain.channel.dto.response.GroupChannelValidResponseDto;
 import com.wava.worcation.domain.channel.dto.response.GroupDetailResponseDto;
-import com.wava.worcation.domain.channel.dto.response.MapPinResponseDto;
 import com.wava.worcation.domain.channel.enums.ChannelType;
 import com.wava.worcation.domain.channel.repository.ChannelRepository;
 import com.wava.worcation.domain.channel.repository.ChannelUserRepository;
 import com.wava.worcation.domain.user.domain.User;
 import com.wava.worcation.domain.user.dto.response.GroupUserResponseDto;
-import com.wava.worcation.domain.user.dto.response.UserResponseDto;
-import com.wava.worcation.domain.worcation.dao.WorcationRepository;
-import com.wava.worcation.domain.worcation.domain.Worcation;
+import com.wava.worcation.domain.worcation.repository.WorcationRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -29,8 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.Random;
 
 @Service
 @RequiredArgsConstructor

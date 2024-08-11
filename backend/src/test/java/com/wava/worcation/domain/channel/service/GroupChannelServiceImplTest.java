@@ -14,7 +14,7 @@ import com.wava.worcation.domain.channel.repository.ChannelRepository;
 import com.wava.worcation.domain.channel.repository.ChannelUserRepository;
 import com.wava.worcation.domain.user.domain.User;
 import com.wava.worcation.domain.user.dto.response.GroupUserResponseDto;
-import com.wava.worcation.domain.worcation.dao.WorcationRepository;
+import com.wava.worcation.domain.worcation.repository.WorcationRepository;
 import com.wava.worcation.domain.worcation.domain.Worcation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,4 +1,4 @@
-package com.wava.worcation.domain.worcation.application;
+package com.wava.worcation.domain.worcation.service;
 
 import com.wava.worcation.domain.user.domain.User;
 import com.wava.worcation.domain.worcation.dto.WorcationRequestDto;

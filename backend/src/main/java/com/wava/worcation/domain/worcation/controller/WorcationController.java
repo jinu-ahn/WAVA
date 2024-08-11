@@ -1,9 +1,9 @@
 // src/main/java/com/worq/worcation/domain/worcation/api/WorcationController.java
-package com.wava.worcation.domain.worcation.api;
+package com.wava.worcation.domain.worcation.controller;
 
 import com.wava.worcation.domain.user.domain.AuthUser;
 import com.wava.worcation.domain.user.domain.User;
-import com.wava.worcation.domain.worcation.application.WorcationService;
+import com.wava.worcation.domain.worcation.service.WorcationService;
 import com.wava.worcation.domain.worcation.dto.WorcationRequestDto;
 import com.wava.worcation.domain.worcation.dto.WorcationResponseDto;
 import com.wava.worcation.domain.worcation.exception.WorcationNotFoundException;

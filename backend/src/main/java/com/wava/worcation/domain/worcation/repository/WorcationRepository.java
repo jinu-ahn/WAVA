@@ -1,5 +1,5 @@
 // src/main/java/com/worq/worcation/domain/worcation/dao/WorcationRepository.java
-package com.wava.worcation.domain.worcation.dao;
+package com.wava.worcation.domain.worcation.repository;
 
 import com.wava.worcation.domain.worcation.domain.Worcation;
 import org.springframework.data.jpa.repository.JpaRepository;
