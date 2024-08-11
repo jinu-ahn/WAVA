@@ -30,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -61,6 +62,9 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                 .channelType(ChannelType.GROUP.getCode())    //C001 : 그룹 ,  C002 : 피드
                 .channelSido(groupChannelRequestDto.getChannelSido())
                 .channelSigungu(groupChannelRequestDto.getChannelSigungu())
+                .red(rgbRandom())
+                .green(rgbRandom())
+                .blue(rgbRandom())
                 .build();
 
          channelRepository.save(channel);
@@ -80,6 +84,9 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                  .channelSigungu(channel.getChannelSigungu())
                  .channelMemo(channel.getChannelMemo())
                  .userCount(channelUserRepository.countByChannelId(channel.getId()))
+                 .r(channel.getRed())
+                 .g(channel.getGreen())
+                 .b(channel.getBlue())
                  .build();
 
         return ResponseEntity.status(HttpStatus.CREATED)
@@ -112,6 +119,9 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                     .channelMemo(channel.getChannelMemo())
                     .channelType(channel.getChannelType())
                     .userCount(channelUserRepository.countByChannelId(channel.getId()))
+                    .r(channel.getRed())
+                    .g(channel.getGreen())
+                    .b(channel.getBlue())
                     .build());
         }
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(groupChannelResponseDtoList));
@@ -180,6 +190,9 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                         .channelMemo(channel.getChannelMemo())
                         .channelType(channel.getChannelType())
                         .userCount(channelUserRepository.countByChannelId(channel.getId()))
+                        .r(channel.getRed())
+                        .g(channel.getGreen())
+                        .b(channel.getBlue())
                         .build()));
     }
 
@@ -209,6 +222,9 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                             .channelMemo(channel.getChannel().getChannelMemo())
                             .channelType(channel.getChannel().getChannelType())
                             .userCount(channelUserRepository.countByChannelId(channel.getChannel().getId()))
+                            .r(channel.getChannel().getRed())
+                            .g(channel.getChannel().getGreen())
+                            .b(channel.getChannel().getBlue())
                             .build();
                 }).toList();
         return ResponseEntity.status(HttpStatus.OK)
@@ -238,6 +254,9 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                     .channelSigungu(channel.getChannelSigungu())
                     .channelMemo(channel.getChannelMemo())
                     .userCount(channelUserRepository.countByChannelId(channel.getId()))
+                    .r(channel.getRed())
+                    .g(channel.getGreen())
+                    .b(channel.getBlue())
                     .build());
         }
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(groupChannelResponseDtoList));
@@ -281,6 +300,9 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                 .channelType(channel.getChannelType())
                 .channelMemo(channel.getChannelMemo())
                 .userCount(channelUserRepository.countByChannelId(channel.getId()))
+                .r(channel.getRed())
+                .g(channel.getGreen())
+                .b(channel.getBlue())
                 .build()));
     }
 
@@ -319,5 +341,15 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                 () -> new CustomException(ErrorCode.CHANNEL_NOT_FOUND)
         );
         return channel;
+    }
+
+    /**
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-08-11
+     * @ 설명     : 랜덤 rgb 값 생성 (50 ~ 205)
+     * @return 랜덤값
+     */
+    private int rgbRandom() {
+        return (int) (Math.random() * 156) + 50;
     }
 }

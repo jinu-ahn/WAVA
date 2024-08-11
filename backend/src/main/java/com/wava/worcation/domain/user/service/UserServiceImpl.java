@@ -80,6 +80,9 @@ public class UserServiceImpl implements UserService{
                         .channelSigungu(user.getSigungu())
                         .channelDescription(user.getNickName() + "님의 채널 입니다.")
                         .channelType(ChannelType.PERSONAL.getCode())
+                        .red(0)
+                        .green(0)
+                        .blue(0)
                         .build());
 
         return ResponseEntity.status(HttpStatus.OK)

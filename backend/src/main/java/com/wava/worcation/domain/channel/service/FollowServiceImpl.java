@@ -1,6 +1,7 @@
 package com.wava.worcation.domain.channel.service;
 
 import com.wava.worcation.common.exception.ResourceNotFoundException;
+import com.wava.worcation.domain.channel.domain.Channel;
 import com.wava.worcation.domain.channel.domain.Follow;
 import com.wava.worcation.domain.channel.dto.info.FollowInfoDto;
 import com.wava.worcation.domain.channel.repository.ChannelRepository;
@@ -20,11 +21,8 @@ import java.util.*;
 public class FollowServiceImpl implements com.wava.worcation.domain.channel.service.FollowService {
 
     private static final Logger log = LoggerFactory.getLogger(FollowServiceImpl.class);
-    @Autowired
     FollowRepository followRepository;
-    @Autowired
     ChannelRepository channelRepository;
-    @Autowired
     UserRepository userRepository;
 
     @Override
@@ -71,27 +69,49 @@ public class FollowServiceImpl implements com.wava.worcation.domain.channel.serv
         return map;
     }
 
-
+    /**
+     *
+     * @ 작성자   : 최승호
+     * @ 작성일   : 2024-08-11
+     * @ 설명     :이 채널을 팔로우 하는 사람들 목록 Dto
+     * @param usernickname 채널 주인 닉네임
+     * @return 채널 닉네임, 팔로워 리스트
+     */
     @Override
-    public List<FollowInfoDto.UserFollowInfoDto> getFollowers(Long channelId) {
+    public FollowInfoDto getFollowers(String usernickname, User authUser) {
+        Channel channel = channelRepository.findChannelByUserId(userRepository.findByNickName(usernickname).getId());
         List<FollowInfoDto.UserFollowInfoDto> followerDtos = new ArrayList<>();
-        List<Follow> followers = followRepository.findByChannel(channelRepository.findById(channelId).orElseThrow(ResourceNotFoundException::new));
+        List<Follow> followers = followRepository.findByChannel(channel);
         for (Follow follow : followers) {
             User user = follow.getUser();
+
             FollowInfoDto.UserFollowInfoDto dto = FollowInfoDto.UserFollowInfoDto.builder()
                     .userId(user.getId())
                     .profile(user.getProfileImg())
                     .nickname(user.getNickName())
+                    .isFollower(followRepository.existsByChannelAndUser(channel,authUser))
                     .build();
             followerDtos.add(dto);
         }
-        return followerDtos;
+        return FollowInfoDto.builder()
+                .nickName(usernickname)
+                .userList(followerDtos)
+                .build();
     }
 
+    /**
+     *
+     * @ 작성자   : 최승호
+     * @ 작성일   : 2024-08-11
+     * @ 설명     : 이 사람이 팔로 하는 계정들 목록 Dto
+     * @param usernickname 채널 주인 닉네임
+     * @return
+     */
     @Override
-    public List<FollowInfoDto.UserFollowInfoDto> getFollowings(Long channelId) {
+    public FollowInfoDto getFollowings(String usernickname, User authUser) {
+        Channel channel = channelRepository.findChannelByUserId(userRepository.findByNickName(usernickname).getId());
         List<FollowInfoDto.UserFollowInfoDto> followerDtos = new ArrayList<>();
-        User userInfo = channelRepository.findById(channelId).orElseThrow(()-> new ResourceNotFoundException("채널검색실패")).getUser();
+        User userInfo = channelRepository.findById(channel.getId()).orElseThrow(()-> new ResourceNotFoundException("채널검색실패")).getUser();
         List<Follow> followers = followRepository.findByUser(userInfo);
         for (Follow follow : followers) {
             User user = follow.getUser();
@@ -99,9 +119,13 @@ public class FollowServiceImpl implements com.wava.worcation.domain.channel.serv
                     .userId(user.getId())
                     .profile(user.getProfileImg())
                     .nickname(user.getNickName())
+                    .isFollower(followRepository.existsByChannelAndUser(channel,authUser))
                     .build();
             followerDtos.add(dto);
         }
-        return followerDtos;
+        return FollowInfoDto.builder()
+                .nickName(usernickname)
+                .userList(followerDtos)
+                .build();
     }
 }

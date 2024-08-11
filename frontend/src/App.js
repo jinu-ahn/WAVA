@@ -20,41 +20,6 @@ import GroupDiscoverPage from "./pages/Channel/Group/GroupDiscoverPage";
 function App() {
   const { user } = useAuthStore();
   console.log(user);
-  const [deferredPrompt, setDeferredPrompt] = useState(null);
-  const [showInstallPrompt, setShowInstallPrompt] = useState(false);
-  const promptTimeout = useRef(null);
-  useEffect(() => {
-    const handleBeforeInstallPrompt = (event) => {
-      // Prevent the mini-infobar from appearing on mobile
-      event.preventDefault();
-      // Stash the event so it can be triggered later
-      setDeferredPrompt(event);
-      // Show the install prompt
-      setShowInstallPrompt(true);
-
-      // Clear any existing timeouts
-      if (promptTimeout.current) {
-        clearTimeout(promptTimeout.current);
-      }
-
-      // Hide the prompt automatically after 10 seconds
-      promptTimeout.current = setTimeout(() => {
-        setShowInstallPrompt(false);
-      }, 10000);
-    };
-
-    window.addEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
-
-    return () => {
-      window.removeEventListener(
-        "beforeinstallprompt",
-        handleBeforeInstallPrompt
-      );
-      if (promptTimeout.current) {
-        clearTimeout(promptTimeout.current);
-      }
-    };
-  }, []);
 
   useEffect(() => {
     if (!sessionStorage.getItem("accessToken")) {
@@ -65,24 +30,6 @@ function App() {
     }
   }, []);
 
-  const handleInstallClick = () => {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === "accepted") {
-          console.log("User accepted the A2HS prompt");
-        } else {
-          console.log("User dismissed the A2HS prompt");
-        }
-        setDeferredPrompt(null);
-        setShowInstallPrompt(false);
-      });
-    }
-  };
-
-  const handleInstallClose = () => {
-    setShowInstallPrompt(false);
-  };
   return (
     <>
       <BrowserRouter>
@@ -142,32 +89,6 @@ function App() {
           <Footer />
         </div>
       </BrowserRouter>
-
-      <div className="fixed inset-x-0 top-0 flex justify-center mt-4">
-        <div
-          className={` p-4 bg-white shadow-lg rounded-md transition-opacity ${
-            showInstallPrompt ? "opacity-100" : "opacity-0"
-          } ${showInstallPrompt ? "fade-in" : ""}`}
-        >
-          <p className="text-center text-lg mb-4">
-            WAVA를 설치하고 더 빠르고 편리하게 이용하세요!
-          </p>
-          <div className="flex justify-center space-x-4">
-            <button
-              onClick={handleInstallClick}
-              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-            >
-              확인
-            </button>
-            <button
-              onClick={handleInstallClose}
-              className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
-            >
-              닫기
-            </button>
-          </div>
-        </div>
-      </div>
     </>
   );
 }

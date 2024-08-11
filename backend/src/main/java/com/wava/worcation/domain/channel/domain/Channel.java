@@ -14,6 +14,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@ToString
 @Table(name = "channel", schema = "wava")
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -56,6 +57,15 @@ public class Channel {
     @NotNull
     @Column(name = "channel_type", nullable = false, length = 4)
     private String channelType;
+
+    @Column(name = "red")
+    private int red;
+
+    @Column(name = "green")
+    private int green;
+
+    @Column(name = "blue")
+    private int blue;
 
     @OneToMany(mappedBy = "channel", cascade = CascadeType.REMOVE)
     private List<Chat> chat;
