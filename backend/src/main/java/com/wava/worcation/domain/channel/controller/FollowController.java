@@ -27,12 +27,14 @@ public class FollowController {
 
     private final UserRepository userRepository;
 
-    @PostMapping
-    public ResponseEntity<ApiResponse<FollowResponseDto>> follow(@RequestBody FollowRequestDto requestDto, @AuthUser User user) {
+    @PostMapping("/{nickname}/follow")
+    public ResponseEntity<ApiResponse<FollowResponseDto>> follow(@PathVariable(value = "nickname") String nickname, @AuthUser User user) {
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ApiResponse.success(followService.follow(requestDto,user)));
+                .body(ApiResponse.success(followService.follow(nickname,user)));
 
     }
+
+    @DeleteMapping("/un")
 
     @GetMapping("/{nickname}/follower")
     public ResponseEntity<ApiResponse<FollowInfoDto>> getFollowers(@PathVariable(value = "nickname") String nickname, @AuthUser User user) {

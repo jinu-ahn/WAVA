@@ -1,6 +1,9 @@
 package com.wava.worcation.domain.channel.service;
 
+import com.wava.worcation.common.exception.CustomException;
+import com.wava.worcation.common.exception.CustomExceptionHandler;
 import com.wava.worcation.common.exception.ResourceNotFoundException;
+import com.wava.worcation.common.response.ErrorCode;
 import com.wava.worcation.domain.channel.domain.Channel;
 import com.wava.worcation.domain.channel.domain.Follow;
 import com.wava.worcation.domain.channel.dto.info.FollowInfoDto;
@@ -28,22 +31,25 @@ public class FollowServiceImpl implements com.wava.worcation.domain.channel.serv
     private final FollowRepository followRepository;
     private final ChannelRepository channelRepository;
     private final UserRepository userRepository;
+    private final CustomExceptionHandler customExceptionHandler;
 
     /**
      *
      * @ 작성자   : 최승호
      * @ 작성일   : 2024-08-11
      * @ 설명     : 팔로우 등록
-     * @param followRequestDto
+     * @param nickname
      * @param user
      * @return followResponseDto
      */
     @Override
-    public FollowResponseDto follow(FollowRequestDto followRequestDto, User user) {
-        String nickname = followRequestDto.getNickname();
+    public FollowResponseDto follow(String nickname, User user) {
         // 닉네임으로 들어온 채널
         Channel channel = channelRepository.findChannelByUserId(userRepository.findByNickName(nickname).getId());
 
+        if (followRepository.existsByChannelAndUser(channel,user)){
+            throw new CustomException(ErrorCode.ALREADY_FOLLOWING);
+        }
         Follow follow = Follow.builder()
                 .user(user)
                 .channel(channel)

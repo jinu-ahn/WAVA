@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface FollowService {
-    FollowResponseDto follow(FollowRequestDto followRequestDto, User user);
+    FollowResponseDto follow(String nickname, User user);
 
     FollowInfoDto getFollowers(String usernickname, User user);
 
