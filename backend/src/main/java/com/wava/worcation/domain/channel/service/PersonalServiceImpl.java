@@ -36,6 +36,7 @@ public class PersonalServiceImpl implements PersonalService {
 
     private final com.wava.worcation.domain.channel.service.FollowService followService;
     private final com.wava.worcation.domain.channel.service.InfoService infoService;
+    private final FollowRepository followRepository;
 
     @Override
     public ResponseEntity<ApiResponse<PersonalResponseDto>> ChannelInfo(String nickName,User user){
@@ -54,6 +55,7 @@ public class PersonalServiceImpl implements PersonalService {
                 .follow(followService.getFollowings(nickName,user).getUserList().size())
                 .follower(followService.getFollowers(nickName,user).getUserList().size())
                 .feedCount(feedcount)
+                .isFollowing(followRepository.existsByChannelAndUser(channel,user))
                 .build()
         ));
     }
