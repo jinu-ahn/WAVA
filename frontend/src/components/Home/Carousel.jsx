@@ -23,47 +23,47 @@ const responsive = {
 const carouselItems = [
   {
     title: "강원특별자치도",
-    image: "/assets/팜플렛/강원 팜플렛.png",
+    image: "/assets/팜플렛/강원 팜플렛.webp",
     url: "https://worcation.co.kr/gw",
   },
   {
     title: "더 휴일",
-    image: "/assets/팜플렛/더 휴일 팜플렛.png",
+    image: "/assets/팜플렛/더 휴일 팜플렛.webp",
     url: "https://thehyuil.co.kr/",
   },
   {
     title: "데스커",
-    image: "/assets/팜플렛/데스커 팜플렛.png",
+    image: "/assets/팜플렛/데스커 팜플렛.webp",
     url: "https://www.deskerworcation.com/",
   },
   {
     title: "부산",
-    image: "/assets/팜플렛/부산 팜플렛.png",
+    image: "/assets/팜플렛/부산 팜플렛.webp",
     url: "https://www.busaness.com/",
   },
   {
     title: "서울",
-    image: "/assets/팜플렛/서울 팜플렛.png",
+    image: "/assets/팜플렛/서울 팜플렛.webp",
     url: "https://worcation.sba.kr/",
   },
   {
     title: "어촌체험 휴양마을",
-    image: "/assets/팜플렛/어촌체험 휴양마을 팜플렛.png",
+    image: "/assets/팜플렛/어촌체험 휴양마을 팜플렛.webp",
     url: "https://seantour.kr/newseantour/main/main.do",
   },
   {
     title: "전북특별자치도",
-    image: "/assets/팜플렛/전북 팜플렛.png",
+    image: "/assets/팜플렛/전북 팜플렛.webp",
     url: "https://jb-worcation.com/",
   },
   {
     title: "제주도",
-    image: "/assets/팜플렛/제주 팜플렛.png",
+    image: "/assets/팜플렛/제주 팜플렛.webp",
     url: "https://jejuworcation.or.kr/",
   },
   {
     title: "충청남도",
-    image: "/assets/팜플렛/충남 팜플렛.png",
+    image: "/assets/팜플렛/충남 팜플렛.webp",
     url: "https://cnctf.or.kr/site/worcation/main.php",
   },
 ];

@@ -18,16 +18,16 @@ function ChannelRoomItem({ roomInfo, onClick }) {
   //                                 (거짓)-> active, join활성화
 
   const backgroundImages = [
-    "url('/글래스.png')",
-    "url('/글래스2.png')",
-    "url('/글래스3.png')",
-    "url('/글래스4.png')",
-    "url('/글래스5.png')",
-    "url('/글래스7.png')",
-    "url('/글래스6.png')",
-    "url('/글래스8.png')",
-    "url('/글래스9.png')",
-    "url('/글래스10.png')",
+    "url('/글래스.webp')",
+    "url('/글래스2.webp')",
+    "url('/글래스3.webp')",
+    "url('/글래스4.webp')",
+    "url('/글래스5.webp')",
+    "url('/글래스7.webp')",
+    "url('/글래스6.webp')",
+    "url('/글래스8.webp')",
+    "url('/글래스9.webp')",
+    "url('/글래스10.webp')",
   ];
 
   const [backgroundImage, setBackgroundImage] = useState("");

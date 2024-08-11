@@ -7,9 +7,8 @@ import com.wava.worcation.domain.plan.domain.Plan;
 import com.wava.worcation.domain.plan.dto.PlanRequestDto;
 import com.wava.worcation.domain.plan.dto.PlanResponseDto;
 import com.wava.worcation.domain.user.domain.User;
-import com.wava.worcation.domain.worcation.dao.WorcationRepository;
+import com.wava.worcation.domain.worcation.repository.WorcationRepository;
 import com.wava.worcation.domain.worcation.domain.Worcation;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,6 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
