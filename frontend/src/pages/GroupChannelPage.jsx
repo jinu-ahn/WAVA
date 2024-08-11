@@ -174,17 +174,54 @@
 
 // export default React.memo(GroupChannelComponent);
 
-import { React, useState } from "react";
-import { useParams } from "react-router-dom";
+import { React, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import ChatComponent from "../components/Chat/ChatComponent";
 import MapComponent from "../components/Channel/group/MapComponent";
 import ControllerComponent from "../components/Channel/group/ControllerComponent";
-import VideoChat from "../components/VideoChat/VideoChat"
+import VideoChat from "../components/VideoChat/VideoChat";
+import { groupChannelAPI } from "../api/groupChannelAPI";
+import LoadingSpinner from "../components/Channel/LoadingSpinner";
 
 const GroupChannelPage = () => {
   const { groupId } = useParams();
+  const [loading, setLoading] = useState(true);
+  const [hasAccess, setHasAccess] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const isJoined = async () => {
+      try {
+        // 그룹에 가입한 사람인지 확인하는 작업
+        const resp = await groupChannelAPI.isValidatedGroupMember(groupId);
+        console.log(resp);
+        if (resp?.data?.isJoin) {
+          setHasAccess(true);
+        } else {
+          throw new Error("Not Joined Group-Channel");
+        }
+      } catch (error) {
+        console.error("권한 확인 중 오류 발생:", error);
+        alert("참여하지 않은 채널입니다!");
+
+        navigate("/channel/group/discover-groups"); // 오류 발생 시 검색 페이지로 이동
+      } finally {
+        setLoading(false);
+      }
+    };
+    isJoined();
+  }, [groupId]);
+
   const [mode, setMode] = useState(true);
-  console.log(groupId)
+
+  if (loading) {
+    return <LoadingSpinner message={"컨텐츠 로딩중"} />; // 로딩 중 표시
+  }
+
+  if (!hasAccess) {
+    return null; // 리디렉션 처리 후에는 아무 것도 렌더링하지 않음
+  }
+  console.log(groupId);
   return (
     <div className="flex h-screen">
       {/* 지도 컴포넌트 (3/4) */}
@@ -193,25 +230,22 @@ const GroupChannelPage = () => {
       </div>
 
       {/* 채팅 컴포넌트 (1/4) */}
-      {mode
-        ? <div className="w-1/4 h-full grid grid-rows-12">
-            <div className="row-span-1">
+      {mode ? (
+        <div className="w-1/4 h-full grid grid-rows-12">
+          <div className="row-span-1">
             <ControllerComponent mode={mode} setMode={setMode} />
-            </div>
-            <div className="row-span-11">
+          </div>
+          <div className="row-span-11">
             <ChatComponent channelId={groupId} />
-            </div>
           </div>
-        :  
-          <div className="w-2/12 overflow-auto bg-black">
-          <VideoChat channelId={groupId} mode={mode} setMode={setMode}/>
-          </div>
-        }
-
+        </div>
+      ) : (
+        <div className="w-2/12 overflow-auto bg-black">
+          <VideoChat channelId={groupId} mode={mode} setMode={setMode} />
+        </div>
+      )}
     </div>
   );
 };
 
 export default GroupChannelPage;
-
-
