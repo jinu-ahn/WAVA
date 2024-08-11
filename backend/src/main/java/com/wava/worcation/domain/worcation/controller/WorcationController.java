@@ -28,7 +28,7 @@ public class WorcationController {
     }
 
     @PatchMapping("/update/{worcationid}")
-    public ResponseEntity<?> getAllWorcations(@PathVariable Long worcationid ,@RequestBody WorcationRequestDto worcationRequestDto) {
+    public ResponseEntity<?> getAllWorcations(@PathVariable(value = "worcationid") Long worcationid ,@RequestBody WorcationRequestDto worcationRequestDto) {
         try{
             WorcationResponseDto responseDto = worcationService.updateWorcation(worcationid,worcationRequestDto);
             return ResponseEntity.ok(responseDto);
@@ -40,7 +40,7 @@ public class WorcationController {
     }
 
     @DeleteMapping("/delete/{worcationid}")
-    public ResponseEntity<?> getAllWorcations(@PathVariable Long worcationid) {
+    public ResponseEntity<?> getAllWorcations(@PathVariable(value = "worcationid") Long worcationid) {
         try{
             worcationService.deleteWorcation(worcationid);
             return ResponseEntity.ok().build();

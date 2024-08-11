@@ -36,13 +36,15 @@ public class PersonalServiceImpl implements PersonalService {
 
     private final com.wava.worcation.domain.channel.service.FollowService followService;
     private final com.wava.worcation.domain.channel.service.InfoService infoService;
+    private final FollowRepository followRepository;
 
     @Override
-    public ResponseEntity<ApiResponse<PersonalResponseDto>> ChannelInfo(String nickName){
+    public ResponseEntity<ApiResponse<PersonalResponseDto>> ChannelInfo(String nickName,User user){
         Long userId = userRepository.findByNickName(nickName).getId();
         Channel channel = channelRepository.findChannelByUserId(userId);
         int feedcount = infoService.feedCount(userId);
-        ResponseEntity<ApiResponse<PersonalResponseDto>> response = ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(PersonalResponseDto.builder()
+
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(PersonalResponseDto.builder()
                 .id(channel.getId())
                 .userId(userId)
                 .nickName(nickName)
@@ -50,13 +52,12 @@ public class PersonalServiceImpl implements PersonalService {
                 .sigungu(channel.getChannelSigungu())
                 .description(channel.getChannelDescription())
                 .profileImage(userRepository.findById(userId).orElseThrow(ResourceNotFoundException::new).getProfileImg())
-                .follow(followService.getFollowings(channel.getId()).size())
-                .follower(followService.getFollowers(channel.getId()).size())
+                .follow(followService.getFollowings(nickName,user).getUserList().size())
+                .follower(followService.getFollowers(nickName,user).getUserList().size())
                 .feedCount(feedcount)
+                .isFollowing(followRepository.existsByChannelAndUser(channel,user))
                 .build()
         ));
-
-        return response;
     }
 
     @Override

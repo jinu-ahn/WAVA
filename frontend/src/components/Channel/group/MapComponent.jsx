@@ -93,7 +93,17 @@ const MapComponent = (props) => {
             }
           }
         );
-
+        window.kakao.maps.event.addListener(createdMap, 'click', function(mouseEvent) {        
+            
+            // 클릭한 위도, 경도 정보를 가져옵니다 
+            var latlng = mouseEvent.latLng;
+            
+            var message = '클릭한 위치의 위도는 ' + latlng.getLat() + ' 이고, ';
+            message += '경도는 ' + latlng.getLng() + ' 입니다';
+            
+            console.log(message)
+            
+        });
         // if (currentUser && !currentUser.color) {
         //   const randomColor =
         //     USER_COLORS[Math.floor(Math.random() * USER_COLORS.length)];
@@ -375,7 +385,7 @@ const MapComponent = (props) => {
         </div>
       </div>
       <div ref={mapContainer} className="flex-grow h-screen">
-        <Cursors channelId={props.channelId} />
+        {map && <Cursors channelId={props.channelId} map={map} />}
       </div>
       <div className="absolute bottom-0 left-0 w-full p-4 bg-white bg-opacity-60 z-10 max-h-40 overflow-y-auto">
         <ul>

@@ -20,5 +20,6 @@ public class PersonalResponseDto {
     int follow;
     int follower;
     int feedCount;
+    boolean isFollowing;
 
 }

@@ -14,6 +14,7 @@ import java.util.List;
 public class FollowInfoDto {
     private Long Id;
     private List<UserFollowInfoDto>  userList;
+    private String nickName;
 
     @Data
     @Builder
@@ -23,5 +24,6 @@ public class FollowInfoDto {
         private Long userId;
         private String profile;
         private String nickname;
+        private boolean isFollower;
     }
 }
