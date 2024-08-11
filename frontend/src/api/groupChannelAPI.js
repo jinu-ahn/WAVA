@@ -77,6 +77,14 @@ const groupChannelAPI = {
     );
   },
 
+  // 그룹 권한 검사
+  isValidatedGroupMember: async (channelId) => {
+    return await handleRequest(
+      () => local.get(`${address}/join/valid/${channelId}`),
+      "그룹 채널 권한 검사"
+    );
+  },
+
   // 지도 핀 등록
   addMapPinRequest: async (data) => {
     return await handleRequest(() => local.post(address + "/map", data));

@@ -109,7 +109,7 @@ export const followRequest = async (channelId) => {
   );
 };
 
-// 팔로우 상세
+// 팔로우? 상세
 export const readFollowUserRequest = async (nickName) => {
   return await handleRequest(
     () => local.get(`${address}/${nickName}/follower`),
@@ -117,7 +117,7 @@ export const readFollowUserRequest = async (nickName) => {
   );
 };
 
-// 팔로워 상세
+// 팔로워? 상세
 export const readFollowerUserRequest = async (nickName) => {
   return await handleRequest(
     () => local.get(`${address}/${nickName}/followering`),
