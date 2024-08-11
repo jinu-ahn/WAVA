@@ -1,5 +1,6 @@
 package com.wava.worcation.domain.channel.dto.response;
 
+import com.wava.worcation.domain.user.dto.response.GroupUserResponseDto;
 import com.wava.worcation.domain.user.dto.response.UserResponseDto;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,5 +18,5 @@ public class MapPinResponseDto {
     private String placeName;
     private String info;
     private Long pinOrder;
-    private List<UserResponseDto> user;
+    private List<GroupUserResponseDto> user;
 }

@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import Swal from "sweetalert2";
-// import { Cursors } from "./cursor/Cursors";
+import Cursors from "./cursor/Cursors";
 // import { useUsers } from "y-presence";
 // import { awareness } from "./cursor/y";
 // import { USER_COLORS } from "./cursor/constants";
 
-const MapComponent = () => {
+const MapComponent = (props) => {
   const mapContainer = useRef(null);
   const [map, setMap] = useState(null);
   const [drawingManager, setDrawingManager] = useState(null);
@@ -17,6 +17,7 @@ const MapComponent = () => {
   const infowindow = useRef(null);
 
   // const currentUser = useUsers(awareness)[awareness.clientID];
+
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -162,15 +163,15 @@ const MapComponent = () => {
       text: "이 마커를 삭제하시겠습니까?",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
       confirmButtonText: "삭제",
       cancelButtonText: "취소",
     }).then((result) => {
       if (result.isConfirmed) {
         customMarker.marker.setMap(null);
         setCustomMarkers((prev) => prev.filter((cm) => cm !== customMarker));
-        Swal.fire("삭제됨", "마커가 삭제되었습니다.", "success");
+        Swal.fire("", "마커가 삭제되었습니다.", "success");
       }
     });
   }, []);
@@ -374,7 +375,7 @@ const MapComponent = () => {
         </div>
       </div>
       <div ref={mapContainer} className="flex-grow h-screen">
-        {/* <Cursors /> */}
+        <Cursors channelId={props.channelId} />
       </div>
       <div className="absolute bottom-0 left-0 w-full p-4 bg-white bg-opacity-60 z-10 max-h-40 overflow-y-auto">
         <ul>

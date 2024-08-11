@@ -83,6 +83,7 @@ const FollowDrawer = ({
         return "팔로우";
       case "following":
       case "mutual":
+      default:
         return "언팔로우";
     }
   };

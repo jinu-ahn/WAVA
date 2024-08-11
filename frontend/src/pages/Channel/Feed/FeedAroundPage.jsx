@@ -3,6 +3,8 @@ import ContentDrawer from "../../../components/Channel/feed/ContentDrawer";
 import ContentItemGrid from "../../../components/Channel/feed/ContentItemGrid";
 import FeedSearchBar from "../../../components/Channel/feed/FeedSearchbar";
 import { searchFeedRequest } from "../../../api/channelFeedApi";
+import LoadingSpinner from "../../../components/Channel/LoadingSpinner";
+import NoResult from "../../../components/Channel/feed/NoResult";
 
 function FeedAroundPage() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -111,23 +113,28 @@ function FeedAroundPage() {
       <div className="flex flex-col flex-1">
         <FeedSearchBar searchHandle={searchHandle} />
 
-        {isNoContent && <h1>아무것도검색되지않았다</h1>}
-        <ContentItemGrid
-          loadMore={loadMore}
-          contents={contents}
-          loading={loading}
-          onSelectContent={handleSelectContent}
-        />
-        <ContentDrawer
-          onDelete={handleDeleteContent}
-          isOpen={isDrawerOpen}
-          onClose={handleCloseDrawer}
-          feedId={selectedFeedId}
-          originChangeHandle={handleChange}
-        />
+        {loading ? (
+          <LoadingSpinner message="게시글을 불러오는 중입니다." />
+        ) : (
+          <>
+            {isNoContent && <NoResult />}
+            <ContentItemGrid
+              loadMore={loadMore}
+              contents={contents}
+              loading={loading}
+              onSelectContent={handleSelectContent}
+            />
+            <ContentDrawer
+              onDelete={handleDeleteContent}
+              isOpen={isDrawerOpen}
+              onClose={handleCloseDrawer}
+              feedId={selectedFeedId}
+              originChangeHandle={handleChange}
+            />
+          </>
+        )}
       </div>
     </div>
   );
 }
-
 export default FeedAroundPage;

@@ -2,22 +2,24 @@ package com.wava.worcation.domain.channel.service;
 
 
 import com.wava.worcation.common.exception.CustomException;
-import com.wava.worcation.common.jwt.TokenProvider;
-import com.wava.worcation.common.openvidu.service.OpenViduService;
 import com.wava.worcation.common.response.ApiResponse;
 import com.wava.worcation.common.response.ErrorCode;
 import com.wava.worcation.domain.channel.domain.Channel;
 import com.wava.worcation.domain.channel.domain.ChannelUser;
+import com.wava.worcation.domain.channel.domain.MapPin;
 import com.wava.worcation.domain.channel.dto.request.GroupChannelRequestDto;
 import com.wava.worcation.domain.channel.dto.response.GroupChannelResponseDto;
+import com.wava.worcation.domain.channel.dto.response.GroupChannelValidResponseDto;
 import com.wava.worcation.domain.channel.dto.response.GroupDetailResponseDto;
+import com.wava.worcation.domain.channel.dto.response.MapPinResponseDto;
 import com.wava.worcation.domain.channel.enums.ChannelType;
 import com.wava.worcation.domain.channel.repository.ChannelRepository;
 import com.wava.worcation.domain.channel.repository.ChannelUserRepository;
 import com.wava.worcation.domain.user.domain.User;
+import com.wava.worcation.domain.user.dto.response.GroupUserResponseDto;
 import com.wava.worcation.domain.user.dto.response.UserResponseDto;
-import com.wava.worcation.domain.user.repository.UserRepository;
 import com.wava.worcation.domain.worcation.dao.WorcationRepository;
+import com.wava.worcation.domain.worcation.domain.Worcation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,7 +39,6 @@ public class GroupChannelServiceImpl implements GroupChannelService {
     private final ChannelRepository channelRepository;
     private final ChannelUserRepository channelUserRepository;
     private final WorcationRepository worcationRepository;
-
 
     /**
      *
@@ -125,22 +127,19 @@ public class GroupChannelServiceImpl implements GroupChannelService {
      */
     @Override
     @Transactional(readOnly = true)
-    public ResponseEntity<ApiResponse<GroupDetailResponseDto>> getGroupDetail(final Long channelId) {
-        Channel channel = channelRepository.findById(channelId).orElseThrow(
-                () -> new CustomException(ErrorCode.CHANNEL_NOT_FOUND)
-        );
+    public ResponseEntity<ApiResponse<GroupDetailResponseDto>> getGroupInfo(final Long channelId) {
+        Channel channel = validateChannel(channelId);
 
-        List<UserResponseDto> userResponseDtoList = channelUserRepository.findByChannelId(channelId)
+        List<GroupUserResponseDto> groupUserList = channelUserRepository.findByChannelId(channelId)
                 .stream()
-                .map(user -> UserResponseDto.builder()
-                        .id(user.getUser().getId())
-                        .email(user.getUser().getEmail())
-                        .phone(user.getUser().getPhone())
-                        .nickName(user.getUser().getNickName())
-                        .sido(user.getUser().getSido())
-                        .sigungu(user.getUser().getSigungu())
-                        .profile(user.getUser().getProfileImg())
-                        .build())
+                .map(user -> {
+                    return GroupUserResponseDto.builder()
+                            .userId(user.getId())
+                            .nickName(user.getUser().getNickName())
+                            .profile(user.getUser().getProfileImg())
+                            .job(user.getUser().getWorcation().getJob())
+                            .build();
+                })
                 .toList();
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -148,7 +147,8 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                         .channelId(channel.getId())
                         .channelTitle(channel.getChannelTitle())
                         .channelDescription(channel.getChannelDescription())
-                        .user(userResponseDtoList)
+                        .channelMemo(channel.getChannelMemo())
+                        .user(groupUserList)
                         .build()));
     }
 
@@ -165,9 +165,7 @@ public class GroupChannelServiceImpl implements GroupChannelService {
     @Override
     @Transactional
     public ResponseEntity<ApiResponse<GroupChannelResponseDto>> updateMemo(final Long channelId, final String memo) {
-        Channel channel = channelRepository.findById(channelId).orElseThrow(
-                () -> new CustomException(ErrorCode.CHANNEL_NOT_FOUND)
-        );
+        Channel channel = validateChannel(channelId);
 
         channel.memoUpdate(memo);
 
@@ -196,7 +194,7 @@ public class GroupChannelServiceImpl implements GroupChannelService {
 
     @Override
     @Transactional
-    public ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> userJoinChannel(final User user) {
+    public ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> userJoinChannels(final User user) {
         List<ChannelUser> channelUserList = channelUserRepository.findByUserId(user.getId());
 
         List<GroupChannelResponseDto> groupChannelResponseList = channelUserList.stream()
@@ -245,5 +243,64 @@ public class GroupChannelServiceImpl implements GroupChannelService {
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(groupChannelResponseDtoList));
     }
 
+    /**
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-08-10
+     * @ 설명     : 채널에 가입
+     * @param user      유저 객체
+     * @param channelId 채널 식별 아이디
+     * @return 등록된 채널 정보
+     * @status 성공 : 200 , 실패 : 403, 404
+     */
+    @Override
+    @Transactional
+    public ResponseEntity<ApiResponse<GroupChannelResponseDto>> initiateJoinChannel(final User user, final Long channelId) {
+        Channel channel = validateChannel(channelId);
 
+        boolean isJoined = channelUserRepository.existsChannelUserByChannelIdAndUserId(channel.getId(),user.getId());
+
+        if(!isJoined &&channelUserRepository.countByChannelId(channelId) >= 4) {
+            throw new CustomException(ErrorCode.CHANNEL_LIMIT_EXCEED);
+        }
+
+        if(!isJoined) {
+            channelUserRepository.save(ChannelUser.builder()
+                    .channel(channel)
+                    .user(user)
+                    .build());
+        }
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.success(GroupChannelResponseDto.builder()
+                .channelId(channel.getId())
+                .userId(user.getId())
+                .channelTitle(channel.getChannelTitle())
+                .channelDescription(channel.getChannelDescription())
+                .channelSido(channel.getChannelSido())
+                .channelSigungu(channel.getChannelSigungu())
+                .channelType(channel.getChannelType())
+                .channelMemo(channel.getChannelMemo())
+                .userCount(channelUserRepository.countByChannelId(channel.getId()))
+                .build()));
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<ApiResponse<GroupChannelValidResponseDto>> channelJoinUserValidate(Long channelId, User user) {
+        Channel channel = validateChannel(channelId);
+
+        Boolean isJoined = channelUserRepository.existsChannelUserByChannelIdAndUserId(channel.getId(),user.getId());
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.success(GroupChannelValidResponseDto.builder()
+                        .isJoin(isJoined)
+                        .build()));
+    }
+
+    private Channel validateChannel(Long channelId) {
+        Channel channel = channelRepository.findById(channelId).orElseThrow(
+                () -> new CustomException(ErrorCode.CHANNEL_NOT_FOUND)
+        );
+        return channel;
+    }
 }

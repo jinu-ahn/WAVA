@@ -13,7 +13,6 @@ import Navbar from "./components/common/Navbar";
 import Footer from "./components/common/Footer";
 import FeedAroundPage from "./pages/Channel/Feed/FeedAroundPage";
 import FeedPersonalPage from "./pages/Channel/Feed/FeedPersonalPage";
-import ChatPage from "./pages/ChatPage";
 import AuthenticatedRouter from "./components/common/AuthenticatedRouter";
 import VideoChat from "./components/VideoChat/VideoChat";
 import GroupDiscoverPage from "./pages/Channel/Group/GroupDiscoverPage";
@@ -52,7 +51,7 @@ function App() {
                 />
               }
             />
-            <Route path="/chat" element={<ChatPage />} />
+
             <Route path="/video-chat" element={<VideoChat />} />
 
             {/* 중첩 라우팅 */}
