@@ -234,27 +234,28 @@ function HomePage() {
           </AnimatedDiv>
         </section>
       </div>
-
       {showInstallPrompt && (
-        <div className="fixed inset-x-0 bottom-2 flex justify-center mt-4">
+        <div className="fixed inset-x-0 bottom-4 flex justify-center">
           <div
-            className={` p-4 bg-white shadow-lg rounded-md transition-opacity ${
-              showInstallPrompt ? "opacity-100" : "opacity-0"
-            } ${showInstallPrompt ? "fade-in" : ""}`}
+            className={`p-4 bg-slate-400 shadow-lg rounded-lg transition-all duration-300 ease-in-out ${
+              showInstallPrompt
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-4"
+            }`}
           >
-            <p className="text-center text-lg mb-4">
+            <p className="text-center text-base mb-3 font-medium text-white">
               WAVA를 설치하고 더 빠르고 편리하게 이용하세요!
             </p>
-            <div className="flex justify-center space-x-4">
+            <div className="flex justify-center space-x-3">
               <button
                 onClick={handleInstallClick}
-                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+                className="bg-mainBlue text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors duration-200 shadow-lg"
               >
                 확인
               </button>
               <button
                 onClick={handleInstallClose}
-                className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
+                className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors duration-200 shadow-lg"
               >
                 닫기
               </button>
