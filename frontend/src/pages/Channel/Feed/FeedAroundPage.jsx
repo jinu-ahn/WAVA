@@ -11,7 +11,7 @@ function FeedAroundPage() {
   const [selectedFeedId, setSelectedFeedId] = useState(null);
 
   const [contents, setContents] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const [pages, setPages] = useState(0);
   const [maxPage, setMaxPage] = useState(-1);
@@ -23,7 +23,6 @@ function FeedAroundPage() {
   useEffect(() => {
     const getData = async () => {
       try {
-        setLoading(true);
         const resp = await searchFeedRequest();
         if (resp?.data?.data?.length > 0) {
           setContents(resp?.data?.data);
@@ -34,7 +33,7 @@ function FeedAroundPage() {
       } catch (error) {
         console.error("Error fetching data:", error);
       } finally {
-        setLoading(false);
+        setLoading(false); // 처음 데이터 로딩 후 로딩 상태를 false로 설정
       }
     };
 
@@ -86,11 +85,8 @@ function FeedAroundPage() {
   };
 
   const loadMore = async () => {
-    if (loading) return;
+    if (pages + 1 > maxPage) return;
     try {
-      console.log(pages, maxPage);
-      if (pages + 1 > maxPage) return;
-      setLoading(true);
       const feedContResp = await searchFeedRequest(searchKeyword, pages + 1);
       if (feedContResp?.data) {
         setContents((state) => [...state, ...feedContResp?.data?.data]);
@@ -98,8 +94,6 @@ function FeedAroundPage() {
       }
     } catch (e) {
       console.log(e);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -108,6 +102,7 @@ function FeedAroundPage() {
       prevContents.filter((content) => content.id !== contentId)
     );
   };
+
   return (
     <div className="flex h-full">
       <div className="flex flex-col flex-1">
@@ -137,4 +132,5 @@ function FeedAroundPage() {
     </div>
   );
 }
+
 export default FeedAroundPage;

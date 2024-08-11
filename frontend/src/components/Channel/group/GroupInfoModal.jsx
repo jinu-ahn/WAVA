@@ -39,7 +39,9 @@ function GroupInfoModal({ onClose, groupId }) {
         {channelData?.channelTitle || "LOADING..."}
       </p>
       <div className="divider" />
-      <p>{channelData?.channelDescription || "LOADING..."}</p>
+      <p className="text-center">
+        {channelData?.channelDescription || "LOADING..."}
+      </p>
 
       <div className="divider" />
       <div>

@@ -21,9 +21,9 @@ function ChannelRoomItem({ roomInfo, onClick }) {
   if (isFull) titleText = "참여 불가";
   if (isJoinedChannel) titleText = "채널로 이동";
 
-  let btnColor = "bg-blue-500 hover:bg-blue-600";
-  if (isFull) btnColor = "bg-red-500 hover:bg-red-600";
-  if (isJoinedChannel) btnColor = "bg-green-500 hover:bg-green-600";
+  let btnColor = "bg-mainBlue hover:bg-blue-600";
+  if (isFull) btnColor = "bg-gray-500 hover:bg-red-600";
+  if (isJoinedChannel) btnColor = "bg-green-700 hover:bg-green-600";
 
   const joinChannelHandle = () => {
     onClick();
@@ -35,7 +35,8 @@ function ChannelRoomItem({ roomInfo, onClick }) {
     clickFunction = () => navigate(`/channel/group/${roomInfo.channelId}`);
 
   return (
-    <div className="bg-white rounded-lg shadow p-4">
+    <div className="bg-white rounded-lg shadow p-4 flex flex-col h-60">
+      {" "}
       <div className="flex justify-between items-center mb-2">
         <h3 className="text-lg font-semibold">{roomInfo.channelTitle}</h3>
         <span
@@ -44,13 +45,21 @@ function ChannelRoomItem({ roomInfo, onClick }) {
           {roomInfo.userCount}/4 👤
         </span>
       </div>
-      <p className="text-gray-600 mb-4">{roomInfo.channelDescription}</p>
-      <button
-        onClick={clickFunction}
-        className={`${btnColor}  text-white px-4 py-2 rounded  transition-colors`}
-      >
-        {titleText}
-      </button>
+      <div className="flex-grow overflow-y-auto mb-4">
+        {" "}
+        {/* 스크롤 가능한 설명 영역 */}
+        <p className="text-gray-600">{roomInfo.channelDescription}</p>
+      </div>
+      <div className="mt-auto">
+        {" "}
+        {/* 버튼을 하단에 고정 */}
+        <button
+          onClick={clickFunction}
+          className={`${btnColor} text-white px-4 py-2 rounded transition-colors`}
+        >
+          {titleText}
+        </button>
+      </div>
     </div>
   );
 }
