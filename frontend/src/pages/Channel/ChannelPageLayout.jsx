@@ -161,7 +161,10 @@ function ChannelPage() {
   };
   return (
     <>
-      <div className="flex h-screen ">
+      <div
+        className="flex h-screen"
+        style={{ fontFamily: "'IBM Plex Sans KR', sans-serif" }}
+      >
         {/* navbar */}
         <Explorer />
 
