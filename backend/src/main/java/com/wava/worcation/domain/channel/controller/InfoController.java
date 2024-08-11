@@ -13,7 +13,6 @@ import com.wava.worcation.domain.user.domain.AuthUser;
 import com.wava.worcation.domain.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +30,6 @@ import java.util.Map;
 public class InfoController{
     public final InfoService infoService;
     private final S3ImageUpLoadService s3ImageUpLoadService;
-    private final FeedRepository feedRepository;
-    private final ChannelRepository channelRepository;
 
     @PostMapping("/create")
     public ResponseEntity<?> createInfo(
