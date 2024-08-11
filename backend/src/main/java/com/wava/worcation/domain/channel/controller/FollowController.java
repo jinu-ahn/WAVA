@@ -28,19 +28,10 @@ public class FollowController {
     private final UserRepository userRepository;
 
     @PostMapping
-    public ResponseEntity<FollowResponseDto> follow(@RequestBody FollowRequestDto requestDto, @AuthenticationPrincipal UserDetails userDetails) {
-        Long channelId = requestDto.getChannelId();
-        String email = userDetails.getUsername();
-        Long userId = userRepository.findByEmail(email).get().getId();
-        Map<String,Object> map = followService.follow(channelId,userId);
-        FollowResponseDto responseDto;
-        responseDto =  FollowResponseDto.builder()
-                .channelId(channelId)
-                .followingCount((Integer)map.get("follow"))
-                .followerCount((Integer)map.get("follower"))
-                .build();
+    public ResponseEntity<ApiResponse<FollowResponseDto>> follow(@RequestBody FollowRequestDto requestDto, @AuthUser User user) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.success(followService.follow(requestDto,user)));
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
     @GetMapping("/{nickname}/follower")

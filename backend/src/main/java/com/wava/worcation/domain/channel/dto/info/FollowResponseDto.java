@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FollowResponseDto {
     private Long channelId;
+    private String nickname;
     private int followerCount;
     private int followingCount;
 }
