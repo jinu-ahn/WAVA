@@ -8,7 +8,6 @@ function ChannelSubIcon({ type, el }) {
     <NavLink
       tabIndex={-1}
       aria-hidden={true}
-      key={el.channelId}
       draggable={false}
       to={`/channel/${type}/${el.channelId}`}
       className="w-full"
