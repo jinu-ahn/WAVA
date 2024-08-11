@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 public class CursorDto {
     private Long channelId;
     private String nickName;
-    private int x;
-    private int y;
+    private double x;
+    private double y;
 }
