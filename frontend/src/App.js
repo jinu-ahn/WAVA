@@ -143,31 +143,33 @@ function App() {
         </div>
       </BrowserRouter>
 
-      <div className="fixed inset-x-0 top-0 flex justify-center mt-4">
-        <div
-          className={` p-4 bg-white shadow-lg rounded-md transition-opacity ${
-            showInstallPrompt ? "opacity-100" : "opacity-0"
-          } ${showInstallPrompt ? "fade-in" : ""}`}
-        >
-          <p className="text-center text-lg mb-4">
-            WAVA를 설치하고 더 빠르고 편리하게 이용하세요!
-          </p>
-          <div className="flex justify-center space-x-4">
-            <button
-              onClick={handleInstallClick}
-              className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
-            >
-              확인
-            </button>
-            <button
-              onClick={handleInstallClose}
-              className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
-            >
-              닫기
-            </button>
+      {showInstallPrompt && (
+        <div className="fixed inset-x-0 bottom-2 flex justify-center mt-4">
+          <div
+            className={` p-4 bg-white shadow-lg rounded-md transition-opacity ${
+              showInstallPrompt ? "opacity-100" : "opacity-0"
+            } ${showInstallPrompt ? "fade-in" : ""}`}
+          >
+            <p className="text-center text-lg mb-4">
+              WAVA를 설치하고 더 빠르고 편리하게 이용하세요!
+            </p>
+            <div className="flex justify-center space-x-4">
+              <button
+                onClick={handleInstallClick}
+                className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+              >
+                확인
+              </button>
+              <button
+                onClick={handleInstallClose}
+                className="bg-gray-500 text-white px-4 py-2 rounded-md hover:bg-gray-600"
+              >
+                닫기
+              </button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </>
   );
 }
