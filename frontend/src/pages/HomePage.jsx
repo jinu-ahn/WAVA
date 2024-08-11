@@ -234,6 +234,7 @@ function HomePage() {
           </AnimatedDiv>
         </section>
       </div>
+
       {showInstallPrompt && (
         <div className="fixed inset-x-0 bottom-2 flex justify-center mt-4">
           <div
