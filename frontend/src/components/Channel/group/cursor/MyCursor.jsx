@@ -3,7 +3,7 @@ import React from "react";
 export const MyCursor = ({ color, nickName }) => {
 
   return (
-    <div>
+    <div className="flex flex-col items-center mt-10 ms-6">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 35 35"
@@ -23,7 +23,7 @@ export const MyCursor = ({ color, nickName }) => {
         </g>
       </svg>
       <div
-        className=" bg-black rounded-md shadow-md text-[10px] text-white text-center"
+        className="px-2 py-1 inline-block bg-black rounded-md shadow-md text-[10px] text-white text-center -mt-3"
       >
         {nickName}
       </div>

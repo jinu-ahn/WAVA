@@ -7,6 +7,7 @@ import Cursors from "./cursor/Cursors";
 
 const MapComponent = (props) => {
   const mapContainer = useRef(null);
+  const cursorsRef = useRef(null);
   const [map, setMap] = useState(null);
   const [drawingManager, setDrawingManager] = useState(null);
   const [places, setPlaces] = useState([]);
@@ -15,9 +16,22 @@ const MapComponent = (props) => {
   const [markers, setMarkers] = useState([]);
   const [customMarkers, setCustomMarkers] = useState([]);
   const infowindow = useRef(null);
+  const [selectedUser, setSelectedUser] = useState("");
 
-  // const currentUser = useUsers(awareness)[awareness.clientID];
 
+  // 특정 사용자의 커서 위치로 지도 center를 이동
+  const handleFollowUser = () => {
+    const cursors = cursorsRef.current.getCursorMarkers();
+    if (selectedUser && map && cursors[selectedUser]) {
+      const position = cursors[selectedUser].getPosition();
+      map.panTo(position); // 선택된 사용자의 위치로 지도 이동
+    } else {
+      Swal.fire({
+        title: "사용자를 선택해주세요",
+        icon: "warning",
+      });
+    }
+  };
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -383,9 +397,24 @@ const MapComponent = (props) => {
             다각형
           </button>
         </div>
+        <div className="p-2 flex space-x-2 mt-2">
+          <input
+            type="text"
+            value={selectedUser}
+            onChange={(e) => setSelectedUser(e.target.value)}
+            placeholder="사용자 닉네임 입력"
+            className="p-2 border rounded flex-grow focus:bg-opacity-100"
+          />
+          <button
+            onClick={handleFollowUser}
+            className="p-2 bg-green-600 text-white rounded hover:bg-green-700"
+          >
+            사용자 따라가기
+          </button>
+        </div>
       </div>
       <div ref={mapContainer} className="flex-grow h-screen">
-        {map && <Cursors channelId={props.channelId} map={map} />}
+        {map && <Cursors ref={cursorsRef} channelId={props.channelId} map={map} />}
       </div>
       <div className="absolute bottom-0 left-0 w-full p-4 bg-white bg-opacity-60 z-10 max-h-40 overflow-y-auto">
         <ul>
