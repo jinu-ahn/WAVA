@@ -37,7 +37,6 @@ function ChannelRoomItem({ roomInfo, onClick }) {
   return (
     <div className="bg-white rounded-lg shadow p-4 flex flex-col h-60">
       {" "}
-      {/* 높이 고정 */}
       <div className="flex justify-between items-center mb-2">
         <h3 className="text-lg font-semibold">{roomInfo.channelTitle}</h3>
         <span
