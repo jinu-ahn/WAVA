@@ -1,5 +1,6 @@
 package com.wava.worcation.domain.channel.controller;
 
+import com.wava.worcation.common.response.ApiResponse;
 import com.wava.worcation.domain.channel.dto.info.FollowInfoDto;
 import com.wava.worcation.domain.channel.dto.info.FollowRequestDto;
 import com.wava.worcation.domain.channel.dto.info.FollowResponseDto;
@@ -43,21 +44,15 @@ public class FollowController {
     }
 
     @GetMapping("/{channelId}/follower")
-    public ResponseEntity<FollowInfoDto> getFollowers(@PathVariable Long channelId) {
-        List<FollowInfoDto.UserFollowInfoDto> followList = followService.getFollowers(channelId);
-        FollowInfoDto responseDto  = FollowInfoDto.builder()
-                .Id(channelId)
-                .userList(followList)
-                .build();
-        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    public ResponseEntity<ApiResponse<FollowInfoDto>> getFollowers(@PathVariable String usernickname) {
+
+        FollowInfoDto followInfoDto = followService.getFollowers(usernickname);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(followInfoDto));
     }
     @GetMapping("/{channelId}/following")
-    public ResponseEntity<FollowInfoDto> getFollowings(@PathVariable Long channelId) {
-        List<FollowInfoDto.UserFollowInfoDto> followList = followService.getFollowings(channelId);
-        FollowInfoDto responseDto  = FollowInfoDto.builder()
-                .Id(channelId)
-                .userList(followList)
-                .build();
-        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    public ResponseEntity<ApiResponse<FollowInfoDto>> getFollowings(@PathVariable String usernickname) {
+
+        FollowInfoDto followInfoDto = followService.getFollowings(usernickname);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(followInfoDto));
     }
 }

@@ -9,7 +9,7 @@ import java.util.Map;
 public interface FollowService {
     Map<String, Object> follow(Long channelId, Long userId);
 
-    List<FollowInfoDto.UserFollowInfoDto> getFollowers(Long channelId);
+    FollowInfoDto getFollowers(String usernickname);
 
-    List<FollowInfoDto.UserFollowInfoDto> getFollowings(Long channelId);
+    FollowInfoDto getFollowings(String usernickname);
 }

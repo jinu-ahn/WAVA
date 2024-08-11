@@ -50,8 +50,8 @@ public class PersonalServiceImpl implements PersonalService {
                 .sigungu(channel.getChannelSigungu())
                 .description(channel.getChannelDescription())
                 .profileImage(userRepository.findById(userId).orElseThrow(ResourceNotFoundException::new).getProfileImg())
-                .follow(followService.getFollowings(channel.getId()).size())
-                .follower(followService.getFollowers(channel.getId()).size())
+                .follow(followService.getFollowings(nickName).getUserList().size())
+                .follower(followService.getFollowers(nickName).getUserList().size())
                 .feedCount(feedcount)
                 .build()
         ));
