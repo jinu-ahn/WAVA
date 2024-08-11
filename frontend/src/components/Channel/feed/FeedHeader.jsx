@@ -156,7 +156,7 @@ const FeedHeader = ({
                   isMobile ? "text-xl" : "text-2xl"
                 } font-bold mr-2`}
               >
-                {userInfo?.nickName || " - - - - - "}
+                {userInfo?.nickName || " - - - "}
               </h1>
             </div>
             {loginedUserNickName === ownerUserNickName && (
@@ -191,7 +191,7 @@ const FeedHeader = ({
             ) : (
               <div className="flex items-center">
                 <p className="text-gray-700 mr-2">
-                  {userInfo?.description || " - - - - - - - - - - "}
+                  {userInfo?.description || " - - - - - "}
                 </p>
                 {loginedUserNickName === ownerUserNickName && (
                   <button

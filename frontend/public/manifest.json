@@ -1,6 +1,7 @@
 {
   "short_name": "WAVA",
   "name": "WAVA:일과 휴식의 어시스턴트",
+  "prefer_related_applications": true,
   "icons": [
     {
       "src": "/icons/wava-64x64.png",

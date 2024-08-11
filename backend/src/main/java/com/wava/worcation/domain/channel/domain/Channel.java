@@ -58,6 +58,15 @@ public class Channel {
     @Column(name = "channel_type", nullable = false, length = 4)
     private String channelType;
 
+    @Column(name = "red")
+    private int red;
+
+    @Column(name = "green")
+    private int green;
+
+    @Column(name = "blue")
+    private int blue;
+
     @OneToMany(mappedBy = "channel", cascade = CascadeType.REMOVE)
     private List<Chat> chat;
 

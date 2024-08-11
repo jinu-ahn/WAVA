@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
@@ -29,62 +29,67 @@ function App() {
       }
     }
   }, []);
+
   return (
-    <BrowserRouter>
-      <div className="App flex flex-col min-h-screen">
-        <Navbar className="m-1" />
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/signup" element={<SignupPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route
-              path="/worcation"
-              element={<AuthenticatedRouter element={<WorcationPage />} />}
-            />
-            <Route
-              path="/dashboard"
-              element={
-                <AuthenticatedRouter
-                  worcation={true}
-                  element={<DashboardPage />}
+    <>
+      <BrowserRouter>
+        <div className="App flex flex-col min-h-screen">
+          <Navbar className="m-1" />
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/signup" element={<SignupPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route
+                path="/worcation"
+                element={<AuthenticatedRouter element={<WorcationPage />} />}
+              />
+              <Route
+                path="/dashboard"
+                element={
+                  <AuthenticatedRouter
+                    worcation={true}
+                    element={<DashboardPage />}
+                  />
+                }
+              />
+
+              <Route path="/video-chat" element={<VideoChat />} />
+
+              {/* 중첩 라우팅 */}
+              <Route
+                path="/channel"
+                element={
+                  <AuthenticatedRouter element={<ChannelPageLayout />} />
+                }
+              >
+                {/* 그룹 시작 / 그룹 검색, 그룹 방 */}
+                <Route
+                  path="/channel/group/discover-groups"
+                  element={<GroupDiscoverPage />}
                 />
-              }
-            />
+                <Route
+                  path="/channel/group/:groupId"
+                  element={<GroupChannelPage />}
+                />
+                {/* 그룹 끝 */}
 
-            <Route path="/video-chat" element={<VideoChat />} />
+                {/* 피드 시작 / 둘러보기, 개인 피드 */}
+                <Route path="/channel/feed" element={<FeedAroundPage />} />
+                <Route
+                  path="/channel/feed/:userId"
+                  element={<FeedPersonalPage />}
+                />
+                {/* 피드 끝 */}
+              </Route>
 
-            {/* 중첩 라우팅 */}
-            <Route
-              path="/channel"
-              element={<AuthenticatedRouter element={<ChannelPageLayout />} />}
-            >
-              {/* 그룹 시작 / 그룹 검색, 그룹 방 */}
-              <Route
-                path="/channel/group/discover-groups"
-                element={<GroupDiscoverPage />}
-              />
-              <Route
-                path="/channel/group/:groupId"
-                element={<GroupChannelPage />}
-              />
-              {/* 그룹 끝 */}
-
-              {/* 피드 시작 / 둘러보기, 개인 피드 */}
-              <Route path="/channel/feed" element={<FeedAroundPage />} />
-              <Route
-                path="/channel/feed/:userId"
-                element={<FeedPersonalPage />}
-              />
-              {/* 피드 끝 */}
-            </Route>
-
-            <Route path="*" element={<NotFoundPage />} />
-          </Routes>
-        </main>
-        <Footer />
-      </div>
-    </BrowserRouter>
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
+          </main>
+          <Footer />
+        </div>
+      </BrowserRouter>
+    </>
   );
 }
 
