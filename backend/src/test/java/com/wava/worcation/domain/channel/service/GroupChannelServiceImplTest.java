@@ -5,10 +5,12 @@ import com.wava.worcation.domain.channel.domain.Channel;
 import com.wava.worcation.domain.channel.domain.ChannelUser;
 import com.wava.worcation.domain.channel.dto.request.GroupChannelRequestDto;
 import com.wava.worcation.domain.channel.dto.response.GroupChannelResponseDto;
+import com.wava.worcation.domain.channel.dto.response.GroupDetailResponseDto;
 import com.wava.worcation.domain.channel.enums.ChannelType;
 import com.wava.worcation.domain.channel.repository.ChannelRepository;
 import com.wava.worcation.domain.channel.repository.ChannelUserRepository;
 import com.wava.worcation.domain.user.domain.User;
+import com.wava.worcation.domain.user.dto.response.GroupUserResponseDto;
 import com.wava.worcation.domain.worcation.dao.WorcationRepository;
 import com.wava.worcation.domain.worcation.domain.Worcation;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,10 +24,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -116,8 +120,7 @@ class GroupChannelServiceImplTest {
 
 
         //given
-
-        Channel dbChannelData = Channel.builder()
+        Channel expectedChannel1 = Channel.builder()
                 .id(56L)
                 .user(User.builder().id(63L).build())
                 .channelSido("서울특별시")
@@ -127,12 +130,44 @@ class GroupChannelServiceImplTest {
                 .channelType("C002")
                 .build();
 
-        List<Channel> dbChannelList = List.of();
-
         Worcation worcation = Worcation.builder()
                 .sido("서울특별시")
                 .build();
 
+        Channel expectedChannel2 = Channel.builder()
+                .id(60L)
+                .user(User.builder().id(63L).build())
+                .channelSido("서울특별시")
+                .channelSigungu("강남구")
+                .channelTitle("안녕")
+                .channelDescription("안녕님의 채널 입니다.")
+                .channelType("C002")
+                .build();
+
+        List<Channel> channelList = new ArrayList<>();
+        channelList.add(expectedChannel1);
+        channelList.add(expectedChannel2);
+
+
+        //when
+        when(worcationRepository.findByUserId(user.getId())).thenReturn(worcation);
+        when(channelRepository.findAllByChannelType(ChannelType.GROUP.getCode(), worcation.getSido())).thenReturn(channelList);
+        ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> response = groupChannelServiceImpl.showAllGroupChannel(user);
+
+
+
+        //then
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(2, response.getBody().getData().size());
+        assertEquals(expectedChannel1.getId(), response.getBody().getData().get(0).getChannelId());
+        assertEquals(expectedChannel2.getId(), response.getBody().getData().get(1).getChannelId());
+
+    }
+
+    @Test
+    void getGroupInfo(){
+
+        //given
         Channel expectedChannel = Channel.builder()
                 .id(56L)
                 .user(User.builder().id(63L).build())
@@ -143,23 +178,49 @@ class GroupChannelServiceImplTest {
                 .channelType("C002")
                 .build();
 
-        List<Channel> channelList = List.of(expectedChannel);
+        User user = User.builder()
+                .id(1L)
+                .nickName("이병수")
+                .profileImg("testProfile.jpg")
+                .worcation(Worcation.builder().job("Developer").build())
+                .build();
+
+        ChannelUser channelUser = ChannelUser.builder()
+                .id(1L)
+                .user(user)
+                .build();
+
+
+        List<ChannelUser> channelUserList = Collections.singletonList(channelUser);
+        when(channelRepository.findById(expectedChannel.getId())).thenReturn(Optional.of(expectedChannel));
+        when(channelUserRepository.findByChannelId(expectedChannel.getId())).thenReturn(channelUserList);
 
         //when
-        when(worcationRepository.findByUserId(user.getId())).thenReturn(worcation);
-        when(channelRepository.findAllByChannelType(ChannelType.GROUP.getCode(), worcation.getSido())).thenReturn(channelList);
+        ResponseEntity<ApiResponse<GroupDetailResponseDto>> groupInfo = groupChannelServiceImpl.getGroupInfo(expectedChannel.getId());
 
-        //실제 메서드 호출
-        //then
-        ResponseEntity<ApiResponse<List<GroupChannelResponseDto>>> response = groupChannelServiceImpl.showAllGroupChannel(user);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
-    }
-
-    @Test
-    void groupGroupDetail(){
-
-        Channel channel = Channel.builder()
-
+        GroupDetailResponseDto expectedResponse = GroupDetailResponseDto.builder()
+                .channelId(expectedChannel.getId())
+                .channelTitle(expectedChannel.getChannelTitle())
+                .channelDescription(expectedChannel.getChannelDescription())
+                .channelMemo(expectedChannel.getChannelMemo())
+                .user(Collections.singletonList(
+                        GroupUserResponseDto.builder()
+                                .userId(user.getId())
+                                .nickName(user.getNickName())
+                                .profile(user.getProfileImg())
+                                .job(user.getWorcation().getJob())
+                                .build()
+                ))
                 .build();
+
+        //then
+        assertEquals(HttpStatus.OK , groupInfo.getStatusCode());
+        assertNotNull(groupInfo.getBody().getData());
+
+        assertEquals(expectedResponse, groupInfo.getBody().getData());
+
+
     }
+
+
 }

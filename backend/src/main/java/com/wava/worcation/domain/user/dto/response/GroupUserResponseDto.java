@@ -1,9 +1,11 @@
 package com.wava.worcation.domain.user.dto.response;
 
 import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 
-@Getter
+
+@Data
 @Builder
 public class GroupUserResponseDto {
     private Long userId;
