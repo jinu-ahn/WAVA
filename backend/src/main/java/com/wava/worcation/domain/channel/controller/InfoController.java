@@ -30,12 +30,9 @@ import java.util.Map;
 @Slf4j
 public class InfoController{
     public final InfoService infoService;
-    @Autowired
-    private S3ImageUpLoadService s3ImageUpLoadService;
-    @Autowired
-    private FeedRepository feedRepository;
-    @Autowired
-    private ChannelRepository channelRepository;
+    private final S3ImageUpLoadService s3ImageUpLoadService;
+    private final FeedRepository feedRepository;
+    private final ChannelRepository channelRepository;
 
     @PostMapping("/create")
     public ResponseEntity<?> createInfo(
