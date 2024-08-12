@@ -23,7 +23,7 @@ public class MapPinController {
     private final MapPinService mapPinService;
     private final SimpMessagingTemplate messagingTemplate;
 
-    @MessageMapping("/position")
+    @MessageMapping("/marker/position")
     public ResponseEntity<ApiResponse<MapPinResponseDto>> markerFunction(@Payload MapPinRequestDto mapPinRequestDto) {
         MapPinResponseDto mapPinResponseDto = mapPinService.markerFunction(mapPinRequestDto);
         messagingTemplate.convertAndSend("/sub/map/" + mapPinResponseDto.getChannelId(), mapPinResponseDto);
