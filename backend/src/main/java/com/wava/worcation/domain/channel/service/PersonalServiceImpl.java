@@ -1,7 +1,9 @@
 package com.wava.worcation.domain.channel.service;
 
-import com.wava.worcation.common.exception.ResourceNotFoundException;
+import com.wava.worcation.common.exception.CustomException;
 import com.wava.worcation.common.response.ApiResponse;
+import com.wava.worcation.common.response.ErrorCode;
+import com.wava.worcation.common.s3.service.S3ImageUpLoadService;
 import com.wava.worcation.domain.channel.domain.Channel;
 import com.wava.worcation.domain.channel.domain.Feed;
 import com.wava.worcation.domain.channel.dto.info.FeedSortResponseDto;
@@ -19,6 +21,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 
 @Transactional
@@ -37,27 +42,28 @@ public class PersonalServiceImpl implements PersonalService {
     private final com.wava.worcation.domain.channel.service.FollowService followService;
     private final com.wava.worcation.domain.channel.service.InfoService infoService;
     private final FollowRepository followRepository;
+    private final S3ImageUpLoadService s3ImageUpLoadService;
 
     @Override
-    public ResponseEntity<ApiResponse<PersonalResponseDto>> ChannelInfo(String nickName,User user){
+    public PersonalResponseDto channelInfo(String nickName,User user){
+
         Long userId = userRepository.findByNickName(nickName).getId();
         Channel channel = channelRepository.findChannelByUserId(userId);
         int feedcount = infoService.feedCount(userId);
 
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponse.success(PersonalResponseDto.builder()
+        return PersonalResponseDto.builder()
                 .id(channel.getId())
                 .userId(userId)
                 .nickName(nickName)
                 .sido(channel.getChannelSido())
                 .sigungu(channel.getChannelSigungu())
                 .description(channel.getChannelDescription())
-                .profileImage(userRepository.findById(userId).orElseThrow(ResourceNotFoundException::new).getProfileImg())
+                .profileImage(userRepository.findById(userId).orElseThrow(()-> new CustomException(ErrorCode.USER_NOT_FOUND)).getProfileImg())
                 .follow(followService.getFollowings(nickName,user).getUserList().size())
                 .follower(followService.getFollowers(nickName,user).getUserList().size())
                 .feedCount(feedcount)
                 .isFollowing(followRepository.existsByChannelAndUser(channel,user))
-                .build()
-        ));
+                .build();
     }
 
     @Override
@@ -84,10 +90,16 @@ public class PersonalServiceImpl implements PersonalService {
     }
 
     @Override
-    public ResponseEntity<?> changeProfile(String imageUrl, User user) {
-        user.updateProfileImg(imageUrl);
-        userRepository.save(user);
-        return ResponseEntity.ok().body(ApiResponse.success(imageUrl));
+    public String changeProfile(MultipartFile file, User user) {
+        try {
+            String imageUrl = s3ImageUpLoadService.uploadImage(file);
+            user.updateProfileImg(imageUrl);
+            userRepository.save(user);
+            return imageUrl;
+        }
+        catch (IOException e) {
+            throw new CustomException(ErrorCode.IOEXCEPTION);
+        }
     }
 
     @Override

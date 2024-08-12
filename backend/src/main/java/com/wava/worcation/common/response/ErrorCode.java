@@ -34,7 +34,9 @@ public enum ErrorCode {
     EMAIL_OR_PASSWORD_UNMATCH(HttpStatus.BAD_REQUEST,"이메일 또는 비밀번호가 일치하지 않습니다."),
     ALREADY_FOLLOWING(HttpStatus.BAD_REQUEST,"이미 팔로우중인 채널입니다."),
     NOT_FOLLOWING(HttpStatus.BAD_REQUEST,"팔로우 하지 않는 채널입니다."),
-    SELF_FOLLOWING(HttpStatus.BAD_REQUEST,"자기를 팔로우할수는 없습니다.");
+    SELF_FOLLOWING(HttpStatus.BAD_REQUEST,"자기를 팔로우할수는 없습니다."),
+    IOEXCEPTION(HttpStatus.BAD_REQUEST,"IOEXCEPTION 발생");
+
     
     private HttpStatus status;
     private String message;
