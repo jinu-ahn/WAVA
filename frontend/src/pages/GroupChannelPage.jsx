@@ -227,7 +227,7 @@ const GroupChannelPage = () => {
   const [mode, setMode] = useState(true);
 
   if (loading) {
-    return <LoadingSpinner message={"컨텐츠 로딩중"} />; // 로딩 중 표시
+    return <LoadingSpinner message={"채널을 이동중입니다."} />; // 로딩 중 표시
   }
 
   if (!hasAccess) {
