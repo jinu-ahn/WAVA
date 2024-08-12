@@ -39,13 +39,13 @@ const Explorer = () => {
     <nav
       className={`sidebar ${
         collapsed ? "w-14" : "w-40"
-      } h-full bg-gray-800 text-white flex flex-col justify-between transition-all duration-300 ease`}
+      } h-full bg-gradient-to-b from-gray-700 to-gray-900 text-white flex flex-col justify-between transition-all duration-300 ease shadow-lg`}
     >
       <div>
         <div
           className={`sidebar-top-wrapper flex items-center ${
             collapsed ? "justify-center" : "justify-between"
-          } p-4 border-b border-gray-700 mb-4`}
+          } p-4 border-b border-gray-700 mb-4 shadow-md`}
         >
           <h2
             className={`text-lg font-semibold tracking-wide text-gray-200 ${
@@ -55,7 +55,7 @@ const Explorer = () => {
             WAVA
           </h2>
           <button
-            className="expand-btn bg-gray-700 p-2 rounded-full focus:outline-none hover:bg-gray-600 transition-colors flex items-center justify-center"
+            className="expand-btn bg-gray-700 p-2 rounded-full focus:outline-none hover:bg-gray-600 transition-colors flex items-center justify-center shadow-md"
             onClick={handleToggleCollapse}
           >
             {collapsed ? (
@@ -108,10 +108,10 @@ const Explorer = () => {
             <img
               src={userInfo.profile}
               alt="User Profile"
-              className="w-6 h-6 rounded-full object-cover"
+              className="w-6 h-6 rounded-full object-cover shadow-md"
             />
           ) : (
-            <UserCircleIcon className="w-8 h-8 text-gray-400" />
+            <UserCircleIcon className="w-8 h-8 text-gray-400 shadow-md" />
           )}
           {!collapsed && (
             <div className="avatar-name ml-3">
@@ -130,7 +130,7 @@ const Explorer = () => {
           onClick={logoutFunc}
           className={`logout-btn flex items-center p-4 hover:bg-gray-700 transition-colors w-full ${
             collapsed ? "justify-center" : "justify-start"
-          }`}
+          } shadow-md`}
         >
           <ArrowRightStartOnRectangleIcon className="h-5 w-5 text-gray-400" />
           {!collapsed && (
@@ -148,7 +148,7 @@ const SidebarLink = ({ to, icon, title, collapsed, active, onClick }) => (
   <li className="w-full">
     <NavLink
       to={to}
-      className={`flex items-center p-3 w-full rounded-md transition-colors ${
+      className={`flex items-center p-3 w-full rounded-md transition-colors shadow-md ${
         active
           ? "bg-gray-700 text-white"
           : "text-gray-400 hover:bg-gray-700 hover:text-white"

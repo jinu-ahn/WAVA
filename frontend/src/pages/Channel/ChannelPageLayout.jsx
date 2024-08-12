@@ -38,10 +38,8 @@ function ChannelPage() {
   const location = useLocation();
 
   const [isCreateChannelOpen, setIsCreateChannelOpen] = useState(false);
-  // const [myChannelList, setMyChannelList] = useState([]);
 
   useLayoutEffect(() => {
-    // 현재 경로가 정확히 '/channel'일 때만 리다이렉트
     if (location.pathname?.replaceAll("/", "") === "channel") {
       navigate(`/channel/feed/${myId}`);
     }
@@ -76,7 +74,6 @@ function ChannelPage() {
 
     const onMouseMove = (e) => {
       if (!isDown) return;
-      // e.preventDefault();
       const y = e.pageY - ref.current.offsetTop;
       const walk = (y - startY) * 2;
       ref.current.scrollTop = scrollTop - walk;
@@ -118,7 +115,6 @@ function ChannelPage() {
 
     const onTouchMove = (e) => {
       if (!isDown) return;
-      // e.preventDefault();
       const y = e.touches[0].pageY - ref.current.offsetTop;
       const walk = (y - startY) * 2;
       ref.current.scrollTop = scrollTop - walk;
@@ -150,110 +146,89 @@ function ChannelPage() {
     handleTouchEvents(infoChannelsRef);
   }, []);
 
-  // 채널 생성 포탈 오픈
   const handleChannelPortalOpen = () => {
     setIsCreateChannelOpen(true);
   };
 
-  // 채널 생성 포탈 닫기
   const handleChannelPortalClose = () => {
     setIsCreateChannelOpen(false);
   };
+
   return (
-    <>
-      <div
-        className="flex h-screen"
-        style={{ fontFamily: "'IBM Plex Sans KR', sans-serif" }}
-      >
-        {/* navbar */}
-        <Explorer />
+    <div
+      className="flex h-screen bg-gray-100"
+      style={{ fontFamily: "'IBM Plex Sans KR', sans-serif" }}
+    >
+      <Explorer />
 
-        {/* 여기부터 채널 탐색기 */}
-        <div className="flex flex-col w-16 bg-blue-50 shadow-lg h-screen">
-          <div className="flex-shrink-0 text-center"></div>
-
-          {/* 내채널 */}
-          <div ref={myChannelRef} className="flex-shrink-0 text-center">
-            <div>
-              {isMobile && <MobileExplorer />}
-              <div className="sticky top-0 bg-blue-50 z-[2]">
-                <span>내 채널</span>
-              </div>
+      <div className="flex flex-col w-16 bg-blue-50 shadow-lg h-screen">
+        {isMobile && <MobileExplorer />}
+        <div className="flex-grow overflow-y-auto">
+          {/* My channel */}
+          <div ref={myChannelRef}>
+            <div className="sticky top-0 bg-blue-50 z-10 py-1.5 font-semibold text-gray-700 text-xs text-center">
+              내 채널
             </div>
-            <div className="my-0.5">
-              <NavLink to={`/channel/feed/${myId}`}>
-                {userInfo?.profile ? (
-                  <img
-                    src={userInfo?.profile}
-                    className="w-10 h-10 mx-auto my-0.5 bg-blue-50 rounded-full"
-                  />
-                ) : (
-                  <UserCircleIcon className="w-10 h-10 mx-auto my-0.5 rounded-full" />
-                )}
-              </NavLink>
-            </div>
-            {/* </ChannelSubExplorer> */}
+            <NavLink to={`/channel/feed/${myId}`} className="block p-2">
+              {userInfo?.profile ? (
+                <img
+                  src={userInfo.profile}
+                  alt="Profile"
+                  className="w-12 h-12 mx-auto rounded-full shadow-md hover:shadow-lg transition-all duration-300 border-2 border-blue-200 hover:border-blue-400"
+                />
+              ) : (
+                <UserCircleIcon className="w-12 h-12 mx-auto rounded-full text-blue-500 hover:text-blue-600 transition-all duration-300" />
+              )}
+            </NavLink>
           </div>
 
-          <div className="divider my-1 mx-2" />
-          {/* 정보채널 */}
-          <div ref={infoChannelsRef} className="overflow-y-auto text-center">
-            <div className="sticky top-0 bg-blue-50 z-[2]">
-              <span className="text-sm">정보 채널</span>
+          {/* Info channels */}
+          <div ref={infoChannelsRef}>
+            <div className="sticky top-0 bg-blue-50 z-10 py-1.5 font-semibold text-gray-700 text-xs text-center">
+              정보 채널
             </div>
-
-            <div>
-              <NavLink to={`/channel/feed`}>
-                <GlobeAltIcon className="w-10 h-10 mx-auto my-2 border border-gray-300 rounded-full " />
-              </NavLink>
-            </div>
+            <NavLink to={`/channel/feed`} className="block p-2">
+              <GlobeAltIcon className="w-12 h-12 mx-auto border border-gray-300 rounded-full shadow-md hover:shadow-lg hover:border-blue-400 transition-all duration-300 text-blue-500" />
+            </NavLink>
           </div>
-          <div className="divider my-1 mx-2" />
 
-          {/* 모임채널 */}
-          <div
-            ref={GroupChannelsRef}
-            className=" flex-1 overflow-y-auto text-center mb-2"
-          >
+          {/* Group channels */}
+          <div ref={GroupChannelsRef}>
             <ChannelSubExplorer
-              // 그룹 생성 버튼(플러스버튼), 그룹 찾기 버튼(점점점)
-              toolbarBtn={
-                <div className="sticky top-0">
-                  <div
-                    onClick={handleChannelPortalOpen}
-                    className=" bg-blue-50 flex items-center justify-center"
-                  >
-                    <div className="border cursor-pointer rounded-full h-10 w-10 hover border-gray-300 hover:bg-gray-100 transition-colors duration-200 ">
-                      <PlusIcon className="w-6 h-6 m-4 mx-auto my-2 text-mainTxt" />
-                    </div>
-                  </div>
-                  <NavLink
-                    to="/channel/group/discover-groups"
-                    className="py-2 bg-blue-50 flex items-center justify-center"
-                  >
-                    <div className="border cursor-pointer rounded-full h-10 w-10 hover border-gray-300 hover:bg-gray-100 transition-colors duration-200 ">
-                      <MagnifyingGlassIcon className="w-6 h-6 m-4 mx-auto my-2 text-mainTxt" />
-                    </div>
-                  </NavLink>
-                </div>
-              }
               type="group"
               data={followChannels}
-            >
-              <div className="sticky top-0 bg-blue-50 z-[2]">
-                <span className="text-sm">모임 채널</span>
-              </div>
-            </ChannelSubExplorer>
+              toolbarBtn={
+                <div className="sticky top-0 bg-blue-50 z-10">
+                  <div className="py-1.5 font-semibold text-gray-700 text-xs text-center">
+                    모임 채널
+                  </div>
+                  <div className="flex flex-col items-center space-y-3 mb-3">
+                    <button
+                      onClick={handleChannelPortalOpen}
+                      className="w-12 h-12 border border-gray-300 rounded-full hover:border-blue-400 hover:bg-gray-100 transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center"
+                    >
+                      <PlusIcon className="w-6 h-6 text-blue-500" />
+                    </button>
+                    <NavLink
+                      to="/channel/group/discover-groups"
+                      className="w-12 h-12 border border-gray-300 rounded-full hover:border-blue-400 hover:bg-gray-100 transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center"
+                    >
+                      <MagnifyingGlassIcon className="w-6 h-6 text-blue-500" />
+                    </NavLink>
+                  </div>
+                </div>
+              }
+            />
           </div>
-        </div>
-
-        {/* 채널 탐색기 끝, 하단은 콘텐츠 영역 */}
-        <div className="flex-1">
-          <Outlet />
         </div>
       </div>
 
-      {/* 채널 생성 포탈 */}
+      {/* Content area */}
+      <div className="flex-1 bg-white shadow-lg overflow-hidden">
+        <Outlet />
+      </div>
+
+      {/* Channel creation modal */}
       <CustomModal
         styles={"backdrop-blur-sm"}
         isOpen={isCreateChannelOpen}
@@ -261,7 +236,7 @@ function ChannelPage() {
       >
         <CreateGroupChannel onClose={handleChannelPortalClose} />
       </CustomModal>
-    </>
+    </div>
   );
 }
 
