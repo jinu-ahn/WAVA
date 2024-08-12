@@ -42,7 +42,7 @@ function FeedPersonalPage() {
           setUserInfo(feedInfoResp?.data);
         } else {
           // alert("존재하지 않는 유저입니다!");
-          navigate("/channel");
+          navigate("/");
         }
         const feedContResp = await readFeedContentRequest(userId);
         if (feedContResp?.data?.data?.length > 0) {
