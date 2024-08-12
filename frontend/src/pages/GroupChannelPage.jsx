@@ -192,12 +192,13 @@ const GroupChannelPage = () => {
   const navigate = useNavigate();
 
   const handleSelectUser = (nickName) => {
-    setSelectedUserNickName(nickName)
-  }
+    setSelectedUserNickName(nickName);
+  };
 
   useEffect(() => {
     const isJoined = async () => {
       try {
+        setLoading(true);
         // 그룹에 가입한 사람인지 확인하는 작업
         const resp = await groupChannelAPI.isValidatedGroupMember(groupId);
         if (resp?.data?.isJoin) {
@@ -221,7 +222,6 @@ const GroupChannelPage = () => {
       }
     };
     isJoined();
-
   }, [groupId, navigate]);
 
   const [mode, setMode] = useState(true);
@@ -234,21 +234,30 @@ const GroupChannelPage = () => {
     return null; // 리디렉션 처리 후에는 아무 것도 렌더링하지 않음
   }
 
-  
   console.log(groupId);
   return (
     <div className="relative flex h-screen">
       {/* 지도 컴포넌트 (3/4) */}
-      
+
       <div className="w-full h-full">
-        <MapComponent channelId={groupId} selectedUserNickName={selectedUserNickName} setSelectedUserNickName={setSelectedUserNickName} />
+        <MapComponent
+          loading={loading}
+          channelId={groupId}
+          selectedUserNickName={selectedUserNickName}
+          setSelectedUserNickName={setSelectedUserNickName}
+        />
       </div>
 
       {/* 채팅 컴포넌트 (1/4) */}
       {mode ? (
         <div className="absolute top-0 right-0 z-20 w-1/4 h-full grid grid-rows-12">
-          <div className="row-span-2 mb-10 mt-2 me-2" >
-            <ControllerComponent mode={mode} setMode={setMode} groupId={groupId} onSelectUser={handleSelectUser} />
+          <div className="row-span-2 mb-10 mt-2 me-2">
+            <ControllerComponent
+              mode={mode}
+              setMode={setMode}
+              groupId={groupId}
+              onSelectUser={handleSelectUser}
+            />
           </div>
           <div className="row-span-11 -mt-8 me-2 mb-2 bg-white rounded-md">
             <ChatComponent mode={mode} setMode={setMode} channelId={groupId} />

@@ -16,8 +16,7 @@ const MapComponent = (props) => {
   const [markers, setMarkers] = useState([]);
   const [customMarkers, setCustomMarkers] = useState([]);
   const infowindow = useRef(null);
-  const {selectedUserNickName, channelId, setSelectedUserNickName } = props
-
+  const { selectedUserNickName, channelId, setSelectedUserNickName } = props;
 
   // 특정 사용자의 커서 위치로 지도 center를 이동
   // const handleFollowUser = () => {
@@ -36,7 +35,7 @@ const MapComponent = (props) => {
     if (selectedUserNickName && cursorsRef.current) {
       const cursors = cursorsRef.current.getCursorMarkers();
       const selectedCursor = cursors[selectedUserNickName];
-      
+
       if (selectedCursor && map) {
         const position = selectedCursor.getPosition();
         map.panTo(position); // 선택된 사용자의 커서 위치로 지도 이동
@@ -47,12 +46,12 @@ const MapComponent = (props) => {
         });
       }
 
-      setSelectedUserNickName(null)
+      setSelectedUserNickName(null);
     }
   }, [selectedUserNickName, map, setSelectedUserNickName]);
 
-
   useEffect(() => {
+    let isMounted = true;
     const script = document.createElement("script");
     script.async = true;
     const apiKey = process.env.REACT_APP_KAKAO_MAPS_API_KEY;
@@ -61,128 +60,147 @@ const MapComponent = (props) => {
 
     script.onload = () => {
       window.kakao.maps.load(() => {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              const lat = position.coords.latitude;
-              const lng = position.coords.longitude;
-              const mapOption = {
-                center: new window.kakao.maps.LatLng(lat, lng),
-                level: 3,
-              };
-              const createdMap = new window.kakao.maps.Map(
-                mapContainer.current,
-                mapOption
-              )
-              setMap(createdMap);
-              initializeDrawingManager(createdMap);
-              initializeClickEventListener(createdMap);
-            },
-            (error) => {
-              console.error("Error fetching current location:", error);
-              const defaultCenter = new window.kakao.maps.LatLng(37.566826, 126.9786567);
-              const mapOption = {
-                center: defaultCenter,
-                level: 3,
-              };
-              const createdMap = new window.kakao.maps.Map(
-                mapContainer.current,
-                mapOption
-              );
-              setMap(createdMap);
-              initializeDrawingManager(createdMap);
-              initializeClickEventListener(createdMap);
-            }
-          )
-        } else {
-          const defaultCenter = new window.kakao.maps.LatLng(37.566826, 126.9786567);
-          const mapOption = {
-            center: defaultCenter,
-            level: 3,
-          };
-          const createdMap = new window.kakao.maps.Map(
-            mapContainer.current,
-            mapOption
-          );
-          setMap(createdMap);
-          initializeDrawingManager(createdMap);
-          initializeClickEventListener(createdMap);
-        }
-
-        const initializeDrawingManager = (createdMap) => {
-          infowindow.current = new window.kakao.maps.InfoWindow({
-            zIndex: 1,
-            removable: true,
-          });
-          const manager = new window.kakao.maps.drawing.DrawingManager({
-            map: createdMap,
-            drawingMode: [
-              window.kakao.maps.drawing.OverlayType.MARKER,
-              window.kakao.maps.drawing.OverlayType.POLYLINE,
-              window.kakao.maps.drawing.OverlayType.RECTANGLE,
-              window.kakao.maps.drawing.OverlayType.CIRCLE,
-              window.kakao.maps.drawing.OverlayType.POLYGON,
-            ],
-            guideTooltip: ["draw", "drag", "edit"],
-            markerOptions: {
-              draggable: true,
-            },
-            polylineOptions: {
-              draggable: true,
-              removable: true,
-              editable: true,
-            },
-            rectangleOptions: {
-              draggable: true,
-              removable: true,
-              editable: true,
-            },
-            circleOptions: {
-              draggable: true,
-              removable: true,
-              editable: true,
-            },
-            polygonOptions: {
-              draggable: true,
-              removable: true,
-              editable: true,
-            },
-          });
-          setDrawingManager(manager);
-  
-          // 마커 생성 완료 이벤트 리스너
-          window.kakao.maps.event.addListener(
-            manager,
-            "drawend",
-            function (data) {
-              const overlay = data.target;
-              const overlayType = data.overlayType;
-              if (overlayType === window.kakao.maps.drawing.OverlayType.MARKER) {
-                handleMarkerCreated(overlay);
-              } else {
-                console.log(`Overlay created, but not handled:`, overlayType);
+        if (isMounted) {
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                const mapOption = {
+                  center: new window.kakao.maps.LatLng(lat, lng),
+                  level: 3,
+                };
+                const createdMap = new window.kakao.maps.Map(
+                  mapContainer.current,
+                  mapOption
+                );
+                setMap(createdMap);
+                initializeDrawingManager(createdMap);
+                initializeClickEventListener(createdMap);
+              },
+              (error) => {
+                console.error("Error fetching current location:", error);
+                const defaultCenter = new window.kakao.maps.LatLng(
+                  37.566826,
+                  126.9786567
+                );
+                const mapOption = {
+                  center: defaultCenter,
+                  level: 3,
+                };
+                const createdMap = new window.kakao.maps.Map(
+                  mapContainer.current,
+                  mapOption
+                );
+                setMap(createdMap);
+                initializeDrawingManager(createdMap);
+                initializeClickEventListener(createdMap);
               }
-            }
-          );
+            );
+          } else {
+            const defaultCenter = new window.kakao.maps.LatLng(
+              37.566826,
+              126.9786567
+            );
+            const mapOption = {
+              center: defaultCenter,
+              level: 3,
+            };
+            const createdMap = new window.kakao.maps.Map(
+              mapContainer.current,
+              mapOption
+            );
+            setMap(createdMap);
+            initializeDrawingManager(createdMap);
+            initializeClickEventListener(createdMap);
+          }
+
+          const initializeDrawingManager = (createdMap) => {
+            infowindow.current = new window.kakao.maps.InfoWindow({
+              zIndex: 1,
+              removable: true,
+            });
+            const manager = new window.kakao.maps.drawing.DrawingManager({
+              map: createdMap,
+              drawingMode: [
+                window.kakao.maps.drawing.OverlayType.MARKER,
+                window.kakao.maps.drawing.OverlayType.POLYLINE,
+                window.kakao.maps.drawing.OverlayType.RECTANGLE,
+                window.kakao.maps.drawing.OverlayType.CIRCLE,
+                window.kakao.maps.drawing.OverlayType.POLYGON,
+              ],
+              guideTooltip: ["draw", "drag", "edit"],
+              markerOptions: {
+                draggable: true,
+              },
+              polylineOptions: {
+                draggable: true,
+                removable: true,
+                editable: true,
+              },
+              rectangleOptions: {
+                draggable: true,
+                removable: true,
+                editable: true,
+              },
+              circleOptions: {
+                draggable: true,
+                removable: true,
+                editable: true,
+              },
+              polygonOptions: {
+                draggable: true,
+                removable: true,
+                editable: true,
+              },
+            });
+            setDrawingManager(manager);
+
+            // 마커 생성 완료 이벤트 리스너
+            window.kakao.maps.event.addListener(
+              manager,
+              "drawend",
+              function (data) {
+                const overlay = data.target;
+                const overlayType = data.overlayType;
+                if (
+                  overlayType === window.kakao.maps.drawing.OverlayType.MARKER
+                ) {
+                  handleMarkerCreated(overlay);
+                } else {
+                  console.log(`Overlay created, but not handled:`, overlayType);
+                }
+              }
+            );
+          };
         }
 
-        const initializeClickEventListener = (createdMap) => {        
-          window.kakao.maps.event.addListener(createdMap, 'click', function(mouseEvent) {        
-              
-              // 클릭한 위도, 경도 정보를 가져옵니다 
+        const initializeClickEventListener = (createdMap) => {
+          window.kakao.maps.event.addListener(
+            createdMap,
+            "click",
+            function (mouseEvent) {
+              // 클릭한 위도, 경도 정보를 가져옵니다
               var latlng = mouseEvent.latLng;
-              
-              var message = '클릭한 위치의 위도는 ' + latlng.getLat() + ' 이고, ';
-              message += '경도는 ' + latlng.getLng() + ' 입니다';
-              
-              console.log(message)
-              
-          });
-        }
+
+              var message =
+                "클릭한 위치의 위도는 " + latlng.getLat() + " 이고, ";
+              message += "경도는 " + latlng.getLng() + " 입니다";
+
+              console.log(message);
+            }
+          );
+        };
       });
     };
 
     return () => {
+      isMounted = false;
+      // kakaomap의 script를 제거하는게 비동기적이라서, 해당 함수의 제거가 완료되지 않은 채로
+      // map컴포넌트가 사라지면 남아있는 함수의 잔존 동작들이(커서, 마커 등)
+      // map을 참조해서 일어나는 에러였던거 같습니다.
+      // 그래서 해당 스크립트와 생명주기를 같이하는 flag를 설정해서 의존성을 만들고,
+      // flag가 있을 때에만 스크립트가 map을 참조하도록 설정
       document.head.removeChild(script);
     };
   }, [channelId]);
