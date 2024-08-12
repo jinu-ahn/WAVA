@@ -1,99 +1,160 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
+import { NavLink, Link } from "react-router-dom";
 import useDeviceStore from "../../store/deviceStore";
 import useUserStore from "../../store/userStore";
-import { NavLink } from "react-router-dom";
-import { Link } from "react-router-dom";
 import {
   CalendarIcon,
   GlobeAltIcon,
-  ArrowLeftStartOnRectangleIcon,
+  ArrowLeftOnRectangleIcon,
   HomeIcon,
+  ArrowsPointingOutIcon,
+  ArrowsPointingInIcon,
+  UserCircleIcon,
 } from "@heroicons/react/24/outline";
 
 const Explorer = () => {
+  const [collapsed, setCollapsed] = useState(false);
+  const [activeLink, setActiveLink] = useState("");
   const isMobile = useDeviceStore((state) => state.isMobile);
   const logoutFunc = useUserStore((state) => state.logoutFunc);
-
-  const [animate, setAnimate] = useState(false);
+  const userInfo = useUserStore((state) => state.userInfo);
 
   useEffect(() => {
-    setAnimate(true);
+    setActiveLink(window.location.pathname);
   }, []);
+
+  const handleToggleCollapse = () => {
+    setCollapsed((prev) => !prev);
+  };
+
+  const handleLinkClick = (link) => {
+    setActiveLink(link);
+  };
 
   if (isMobile) {
     return null;
   }
-  // 대시보드, 채널에서 사용하는 navbar
+
   return (
-    <>
-      {/* Explorer 컴포넌트의 너비를 비례적으로 조정 */}
-      <div
-        className={`relative ${
-          isMobile ? "w-[42px]" : "w-12 min-w-[48px]"
-        } max-w-[110px]`}
-      >
+    <nav
+      className={`sidebar ${
+        collapsed ? "w-14" : "w-40"
+      } h-full bg-gray-800 text-white flex flex-col justify-between transition-all duration-200 ease-in-out`}
+    >
+      <div>
         <div
-          className={`text-mainTxt h-full min-h-[500px]`}
-          style={{
-            backgroundColor: "rgba(40, 57, 67, 0.7)", // 반투명 검은색 배경
-            // boxShadow: "0 4px 10px rgba(0, 0, 0, 0.25)", // 부드러운 그림자 효과
-          }}
+          className={`sidebar-top-wrapper flex items-center ${
+            collapsed ? "justify-center" : "justify-between"
+          } p-4 border-b border-gray-700 mb-4`}
         >
-          <NavLink className="hover:text-mainBlue" to="/">
-            <div
-              className="py-3.5 flex justify-center items-center tooltip tooltip-right z-[11]"
-              data-tip="Home"
-            >
-              <HomeIcon
-                className={`size-8 ${animate ? "animate-dropIn" : ""}`}
-              />
-            </div>
-          </NavLink>
-          <NavLink className="hover:text-mainBlue" to="/channel">
-            <div
-              className="py-3.5 flex justify-center items-center tooltip tooltip-right  z-[11]"
-              data-tip="Channels"
-            >
-              <GlobeAltIcon
-                stroke="currentColor"
-                className={`size-8  hover:text-mainBlue  ${
-                  animate ? "animate-dropIn" : ""
-                }`}
-              />
-            </div>
-          </NavLink>
-          <NavLink className="hover:text-black" to="/dashboard">
-            <div
-              className="py-3.5 flex justify-center items-center tooltip tooltip-right  z-[11]"
-              data-tip="Dashboard"
-            >
-              <CalendarIcon
-                className={`size-8  hover:text-mainBlue ${
-                  animate ? "animate-dropIn" : ""
-                }`}
-              />
-            </div>
-          </NavLink>
+          <h2
+            className={`text-lg font-semibold tracking-wide text-gray-300 ${
+              collapsed ? "hidden" : "block"
+            }`}
+          >
+            WAVA
+          </h2>
+          <button
+            className="expand-btn bg-gray-700 p-2 rounded-full focus:outline-none hover:bg-gray-600 transition-colors flex items-center justify-center"
+            onClick={handleToggleCollapse}
+          >
+            {collapsed ? (
+              <ArrowsPointingOutIcon className="h-5 w-5" />
+            ) : (
+              <ArrowsPointingInIcon className="h-5 w-5" />
+            )}
+          </button>
         </div>
-        <div
-          style={{ position: "absolute", bottom: 0, left: 0, width: "100%" }}
+
+        <ul
+          className={`sidebar-links-wrapper space-y-1 ${
+            collapsed ? "items-center" : "items-start"
+          } flex flex-col`}
         >
-          <Link className="hover:text-black" to="/" onClick={logoutFunc}>
-            <div
-              className="py-3.5 flex justify-center items-center tooltip tooltip-right z-[11]"
-              data-tip="Logout"
-            >
-              <ArrowLeftStartOnRectangleIcon
-                className={`size-8 hover:text-mainBlue ${
-                  animate ? "animate-dropIn" : ""
-                }`}
-              />
-            </div>
-          </Link>
-        </div>
+          <SidebarLink
+            to="/"
+            icon={<HomeIcon className="h-6 w-6" />}
+            title="Home"
+            collapsed={collapsed}
+            active={activeLink === "/"}
+            onClick={() => handleLinkClick("/")}
+          />
+          <SidebarLink
+            to="/channel"
+            icon={<GlobeAltIcon className="h-6 w-6" />}
+            title="Channels"
+            collapsed={collapsed}
+            active={activeLink === "/channel"}
+            onClick={() => handleLinkClick("/channel")}
+          />
+          <SidebarLink
+            to="/dashboard"
+            icon={<CalendarIcon className="h-6 w-6" />}
+            title="Dashboard"
+            collapsed={collapsed}
+            active={activeLink === "/dashboard"}
+            onClick={() => handleLinkClick("/dashboard")}
+          />
+        </ul>
       </div>
-    </>
+
+      <div className="mt-4">
+        <div className="sidebar-profile p-4 border-t border-gray-700 mb-4">
+          <div className="avatar-wrapper flex items-center">
+            {userInfo?.profile ? (
+              <img
+                src={userInfo.profile}
+                alt="User Profile"
+                className="w-6 h-6 rounded-full object-cover"
+              />
+            ) : (
+              <UserCircleIcon className="w-8 h-8 text-gray-400" />
+            )}
+            {!collapsed && (
+              <div className="avatar-name ml-3">
+                <div className="user-name font-medium text-gray-200 text-sm">
+                  {userInfo?.nickName || "User Name"}
+                </div>
+                <div className="text-xs text-gray-400">
+                  {`@${userInfo?.worcation.sido}` || "@username"}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <Link
+          to="/"
+          onClick={logoutFunc}
+          className="logout-btn flex items-center justify-center p-4 hover:bg-gray-700 transition-colors"
+        >
+          <ArrowLeftOnRectangleIcon className="h-5 w-5 text-gray-400" />
+          {!collapsed && (
+            <span className="ml-2 text-gray-300 font-medium text-sm">
+              Logout
+            </span>
+          )}
+        </Link>
+      </div>
+    </nav>
   );
 };
+
+const SidebarLink = ({ to, icon, title, collapsed, active, onClick }) => (
+  <li>
+    <NavLink
+      to={to}
+      className={`flex items-center p-3 w-full rounded-md transition-colors ${
+        active
+          ? "bg-gray-700 text-white"
+          : "text-gray-400 hover:bg-gray-700 hover:text-white"
+      }`}
+      onClick={onClick}
+    >
+      {icon}
+      {!collapsed && <span className="ml-2 text-sm">{title}</span>}
+    </NavLink>
+  </li>
+);
 
 export default Explorer;
