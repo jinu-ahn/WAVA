@@ -42,94 +42,131 @@ const MapComponent = (props) => {
 
     script.onload = () => {
       window.kakao.maps.load(() => {
-        const mapOption = {
-          center: new window.kakao.maps.LatLng(37.566826, 126.9786567),
-          level: 3,
-        };
-        const createdMap = new window.kakao.maps.Map(
-          mapContainer.current,
-          mapOption
-        );
-        setMap(createdMap);
-
-        infowindow.current = new window.kakao.maps.InfoWindow({
-          zIndex: 1,
-          removable: true,
-        });
-
-        const manager = new window.kakao.maps.drawing.DrawingManager({
-          map: createdMap,
-          drawingMode: [
-            window.kakao.maps.drawing.OverlayType.MARKER,
-            window.kakao.maps.drawing.OverlayType.POLYLINE,
-            window.kakao.maps.drawing.OverlayType.RECTANGLE,
-            window.kakao.maps.drawing.OverlayType.CIRCLE,
-            window.kakao.maps.drawing.OverlayType.POLYGON,
-          ],
-          guideTooltip: ["draw", "drag", "edit"],
-          markerOptions: {
-            draggable: true,
-          },
-          polylineOptions: {
-            draggable: true,
-            removable: true,
-            editable: true,
-          },
-          rectangleOptions: {
-            draggable: true,
-            removable: true,
-            editable: true,
-          },
-          circleOptions: {
-            draggable: true,
-            removable: true,
-            editable: true,
-          },
-          polygonOptions: {
-            draggable: true,
-            removable: true,
-            editable: true,
-          },
-        });
-        setDrawingManager(manager);
-
-        // 마커 생성 완료 이벤트 리스너
-        window.kakao.maps.event.addListener(
-          manager,
-          "drawend",
-          function (data) {
-            const overlay = data.target;
-            const overlayType = data.overlayType;
-            if (overlayType === window.kakao.maps.drawing.OverlayType.MARKER) {
-              handleMarkerCreated(overlay);
-            } else {
-              console.log(`Overlay created, but not handled:`, overlayType);
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const lat = position.coords.latitude;
+              const lng = position.coords.longitude;
+              const mapOption = {
+                center: new window.kakao.maps.LatLng(lat, lng),
+                level: 3,
+              };
+              const createdMap = new window.kakao.maps.Map(
+                mapContainer.current,
+                mapOption
+              )
+              setMap(createdMap);
+              initializeDrawingManager(createdMap);
+              initializeClickEventListener(createdMap);
+            },
+            (error) => {
+              console.error("Error fetching current location:", error);
+              const defaultCenter = new window.kakao.maps.LatLng(37.566826, 126.9786567);
+              const mapOption = {
+                center: defaultCenter,
+                level: 3,
+              };
+              const createdMap = new window.kakao.maps.Map(
+                mapContainer.current,
+                mapOption
+              );
+              setMap(createdMap);
+              initializeDrawingManager(createdMap);
+              initializeClickEventListener(createdMap);
             }
-          }
-        );
-        window.kakao.maps.event.addListener(createdMap, 'click', function(mouseEvent) {        
-            
-            // 클릭한 위도, 경도 정보를 가져옵니다 
-            var latlng = mouseEvent.latLng;
-            
-            var message = '클릭한 위치의 위도는 ' + latlng.getLat() + ' 이고, ';
-            message += '경도는 ' + latlng.getLng() + ' 입니다';
-            
-            console.log(message)
-            
-        });
-        // if (currentUser && !currentUser.color) {
-        //   const randomColor =
-        //     USER_COLORS[Math.floor(Math.random() * USER_COLORS.length)];
-        //   awareness.setLocalStateField("color", randomColor);
-        // }
+          )
+        } else {
+          const defaultCenter = new window.kakao.maps.LatLng(37.566826, 126.9786567);
+          const mapOption = {
+            center: defaultCenter,
+            level: 3,
+          };
+          const createdMap = new window.kakao.maps.Map(
+            mapContainer.current,
+            mapOption
+          );
+          setMap(createdMap);
+          initializeDrawingManager(createdMap);
+          initializeClickEventListener(createdMap);
+        }
+
+        const initializeDrawingManager = (createdMap) => {
+          infowindow.current = new window.kakao.maps.InfoWindow({
+            zIndex: 1,
+            removable: true,
+          });
+          const manager = new window.kakao.maps.drawing.DrawingManager({
+            map: createdMap,
+            drawingMode: [
+              window.kakao.maps.drawing.OverlayType.MARKER,
+              window.kakao.maps.drawing.OverlayType.POLYLINE,
+              window.kakao.maps.drawing.OverlayType.RECTANGLE,
+              window.kakao.maps.drawing.OverlayType.CIRCLE,
+              window.kakao.maps.drawing.OverlayType.POLYGON,
+            ],
+            guideTooltip: ["draw", "drag", "edit"],
+            markerOptions: {
+              draggable: true,
+            },
+            polylineOptions: {
+              draggable: true,
+              removable: true,
+              editable: true,
+            },
+            rectangleOptions: {
+              draggable: true,
+              removable: true,
+              editable: true,
+            },
+            circleOptions: {
+              draggable: true,
+              removable: true,
+              editable: true,
+            },
+            polygonOptions: {
+              draggable: true,
+              removable: true,
+              editable: true,
+            },
+          });
+          setDrawingManager(manager);
+  
+          // 마커 생성 완료 이벤트 리스너
+          window.kakao.maps.event.addListener(
+            manager,
+            "drawend",
+            function (data) {
+              const overlay = data.target;
+              const overlayType = data.overlayType;
+              if (overlayType === window.kakao.maps.drawing.OverlayType.MARKER) {
+                handleMarkerCreated(overlay);
+              } else {
+                console.log(`Overlay created, but not handled:`, overlayType);
+              }
+            }
+          );
+        }
+
+        const initializeClickEventListener = (createdMap) => {        
+          window.kakao.maps.event.addListener(createdMap, 'click', function(mouseEvent) {        
+              
+              // 클릭한 위도, 경도 정보를 가져옵니다 
+              var latlng = mouseEvent.latLng;
+              
+              var message = '클릭한 위치의 위도는 ' + latlng.getLat() + ' 이고, ';
+              message += '경도는 ' + latlng.getLng() + ' 입니다';
+              
+              console.log(message)
+              
+          });
+        }
       });
     };
 
     return () => {
       document.head.removeChild(script);
     };
-  }, []); // }, [currentUser]);
+  }, [props.channelId]);
 
   const handleMarkerCreated = useCallback((marker) => {
     Swal.fire({

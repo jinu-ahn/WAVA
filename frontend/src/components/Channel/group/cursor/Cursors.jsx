@@ -35,6 +35,23 @@ const Cursors = forwardRef((props, ref) => {
   }));
 
   useEffect(() => {
+    const clearCursors = () => {
+      Object.keys(cursorMarkers.current).forEach((key) => {
+        cursorMarkers.current[key].setMap(null);
+      });
+      cursorMarkers.current = {};;
+      setUsers({});
+    }
+
+    return () => {
+      clearCursors();
+      if (stompClient.current) {
+        stompClient.current.disconnect();
+      }
+    }
+  }, [channelId])
+
+  useEffect(() => {
 
     getUserNickName();
 
