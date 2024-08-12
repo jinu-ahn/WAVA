@@ -1,5 +1,7 @@
 package com.wava.worcation.domain.channel.service;
 
+import com.wava.worcation.common.response.ApiResponse;
+import com.wava.worcation.domain.channel.dto.info.DescriptionRequestDto;
 import com.wava.worcation.domain.channel.dto.info.FeedSortResponseDto;
 import com.wava.worcation.domain.channel.dto.info.PersonalResponseDto;
 import com.wava.worcation.domain.user.domain.User;
@@ -13,5 +15,5 @@ public interface PersonalService {
     Page<FeedSortResponseDto> personalFeed(int pages, String nickname, User user);
 
     String changeProfile(MultipartFile file, User user);
-    ResponseEntity changeDescription(String description,User user);
+    String changeDescription(DescriptionRequestDto description, User user);
 }

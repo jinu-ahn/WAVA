@@ -1,11 +1,11 @@
 package com.wava.worcation.domain.channel.service;
 
 import com.wava.worcation.common.exception.CustomException;
-import com.wava.worcation.common.response.ApiResponse;
 import com.wava.worcation.common.response.ErrorCode;
 import com.wava.worcation.common.s3.service.S3ImageUpLoadService;
 import com.wava.worcation.domain.channel.domain.Channel;
 import com.wava.worcation.domain.channel.domain.Feed;
+import com.wava.worcation.domain.channel.dto.info.DescriptionRequestDto;
 import com.wava.worcation.domain.channel.dto.info.FeedSortResponseDto;
 import com.wava.worcation.domain.channel.dto.info.PersonalResponseDto;
 import com.wava.worcation.domain.channel.repository.*;
@@ -18,8 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -103,9 +101,10 @@ public class PersonalServiceImpl implements PersonalService {
     }
 
     @Override
-    public ResponseEntity<?> changeDescription(String description, User user) {
-        Channel channel = channelRepository.findChannelByUserId(userRepository.findByNickName(user.getNickName()).getId());
-        channel.updateDescription(description);
-        return ResponseEntity.ok().body(ApiResponse.success(HttpStatus.OK));
+    public String changeDescription(DescriptionRequestDto description, User user) {
+
+        Channel channel = channelRepository.findByUser(user).orElseThrow(()->new CustomException(ErrorCode.CHANNEL_NOT_FOUND));
+        channel.updateDescription(description.getDescription());
+        return description.getDescription();
     }
 }
