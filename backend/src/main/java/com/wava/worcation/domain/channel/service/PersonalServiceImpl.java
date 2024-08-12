@@ -36,12 +36,21 @@ public class PersonalServiceImpl implements PersonalService {
     private final FeedCommentRepository commentRepository;
     private final LikeRepository likeRepository;
     private final ImageRepository imageRepository;
+    private final FollowRepository followRepository;
 
     private final com.wava.worcation.domain.channel.service.FollowService followService;
     private final com.wava.worcation.domain.channel.service.InfoService infoService;
-    private final FollowRepository followRepository;
     private final S3ImageUpLoadService s3ImageUpLoadService;
 
+    /**
+     *
+     @ 작성자 : 최승호
+     @ 작성일 : 2024-08-12
+     @ 설명 : 개인 정보 채널의 정보를 받아오는 메소드
+     * @param nickName 받아올 개인 정보 채널 주인의 Nickname
+     * @param user 메소드를 요청하는 유저의 객체 (토큰)
+     * @return 개인정보 채널의 상세정보
+     */
     @Override
     public PersonalResponseDto channelInfo(String nickName,User user){
 
@@ -63,6 +72,17 @@ public class PersonalServiceImpl implements PersonalService {
                 .isFollowing(followRepository.existsByChannelAndUser(channel,user))
                 .build();
     }
+
+    /**
+     *
+     @ 작성자 : 최승호
+     @ 작성일 : 2024-08-12
+     @ 설명 : 개인 정보 채널의 피드 목록을 반환하는 메소드
+     * @param pages 몇개의 피드로 페이징을 할것인가의 값
+     * @param nickName 개인정보채널의 소유자의 Nickname
+     * @param user 값을 요청하는 유저 객체
+     * @return 피드 목록 FeedSortResponseDto를 Page형으로 바꾼 Page
+     */
 
     @Override
     public Page<FeedSortResponseDto> personalFeed(int pages, String nickName, User user) {
@@ -87,6 +107,16 @@ public class PersonalServiceImpl implements PersonalService {
         });
     }
 
+    /**
+     *
+     @ 작성자 : 최승호
+     @ 작성일 : 2024-08-12
+     @ 설명 : 프로필을 변경하는 메소드
+     * @param file 프로필 사진으로 넣고싶은 파일
+     * @param user 요청하는 유저의 객체
+     * @return data: ImageUrl
+     */
+
     @Override
     public String changeProfile(MultipartFile file, User user) {
         try {
@@ -100,6 +130,15 @@ public class PersonalServiceImpl implements PersonalService {
         }
     }
 
+    /**
+     *
+     @ 작성자 : 최승호
+     @ 작성일 : 2024-08-12
+     @ 설명 : 개인정보채널의 설명 변경
+     * @param description 설명으로 넣고싶은 String
+     * @param user 요청하는 유저의 객체
+     * @return data : description
+     */
     @Override
     public String changeDescription(DescriptionRequestDto description, User user) {
 

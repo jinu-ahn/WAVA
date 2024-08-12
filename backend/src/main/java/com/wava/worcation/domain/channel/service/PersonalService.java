@@ -1,12 +1,9 @@
 package com.wava.worcation.domain.channel.service;
-
-import com.wava.worcation.common.response.ApiResponse;
 import com.wava.worcation.domain.channel.dto.info.DescriptionRequestDto;
 import com.wava.worcation.domain.channel.dto.info.FeedSortResponseDto;
 import com.wava.worcation.domain.channel.dto.info.PersonalResponseDto;
 import com.wava.worcation.domain.user.domain.User;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface PersonalService {
