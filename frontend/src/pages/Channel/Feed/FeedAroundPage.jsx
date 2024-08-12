@@ -111,7 +111,10 @@ function FeedAroundPage() {
   return (
     <div className="flex h-full">
       <div className="flex flex-col flex-1">
-        <FeedSearchBar searchHandle={searchHandle} />
+        <FeedSearchBar
+          searchHandle={searchHandle}
+          tooltipMessage="피드 검색은 게시글 내용 중 검색어와 일치하는 피드를 보여줍니다."
+        />
 
         {loading ? (
           <LoadingSpinner message="게시글을 불러오는 중입니다." />
