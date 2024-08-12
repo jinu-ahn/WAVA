@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function FeedSearchBar({ searchHandle }) {
+function FeedSearchBar({ searchHandle, searchBarRef }) {
   const [searchText, setsearchText] = useState("");
 
   const submitHandle = (e) => {
@@ -12,6 +12,7 @@ function FeedSearchBar({ searchHandle }) {
       <form onSubmit={submitHandle} className="my-5 sm:w-full max-w-md mx-auto">
         <label className="input input-bordered flex items-center gap-2">
           <input
+            ref={searchBarRef}
             required
             value={searchText}
             onChange={(e) => setsearchText(e.target.value)}

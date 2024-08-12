@@ -10,8 +10,10 @@ import {
 } from "../../../api/channelFeedApi";
 import NoContent from "../../../components/Channel/feed/NoContent";
 import LoadingSpinner from "../../../components/Channel/LoadingSpinner";
+import useDeviceStore from "../../../store/deviceStore";
 
 function FeedPersonalPage() {
+  const isMobile = useDeviceStore((state) => state.isMobile);
   const { userId } = useParams(); // URL에서 userId를 가져옵니다
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedFeedId, setSelectedFeedId] = useState(null);
@@ -134,7 +136,7 @@ function FeedPersonalPage() {
   return (
     <>
       <div className="flex h-full">
-        <div className="flex flex-col flex-1">
+        <div className={`flex flex-col flex-1 `}>
           <FeedHeader
             openDrawerRef={openDrawerRef}
             createFeedControl={createFeedControl}
@@ -143,16 +145,18 @@ function FeedPersonalPage() {
             openCreateDrawer={() => setIsCreateDrawerOpen(true)}
           />
           {loading ? (
-            <LoadingSpinner message="피드를 로딩중입니다." /> // 추가: 로딩 중일 때 스피너 표시
+            <LoadingSpinner message="게시글을 불러오는 중입니다." /> // 추가: 로딩 중일 때 스피너 표시
           ) : (
             <>
-              {isNoContent && (
-                <NoContent
-                  refStatus={openDrawerRef.current ? true : false}
-                  createFeedControl={createFeedControl}
-                />
-              )}
               <ContentItemGrid
+                isPersonal={true}
+                isNoContent={isNoContent}
+                noContentComponent={
+                  <NoContent
+                    refStatus={openDrawerRef.current ? true : false}
+                    createFeedControl={createFeedControl}
+                  />
+                }
                 loadMore={loadMore}
                 loading={itemLoading}
                 contents={contents}
