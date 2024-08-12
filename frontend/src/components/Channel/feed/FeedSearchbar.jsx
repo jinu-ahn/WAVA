@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 
-function FeedSearchBar({ searchHandle, tooltipMessage }) {
+function FeedSearchBar({ searchHandle, searchBarRef, tooltipMessage }) {
   const [searchText, setsearchText] = useState("");
 
   const submitHandle = (e) => {

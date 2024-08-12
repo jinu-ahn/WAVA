@@ -1,18 +1,21 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ContentDrawer from "../../../components/Channel/feed/ContentDrawer";
 import ContentItemGrid from "../../../components/Channel/feed/ContentItemGrid";
 import FeedSearchBar from "../../../components/Channel/feed/FeedSearchbar";
 import { searchFeedRequest } from "../../../api/channelFeedApi";
 import LoadingSpinner from "../../../components/Channel/LoadingSpinner";
 import NoResult from "../../../components/Channel/feed/NoResult";
+import useDeviceStore from "../../../store/deviceStore";
 
 function FeedAroundPage() {
+  const isMobile = useDeviceStore((state) => state.isMobile);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedFeedId, setSelectedFeedId] = useState(null);
 
   const [contents, setContents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [itemLoading, setItemLoading] = useState(false);
+  const searchBarRef = useRef(null);
 
   const [pages, setPages] = useState(0);
   const [maxPage, setMaxPage] = useState(-1);
@@ -107,6 +110,9 @@ function FeedAroundPage() {
       prevContents.filter((content) => content.id !== contentId)
     );
   };
+  const onRetry = () => {
+    searchBarRef.current.focus();
+  };
 
   return (
     <div className="flex h-full">
@@ -114,14 +120,16 @@ function FeedAroundPage() {
         <FeedSearchBar
           searchHandle={searchHandle}
           tooltipMessage="피드 검색은 게시글 내용 중 검색어와 일치하는 피드를 보여줍니다."
+          searchBarRef={searchBarRef}
         />
 
         {loading ? (
           <LoadingSpinner message="게시글을 불러오는 중입니다." />
         ) : (
           <>
-            {isNoContent && <NoResult />}
             <ContentItemGrid
+              isNoContent={isNoContent}
+              noContentComponent={<NoResult onRetry={onRetry} />}
               loadMore={loadMore}
               contents={contents}
               loading={itemLoading}
