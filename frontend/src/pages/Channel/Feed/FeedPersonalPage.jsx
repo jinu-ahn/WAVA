@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ContentDrawer from "../../../components/Channel/feed/ContentDrawer";
 import ContentItemGrid from "../../../components/Channel/feed/ContentItemGrid";
 import CreateContentDrawer from "../../../components/Channel/feed/CreateContentDrawer";
@@ -29,6 +29,7 @@ function FeedPersonalPage() {
   const [isNoContent, setIsNoContent] = useState(false);
 
   const location = useLocation();
+  const navigate = useNavigate();
 
   const openDrawerRef = useRef(null);
 
@@ -37,7 +38,12 @@ function FeedPersonalPage() {
       try {
         setLoading(true);
         const feedInfoResp = await readFeedInfoRequest(userId);
-        if (feedInfoResp?.data) setUserInfo(feedInfoResp?.data);
+        if (feedInfoResp?.data) {
+          setUserInfo(feedInfoResp?.data);
+        } else {
+          alert("존재하지 않는 유저입니다!");
+          navigate("/channel");
+        }
         const feedContResp = await readFeedContentRequest(userId);
         if (feedContResp?.data?.data?.length > 0) {
           setMaxPage(feedContResp?.data?.totalPages - 1); // 0부터 -1까지
