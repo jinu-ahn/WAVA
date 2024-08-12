@@ -46,6 +46,8 @@ public class FollowServiceImpl implements com.wava.worcation.domain.channel.serv
 
         if (followRepository.existsByChannelAndUser(channel,user)){
             throw new CustomException(ErrorCode.ALREADY_FOLLOWING);
+        } else if (channel.getUser() == user) {
+            throw  new CustomException(ErrorCode.SELF_FOLLOWING);
         }
         Follow follow = Follow.builder()
                 .user(user)
