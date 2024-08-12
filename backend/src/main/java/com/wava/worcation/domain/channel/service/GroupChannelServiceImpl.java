@@ -4,6 +4,7 @@ package com.wava.worcation.domain.channel.service;
 import com.wava.worcation.common.exception.CustomException;
 import com.wava.worcation.common.response.ApiResponse;
 import com.wava.worcation.common.response.ErrorCode;
+import com.wava.worcation.common.util.BadWordFilter;
 import com.wava.worcation.domain.channel.domain.Channel;
 import com.wava.worcation.domain.channel.domain.ChannelUser;
 import com.wava.worcation.domain.channel.dto.request.GroupChannelRequestDto;
@@ -35,6 +36,7 @@ public class GroupChannelServiceImpl implements GroupChannelService {
     private final ChannelUserRepository channelUserRepository;
     private final WorcationRepository worcationRepository;
 
+    private BadWordFilter badWordFilter = new BadWordFilter();
     /**
      *
      * @ 작성자   : user
@@ -48,6 +50,15 @@ public class GroupChannelServiceImpl implements GroupChannelService {
     @Override
     @Transactional
     public ResponseEntity<ApiResponse<GroupChannelResponseDto>> createGroupChannel(final GroupChannelRequestDto groupChannelRequestDto, final User user) {
+        String title = groupChannelRequestDto.getChannelTitle();
+        if(title == null || title.trim().equals("")) {
+            throw new CustomException(ErrorCode.NO_CONTENT);
+        }
+
+        boolean titleBadCheck = badWordFilter.containsBadWords(groupChannelRequestDto.getChannelTitle());
+        if(titleBadCheck) {
+            throw new CustomException(ErrorCode.BAD_WORD);
+        }
 
         Channel channel = Channel.builder()
                 .user(user)

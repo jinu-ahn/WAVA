@@ -35,9 +35,9 @@ public enum ErrorCode {
     ALREADY_FOLLOWING(HttpStatus.BAD_REQUEST,"이미 팔로우중인 채널입니다."),
     NOT_FOLLOWING(HttpStatus.BAD_REQUEST,"팔로우 하지 않는 채널입니다."),
     SELF_FOLLOWING(HttpStatus.BAD_REQUEST,"자기를 팔로우할수는 없습니다."),
-    IOEXCEPTION(HttpStatus.BAD_REQUEST,"IOEXCEPTION 발생");
-
-    
+    IOEXCEPTION(HttpStatus.BAD_REQUEST,"IOEXCEPTION 발생"),
+    BAD_WORD(HttpStatus.BAD_REQUEST,"비속어를 사용할 수 없습니다."),
+    NO_CONTENT(HttpStatus.NO_CONTENT, "빈 값을 넣었습니다. 다시 입력해주세요");
     private HttpStatus status;
     private String message;
 }
