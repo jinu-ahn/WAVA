@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import Swal from "sweetalert2";
 import Cursors from "./cursor/Cursors";
+import { ChevronDown } from "lucide-react";
 // import { useUsers } from "y-presence";
 // import { awareness } from "./cursor/y";
 // import { USER_COLORS } from "./cursor/constants";
@@ -17,6 +18,8 @@ const MapComponent = (props) => {
   const [customMarkers, setCustomMarkers] = useState([]);
   const infowindow = useRef(null);
   const { selectedUserNickName, channelId, setSelectedUserNickName } = props;
+  const [isToolbarOpen, setIsToolbarOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   // 특정 사용자의 커서 위치로 지도 center를 이동
   // const handleFollowUser = () => {
@@ -204,6 +207,23 @@ const MapComponent = (props) => {
       document.head.removeChild(script);
     };
   }, [channelId]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsToolbarOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const toggleToolbar = () => {
+    setIsToolbarOpen(!isToolbarOpen);
+  };
 
   const handleMarkerCreated = useCallback((marker) => {
     Swal.fire({
@@ -418,13 +438,13 @@ const MapComponent = (props) => {
   return (
     <div className="flex flex-col h-full relative ">
       <div className="w-3/4 absolute top-0 left-0 p-4 bg-white bg-opacity-60 z-10">
-        <div className="flex space-x-2">
+        <div className="flex space-x-2 items-center">
           <input
             type="text"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             placeholder="검색할 키워드를 입력하세요"
-            className="p-2 border rounded flex-grow focus:bg-opacity-100"
+            className="p-2 border rounded w-3/4 focus:bg-opacity-100"
           />
           <button
             onClick={searchPlaces}
@@ -432,6 +452,55 @@ const MapComponent = (props) => {
           >
             검색
           </button>
+          <div className="relative" ref={dropdownRef}>
+            <button
+              type="button"
+              className="flex items-center space-x-1 p-2 bg-gray-500 text-white rounded hover:bg-toolBtn"
+              onClick={toggleToolbar}
+            >
+              <span>도구</span>
+              <ChevronDown className="w-4 h-4" />
+            </button>
+
+            <div
+              className={`absolute left-0 mt-2 w-24 bg-[#1e1e1e] rounded-md shadow-lg overflow-hidden transition-all duration-200 ease-in-out ${
+                isToolbarOpen ? "opacity-100 visible" : "opacity-0 invisible"
+              }`}
+            >
+              <div className="py-1">
+                <button
+                  onClick={() => handleDrawingModeChange("MARKER")}
+                  className="block w-full text-center px-4 py-2 text-xs text-white hover:bg-[#333]"
+                >
+                  마커
+                </button>
+                <button
+                  onClick={() => handleDrawingModeChange("POLYLINE")}
+                  className="block w-full text-center px-4 py-2 text-xs text-white hover:bg-[#333]"
+                >
+                  선
+                </button>
+                <button
+                  onClick={() => handleDrawingModeChange("RECTANGLE")}
+                  className="block w-full text-center px-4 py-2 text-xs text-white hover:bg-[#333]"
+                >
+                  사각형
+                </button>
+                <button
+                  onClick={() => handleDrawingModeChange("CIRCLE")}
+                  className="block w-full text-center px-4 py-2 text-xs text-white hover:bg-[#333]"
+                >
+                  원
+                </button>
+                <button
+                  onClick={() => handleDrawingModeChange("POLYGON")}
+                  className="block w-full text-center px-4 py-2 text-xs text-white hover:bg-[#333]"
+                >
+                  다각형
+                </button>
+              </div>
+            </div>
+          </div>
           <button
             onClick={resetMap}
             className="p-2 bg-gray-600 text-white rounded hover:bg-red-600"
@@ -439,54 +508,8 @@ const MapComponent = (props) => {
             초기화
           </button>
         </div>
-        <div className="p-2 flex space-x-2 mt-2">
-          <button
-            onClick={() => handleDrawingModeChange("MARKER")}
-            className="p-2 bg-gray-500 text-white rounded hover:bg-toolBtn"
-          >
-            마커
-          </button>
-          <button
-            onClick={() => handleDrawingModeChange("POLYLINE")}
-            className="p-2 bg-gray-500 text-white rounded hover:bg-toolBtn"
-          >
-            선
-          </button>
-          <button
-            onClick={() => handleDrawingModeChange("RECTANGLE")}
-            className="p-2 bg-gray-500 text-white rounded hover:bg-toolBtn"
-          >
-            사각형
-          </button>
-          <button
-            onClick={() => handleDrawingModeChange("CIRCLE")}
-            className="p-2 bg-gray-500 text-white rounded hover:bg-toolBtn"
-          >
-            원
-          </button>
-          <button
-            onClick={() => handleDrawingModeChange("POLYGON")}
-            className="p-2 bg-gray-500 text-white rounded hover:bg-toolBtn"
-          >
-            다각형
-          </button>
-        </div>
-        {/* <div className="p-2 flex space-x-2 mt-2">
-          <input
-            type="text"
-            value={selectedUser}
-            onChange={(e) => setSelectedUser(e.target.value)}
-            placeholder="사용자 닉네임 입력"
-            className="p-2 border rounded flex-grow focus:bg-opacity-100"
-          />
-          <button
-            onClick={handleFollowUser}
-            className="p-2 bg-green-600 text-white rounded hover:bg-green-700"
-          >
-            사용자 따라가기
-          </button>
-        </div> */}
       </div>
+
       <div ref={mapContainer} className="flex-grow h-screen">
         {map && <Cursors ref={cursorsRef} channelId={channelId} map={map} />}
       </div>
