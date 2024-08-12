@@ -40,7 +40,7 @@ public class UserController {
         return userService.reissue(request,response);
     }
     @PostMapping("/nickname/check/{nickName}")
-    private ResponseEntity<ApiResponse<String>> nickNameCheck(@PathVariable(name="nickName") String nickName) {
+    public ResponseEntity<ApiResponse<String>> nickNameCheck(@PathVariable(name="nickName") String nickName) {
         return userService.nickNameCheck(nickName);
     }
 }
