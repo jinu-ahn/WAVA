@@ -42,7 +42,8 @@ const useUserStore = create(
               await Swal.fire({
                 position: "center",
                 icon: "error",
-                titleText: errorMessage || "네트워크 연결을 확인해 주세요",
+                titleText:
+                  errorMessage || "아이디 혹은 비밀번호를 확인해 주세요",
                 showConfirmButton: false,
                 timer: 2500,
               });

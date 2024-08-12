@@ -6,6 +6,8 @@ import { UserCircleIcon } from "@heroicons/react/24/solid";
 import ProfileIconBtn from "./ProfileIconBtn";
 import {
   createProfileImageRequest,
+  followRequest,
+  unfollowRequest,
   updateFeedDescription,
 } from "../../../api/channelFeedApi";
 import useUserStore from "../../../store/userStore";
@@ -13,7 +15,6 @@ import LoadingSpinner from "../LoadingSpinner";
 
 const FeedHeader = ({
   openCreateDrawer,
-  userId,
   setUserInfo,
   userInfo,
   openDrawerRef,
@@ -22,7 +23,7 @@ const FeedHeader = ({
   // const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [isFollowDrawerOpen, setIsFollowDrawerOpen] = useState(false);
-  const [followDrawerTab, setFollowDrawerTab] = useState("followers");
+  const [followDrawerTab, setFollowDrawerTab] = useState(null);
 
   const [editProfile, setEditProfile] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
@@ -77,6 +78,48 @@ const FeedHeader = ({
       console.error("Error uploading profile image:", error);
     } finally {
       setIsUploading(false); // 업로드 완료
+    }
+  };
+
+  const handleFollowClick = async (type, status, nickName) => {
+    let resp = false;
+    if (status) {
+      resp = await unfollowRequest(nickName);
+      if (resp?.status === "OK") {
+        // 언팔로우
+        if (loginedUserNickName === ownerUserNickName) {
+          setUserInfo((status) => ({
+            ...status,
+            follow: status.follow - 1,
+            following: false,
+          }));
+        } else {
+          setUserInfo((status) => ({
+            ...status,
+            follower: status.follower - 1,
+            following: false,
+          }));
+        }
+      }
+    } else {
+      // 팔로우
+      resp = await followRequest(nickName);
+      if (resp?.status === "OK") {
+        if (loginedUserNickName === ownerUserNickName) {
+          setUserInfo((status) => ({
+            ...status,
+            follow: status.follow + 1,
+            following: true,
+          }));
+        } else {
+          setUserInfo((status) => ({
+            ...status,
+            follower: status.follower + 1,
+            following: true,
+          }));
+        }
+      }
+      // }
     }
   };
 
@@ -159,7 +202,7 @@ const FeedHeader = ({
                 {userInfo?.nickName || " - - - "}
               </h1>
             </div>
-            {loginedUserNickName === ownerUserNickName && (
+            {loginedUserNickName === ownerUserNickName ? (
               <button
                 ref={openDrawerRef}
                 onClick={openCreateDrawer}
@@ -169,6 +212,25 @@ const FeedHeader = ({
               >
                 글 작성
               </button>
+            ) : (
+              <>
+                <button
+                  className={`px-4 py-2 rounded ${
+                    userInfo?.following
+                      ? "bg-gray-200"
+                      : "bg-mainBlue text-white"
+                  }`}
+                  onClick={() =>
+                    handleFollowClick(
+                      "inContent",
+                      userInfo.following,
+                      userInfo.nickName
+                    )
+                  }
+                >
+                  {userInfo?.following ? "언팔로우" : "팔로우"}
+                </button>
+              </>
             )}
           </div>
 
@@ -224,7 +286,9 @@ const FeedHeader = ({
             >
               팔로워{" "}
               <span className="font-semibold">
-                {Number.isInteger(userInfo?.follow) ? userInfo?.follow : "-"}
+                {Number.isInteger(userInfo?.follower)
+                  ? userInfo?.follower
+                  : "-"}
               </span>
             </button>
             <span>
@@ -239,10 +303,13 @@ const FeedHeader = ({
         </div>
       </div>
       <FollowDrawer
+        loginedUserNickName={loginedUserNickName}
+        setActiveTab={setFollowDrawerTab}
+        handleFollowClick={handleFollowClick}
         isOpen={isFollowDrawerOpen}
         onClose={() => setIsFollowDrawerOpen(false)}
-        userId={userId}
-        initialTab={followDrawerTab}
+        userNickName={userInfo?.nickName}
+        activeTab={followDrawerTab}
       />
       {isUploading && (
         <LoadingSpinner message="프로필 사진을 변경중입니다." /> // 추가: 프로필 사진 변경 중 로딩 스피너 표시
