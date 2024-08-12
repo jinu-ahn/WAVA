@@ -109,7 +109,7 @@ const FollowDrawer = ({
           <div className="flex-grow overflow-y-auto">
             {users.map((user) => (
               <div
-                key={user.id}
+                key={user.userId}
                 className="flex items-center justify-between p-4 hover:bg-gray-100"
               >
                 <div
@@ -126,6 +126,9 @@ const FollowDrawer = ({
                   )}
                   <div>
                     <p className="text-black mx-2">{user.nickname}</p>
+                    <p className="text-gray-700 text-xs mx-2">
+                      {user?.hasFollowerRelationship && "나를 팔로우중"}
+                    </p>
                   </div>
                 </div>
                 {loginedUserNickName !== user.nickname && (
