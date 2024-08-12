@@ -13,6 +13,7 @@ import com.wava.worcation.domain.user.domain.User;
 import com.wava.worcation.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import java.util.Optional;
 @Service
 @Transactional
 @RequiredArgsConstructor
+@Slf4j
 public class FollowServiceImpl implements com.wava.worcation.domain.channel.service.FollowService {
 
     private final FollowRepository followRepository;
@@ -98,7 +100,7 @@ public class FollowServiceImpl implements com.wava.worcation.domain.channel.serv
                     .userId(user.getId())
                     .profile(user.getProfileImg())
                     .nickname(user.getNickName())
-                    .isFollower(followRepository.existsByChannelAndUser(follow.getChannel(),authUser))
+                    .isFollower(followRepository.existsByChannelAndUser(channelRepository.findChannelByUserId(user.getId()),authUser))
                     .build();
             followerDtos.add(dto);
         }
@@ -123,13 +125,14 @@ public class FollowServiceImpl implements com.wava.worcation.domain.channel.serv
         User userInfo = channelRepository.findById(channel.getId()).orElseThrow(()-> new ResourceNotFoundException("채널검색실패")).getUser();
         List<Follow> followers = followRepository.findByUser(userInfo);
         for (Follow follow : followers) {
-            User user = follow.getUser();
+            User user = follow.getChannel().getUser();
             FollowInfoDto.UserFollowInfoDto dto = FollowInfoDto.UserFollowInfoDto.builder()
                     .userId(user.getId())
                     .profile(user.getProfileImg())
                     .nickname(user.getNickName())
-                    .isFollower(followRepository.existsByChannelAndUser(follow.getChannel(),authUser))
+                    .isFollower(followRepository.existsByChannelAndUser(channelRepository.findChannelByUserId(user.getId()),authUser))
                     .build();
+                    log.info("channel {} user {}",follow.getChannel(),authUser);
             followerDtos.add(dto);
         }
         return FollowInfoDto.builder()
