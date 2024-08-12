@@ -25,6 +25,6 @@ public class FollowInfoDto {
         private String profile;
         private String nickname;
         private boolean isFollower;
-        private boolean isFollowingThisisForSehun;
+        private boolean hasFollowerRelationship;
     }
 }
