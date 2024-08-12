@@ -8,8 +8,6 @@ import org.springframework.http.ResponseEntity;
 import java.util.List;
 
 public interface MapPinService {
-    MapPinResponseDto createPin(final MapPinRequestDto mapPinRequestDto);
-    MapPinResponseDto updatePin(final Long pinId, final MapPinRequestDto mapPinRequestDto);
-    void deletePin(final Long pinId);
     List<MapPinResponseDto> getChannelPins(final Long channelId);
+    MapPinResponseDto markerFunction(final MapPinRequestDto mapPinRequestDto);
 }

@@ -16,10 +16,15 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
+        // chatting 소켓 엔드포인트
         registry.addEndpoint("/ws") // 웹소켓 엔드포인트
                 .setAllowedOriginPatterns("*"); // CORS 허용
 //                .withSockJS();
+        // cursor 소켓 엔드포인트
         registry.addEndpoint("/cursor")
+                .setAllowedOriginPatterns("*");
+        // marker 소켓 엔드포인트
+        registry.addEndpoint("/marker")
                 .setAllowedOriginPatterns("*");
     }
 

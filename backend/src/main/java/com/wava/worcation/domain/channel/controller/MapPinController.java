@@ -8,39 +8,31 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 
 @RestController
-@RequestMapping("/channel/map")
 @RequiredArgsConstructor
 @Slf4j
 public class MapPinController {
     private final MapPinService mapPinService;
+    private final SimpMessagingTemplate messagingTemplate;
 
-    @PostMapping()
-    private ResponseEntity<ApiResponse<MapPinResponseDto>> createPin(@RequestBody MapPinRequestDto requestDto) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success(mapPinService.createPin(requestDto)));
-    }
-
-    @PatchMapping("/{pinId}/update")
-    private ResponseEntity<ApiResponse<MapPinResponseDto>> updatePin(@PathVariable("pinId") Long pinId, @RequestBody MapPinRequestDto requestDto) {
+    @MessageMapping("/position")
+    public ResponseEntity<ApiResponse<MapPinResponseDto>> markerFunction(@Payload MapPinRequestDto mapPinRequestDto) {
+        MapPinResponseDto mapPinResponseDto = mapPinService.markerFunction(mapPinRequestDto);
+        messagingTemplate.convertAndSend("/sub/map/" + mapPinResponseDto.getChannelId(), mapPinResponseDto);
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ApiResponse.success(mapPinService.updatePin(pinId, requestDto)));
+                .body(ApiResponse.success(mapPinResponseDto));
     }
 
-    @DeleteMapping("/{pinId}/delete")
-    private ResponseEntity<ApiResponse<String>> deletePin(@PathVariable("pinId") Long pinId) {
-        mapPinService.deletePin(pinId);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(ApiResponse.success("PIN_DELETE_SUCCESS"));
-    }
-
-    @GetMapping("detail/{channelId}")
-    private ResponseEntity<ApiResponse<List<MapPinResponseDto>>> detail(@PathVariable("channelId") Long channelId) {
+    @GetMapping("/position/detail/{channelId}")
+    public ResponseEntity<ApiResponse<List<MapPinResponseDto>>> detail(@PathVariable("channelId") Long channelId) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(mapPinService.getChannelPins(channelId)));
     }

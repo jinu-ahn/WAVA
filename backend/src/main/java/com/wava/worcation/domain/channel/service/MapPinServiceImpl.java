@@ -16,6 +16,7 @@ import com.wava.worcation.domain.user.dto.response.GroupUserResponseDto;
 import com.wava.worcation.domain.user.dto.response.UserResponseDto;
 import com.wava.worcation.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,21 @@ public class MapPinServiceImpl implements MapPinService {
     private final UserRepository userRepository;
     private final CompanionRepository companionRepository;
 
+
+    @Override
+    @Transactional
+    public MapPinResponseDto markerFunction(final MapPinRequestDto mapPinRequestDto) {
+        if(mapPinRequestDto.getStatus().equals("ADD"))
+            return createMarker(mapPinRequestDto);
+        if(mapPinRequestDto.getStatus().equals("MODIFY"))
+            return updateMarker(mapPinRequestDto);
+        if(mapPinRequestDto.getStatus().equals("DELETE"))
+            return deleteMarker(mapPinRequestDto.getPinId(), mapPinRequestDto.getStatus());
+
+        throw new CustomException(ErrorCode.NOT_FOUND_MAP_PIN);
+    }
+
+
     /**
      * @ 작성자   : 안진우
      * @ 작성일   : 2024-08-09
@@ -40,9 +56,7 @@ public class MapPinServiceImpl implements MapPinService {
      * @return 생성한 핀 정보
      * @status 성공 : 201, 실패 : 404, 409
      */
-    @Override
-    @Transactional(rollbackOn = Exception.class)
-    public MapPinResponseDto createPin(final MapPinRequestDto mapPinRequestDto) {
+    public MapPinResponseDto createMarker(final MapPinRequestDto mapPinRequestDto) {
         Channel channel = validateChannel(mapPinRequestDto.getChannelId());
         isPinOrder(mapPinRequestDto.getChannelId(), mapPinRequestDto.getPinOrder());
         MapPin mapPin = mapPinRepository.save(MapPin.builder()
@@ -83,6 +97,7 @@ public class MapPinServiceImpl implements MapPinService {
                 .info(mapPin.getInfo())
                 .pinOrder(mapPin.getPinOrder())
                 .user(groupUserList)
+                .status(mapPinRequestDto.getStatus())
                 .build();
     }
 
@@ -90,19 +105,16 @@ public class MapPinServiceImpl implements MapPinService {
      * @ 작성자   : 안진우
      * @ 작성일   : 2024-08-09
      * @ 설명     : 공유지도에 마킹되어있는 핀 수정 (동행자, 위치정보)
-     * @param pinId 핀 식별 아이디
      * @param mapPinRequestDto 업데이트 할 마커 데이터
      * @return 업데이트한 핀 정보
      * @status 성공 : 200, 실패 : 404
      */
-    @Override
-    @Transactional(rollbackOn = Exception.class)
-    public MapPinResponseDto updatePin(Long pinId, MapPinRequestDto mapPinRequestDto) {
-        MapPin mapPin = mapPinRepository.findById(pinId).orElseThrow(
+    public MapPinResponseDto updateMarker(MapPinRequestDto mapPinRequestDto) {
+        MapPin mapPin = mapPinRepository.findById(mapPinRequestDto.getPinId()).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_MAP_PIN)
         );
         mapPin.update(mapPinRequestDto);
-        companionRepository.deleteAllByMapPinId(pinId);
+        companionRepository.deleteAllByMapPinId(mapPin.getId());
 
         List<GroupUserResponseDto> groupUserList = mapPinRequestDto.getUser()
                 .stream()
@@ -131,53 +143,8 @@ public class MapPinServiceImpl implements MapPinService {
                 .info(mapPin.getInfo())
                 .pinOrder(mapPin.getPinOrder())
                 .user(groupUserList)
+                .status(mapPinRequestDto.getStatus())
                 .build();
-    }
-
-    /**
-     * @ 작성자   : 안진우
-     * @ 작성일   : 2024-08-09
-     * @ 설명     : 공유지도에 마킹된 핀 삭제
-     * @param pinId 핀 식별 아이디
-     * @return
-     * @status 성공 : 200
-     */
-    @Override
-    @Transactional
-    public void deletePin(Long pinId) {
-        mapPinRepository.findById(pinId).orElseThrow(
-                () -> new CustomException(ErrorCode.NOT_FOUND_MAP_PIN)
-        );
-        mapPinRepository.deleteById(pinId);
-    }
-
-    /**
-     * @ 작성자   : 안진우
-     * @ 작성일   : 2024-08-09
-     * @ 설명     : 채널 존재 여부 검증
-     * @param channelId 채널 식별 아이디
-     * @return 채널 엔티티
-     * @status 실패 : 404
-     */
-    private Channel validateChannel(final Long channelId){
-        Channel channel = channelRepository.findById(channelId).orElseThrow(
-                () -> new CustomException(ErrorCode.CHANNEL_NOT_FOUND)
-        );
-        return channel;
-    }
-
-    /**
-     * @ 작성자   : 안진우
-     * @ 작성일   : 2024-08-09
-     * @ 설명     : 해당 채널의 핀 순서 중복 검증
-     * @param channelId 채널 식별 아이디
-     * @param pinId 핀 식별 아이디
-     * @return
-     * @status 실패 : 409
-     */
-    private void isPinOrder(final Long channelId, final Long pinId) {
-        if(mapPinRepository.existsByPinOrderAndChannelId(pinId,channelId))
-            throw new CustomException(ErrorCode.DUPLICATE_PIN_ORDER);
     }
 
     /**
@@ -224,4 +191,62 @@ public class MapPinServiceImpl implements MapPinService {
 
         return mapPinResponseList;
     }
+
+    /**
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-08-09
+     * @ 설명     : 공유지도에 마킹된 핀 삭제
+     * @param pinId 핀 식별 아이디
+     * @return
+     * @status 성공 : 200
+     */
+    public MapPinResponseDto deleteMarker(Long pinId, String status) {
+        MapPin mapPin = mapPinRepository.findById(pinId).orElseThrow(
+                () -> new CustomException(ErrorCode.NOT_FOUND_MAP_PIN)
+        );
+        mapPinRepository.delete(mapPin);
+
+        return MapPinResponseDto.builder()
+                .pinId(mapPin.getId())
+                .channelId(mapPin.getChannel().getId())
+                .lat(mapPin.getLat())
+                .lng(mapPin.getLng())
+                .placeName(mapPin.getPlaceName())
+                .info(mapPin.getInfo())
+                .pinOrder(mapPin.getPinOrder())
+                .user(null)
+                .status(status)
+                .build();
+    }
+
+    /**
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-08-09
+     * @ 설명     : 채널 존재 여부 검증
+     * @param channelId 채널 식별 아이디
+     * @return 채널 엔티티
+     * @status 실패 : 404
+     */
+    private Channel validateChannel(final Long channelId){
+        Channel channel = channelRepository.findById(channelId).orElseThrow(
+                () -> new CustomException(ErrorCode.CHANNEL_NOT_FOUND)
+        );
+        return channel;
+    }
+
+    /**
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-08-09
+     * @ 설명     : 해당 채널의 핀 순서 중복 검증
+     * @param channelId 채널 식별 아이디
+     * @param pinId 핀 식별 아이디
+     * @return
+     * @status 실패 : 409
+     */
+    private void isPinOrder(final Long channelId, final Long pinId) {
+        if(mapPinRepository.existsByPinOrderAndChannelId(pinId,channelId))
+            throw new CustomException(ErrorCode.DUPLICATE_PIN_ORDER);
+    }
+
+
 }

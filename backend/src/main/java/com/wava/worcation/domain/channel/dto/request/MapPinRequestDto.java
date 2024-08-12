@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 public class MapPinRequestDto {
+    private Long pinId;
     private Long channelId;
     private Double lat;
     private Double lng;
@@ -19,4 +20,5 @@ public class MapPinRequestDto {
     private String info;
     private Long pinOrder;
     private List<CompanionRequestDto> user;
+    private String status;
 }

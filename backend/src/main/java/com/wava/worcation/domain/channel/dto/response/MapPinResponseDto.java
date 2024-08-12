@@ -19,4 +19,5 @@ public class MapPinResponseDto {
     private String info;
     private Long pinOrder;
     private List<GroupUserResponseDto> user;
+    private String status;
 }
