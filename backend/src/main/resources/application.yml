@@ -82,7 +82,7 @@ spring:
       port: 6379
 
   jpa:
-    show-sql: true # JPA SQL 출력 설정
+#    show-sql: true # JPA SQL 출력 설정
     database-platform: org.hibernate.dialect.MySQL8Dialect # JPA 데이터베이스 플랫폼 설정
     hibernate:
       ddl-auto: update # Hibernate DDL 자동 설정
