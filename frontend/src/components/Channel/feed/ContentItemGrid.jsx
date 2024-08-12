@@ -26,12 +26,9 @@ const ContentItemGrid = ({
     <>
       {isNoContent && noContentComponent}
       <div
-        className={`grid select-none user ${
-          isMobile
-            ? "grid-cols-1 gap-y-6"
-            : "grid-cols-2 overflow-y-auto h-full"
+        className={`grid select-none user overflow-y-auto h-full  ${
+          isMobile ? "grid-cols-1 gap-y-6" : "grid-cols-2"
         } 
-         ${isMobile && !isPersonal && " overflow-y-auto h-full "}
         2xl:grid-cols-6 lg:grid-cols-4 md:grid-cols-3 gap-6 p-6`}
       >
         {contents?.map((content, index) => (
