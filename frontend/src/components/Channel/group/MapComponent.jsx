@@ -1,6 +1,12 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import Swal from "sweetalert2";
 import Cursors from "./cursor/Cursors";
+import { MagnifyingGlassCircleIcon } from "@heroicons/react/24/solid";
+import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
+import RestartAltOutlinedIcon from '@mui/icons-material/RestartAltOutlined';
+import AddLocationAltTwoToneIcon from '@mui/icons-material/AddLocationAltTwoTone';
+import IconButton from '@mui/material/IconButton';
+import Tooltip from '@mui/material/Tooltip';
 // import { useUsers } from "y-presence";
 // import { awareness } from "./cursor/y";
 // import { USER_COLORS } from "./cursor/constants";
@@ -18,19 +24,6 @@ const MapComponent = (props) => {
   const infowindow = useRef(null);
   const { selectedUserNickName, channelId, setSelectedUserNickName } = props;
 
-  // 특정 사용자의 커서 위치로 지도 center를 이동
-  // const handleFollowUser = () => {
-  //   const cursors = cursorsRef.current.getCursorMarkers();
-  //   if (selectedUser && map && cursors[selectedUser]) {
-  //     const position = cursors[selectedUser].getPosition();
-  //     map.panTo(position); // 선택된 사용자의 위치로 지도 이동
-  //   } else {
-  //     Swal.fire({
-  //       title: "사용자를 선택해주세요",
-  //       icon: "warning",
-  //     });
-  //   }
-  // };
   useEffect(() => {
     if (selectedUserNickName && cursorsRef.current) {
       const cursors = cursorsRef.current.getCursorMarkers();
@@ -417,29 +410,42 @@ const MapComponent = (props) => {
 
   return (
     <div className="flex flex-col h-full relative ">
-      <div className="w-3/4 absolute top-0 left-0 p-4 bg-white bg-opacity-60 z-10">
-        <div className="flex space-x-2">
+      <div className="w-3/4 absolute top-0 left-0 p-2 bg-white bg-opacity-0 z-10">
+        <div className="flex space-x-2 mx-52 bg-white rounded-full shadow-md shadow-slate-300 hover:shadow-slate-400 focus:shadow-slate-400">
           <input
             type="text"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             placeholder="검색할 키워드를 입력하세요"
-            className="p-2 border rounded flex-grow focus:bg-opacity-100"
+            className="ps-4 p-1 rounded-s-full w-3/4 focus:outline-none"
           />
-          <button
-            onClick={searchPlaces}
-            className="p-2 bg-mainBlue text-white rounded hover:bg-blue-600"
-          >
-            검색
-          </button>
-          <button
-            onClick={resetMap}
-            className="p-2 bg-gray-600 text-white rounded hover:bg-red-600"
-          >
-            초기화
-          </button>
+          <Tooltip title="검색" placement="bottom" arrow>
+            <button
+              onClick={searchPlaces}
+              className="p-2 rounded hover: shadow-sm"
+            >
+            {/* <MagnifyingGlassCircleIcon className="w-10"/> */}
+              <SearchOutlinedIcon fontSize="large" />
+            </button>
+          </Tooltip>
+          <Tooltip title="검색 결과 초기화" placement="bottom" arrow>
+            <button
+              onClick={resetMap}
+              className="p-2 mb-0.5 "
+            >
+              <RestartAltOutlinedIcon fontSize="large" color="danger"/>
+            </button>
+          </Tooltip>
+          <Tooltip title="일정 마커 추가" placement="bottom" arrow>
+            <button
+              onClick={() => handleDrawingModeChange("MARKER")}
+              className="p-2 "
+            >
+              <AddLocationAltTwoToneIcon fontSize="large" color="primary"/>
+            </button>
+          </Tooltip>
         </div>
-        <div className="p-2 flex space-x-2 mt-2">
+        {/* <div className="p-2 flex space-x-2 mt-2">
           <button
             onClick={() => handleDrawingModeChange("MARKER")}
             className="p-2 bg-gray-500 text-white rounded hover:bg-toolBtn"
@@ -469,21 +475,6 @@ const MapComponent = (props) => {
             className="p-2 bg-gray-500 text-white rounded hover:bg-toolBtn"
           >
             다각형
-          </button>
-        </div>
-        {/* <div className="p-2 flex space-x-2 mt-2">
-          <input
-            type="text"
-            value={selectedUser}
-            onChange={(e) => setSelectedUser(e.target.value)}
-            placeholder="사용자 닉네임 입력"
-            className="p-2 border rounded flex-grow focus:bg-opacity-100"
-          />
-          <button
-            onClick={handleFollowUser}
-            className="p-2 bg-green-600 text-white rounded hover:bg-green-700"
-          >
-            사용자 따라가기
           </button>
         </div> */}
       </div>
