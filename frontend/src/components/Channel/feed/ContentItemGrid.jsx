@@ -3,6 +3,7 @@ import { useInView } from "react-intersection-observer";
 import useDeviceStore from "../../../store/deviceStore";
 
 const ContentItemGrid = ({
+  isPersonal = false,
   isNoContent,
   noContentComponent,
   loadMore,
@@ -25,9 +26,13 @@ const ContentItemGrid = ({
     <>
       {isNoContent && noContentComponent}
       <div
-        className={`grid overflow-y-auto h-full select-none user ${
-          isMobile ? "grid-cols-1 gap-y-6" : "grid-cols-2"
-        } 2xl:grid-cols-6 lg:grid-cols-4 md:grid-cols-3 gap-6 p-6`}
+        className={`grid select-none user ${
+          isMobile
+            ? "grid-cols-1 gap-y-6"
+            : "grid-cols-2 overflow-y-auto h-full"
+        } 
+         ${isMobile && !isPersonal && " overflow-y-auto h-full "}
+        2xl:grid-cols-6 lg:grid-cols-4 md:grid-cols-3 gap-6 p-6`}
       >
         {contents?.map((content, index) => (
           <div
