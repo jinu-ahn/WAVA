@@ -27,7 +27,6 @@ export default function ControllerComponent(props) {
   
   useEffect(() => {
     getUserList();
-    console.log("실행됨?")
   }, [groupId])
 
   useEffect(() => {

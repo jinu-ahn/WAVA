@@ -107,7 +107,14 @@ const groupChannelAPI = {
     ]
   }
 */
-
+  
+  // 지도 핀 정보 모두 가져오기
+  getMapPinRequest: async (channelId) => {
+    return await handleRequest(() =>
+      local.get(`position/detail/${channelId}`)
+    )
+  },
+  
   // 지도 핀 수정
   updateMapPinRequest: async (pinId, data) => {
     return await handleRequest(() =>
