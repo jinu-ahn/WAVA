@@ -30,8 +30,14 @@ public enum ErrorCode {
     EXPIRED_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED,"재 로그인이 필요합니다."),
     ALREADY_EXIST_WORCATION(HttpStatus.CONFLICT, "진행중인 워케이션이 있습니다."),
     FILE_TOO_LARGE(HttpStatus.PAYLOAD_TOO_LARGE,"파일의 최대용량이 초과되었습니다."),
-    CHANNEL_LIMIT_EXCEED(HttpStatus.FORBIDDEN, "채널 인원이 가득 찼습니다.");
+    CHANNEL_LIMIT_EXCEED(HttpStatus.FORBIDDEN, "채널 인원이 가득 찼습니다."),
+    EMAIL_OR_PASSWORD_UNMATCH(HttpStatus.BAD_REQUEST,"이메일 또는 비밀번호가 일치하지 않습니다."),
+    ALREADY_FOLLOWING(HttpStatus.BAD_REQUEST,"이미 팔로우중인 채널입니다."),
+    NOT_FOLLOWING(HttpStatus.BAD_REQUEST,"팔로우 하지 않는 채널입니다."),
+    SELF_FOLLOWING(HttpStatus.BAD_REQUEST,"자기를 팔로우할수는 없습니다."),
+    IOEXCEPTION(HttpStatus.BAD_REQUEST,"IOEXCEPTION 발생");
 
+    
     private HttpStatus status;
     private String message;
 }

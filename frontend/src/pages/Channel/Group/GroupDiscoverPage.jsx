@@ -53,7 +53,10 @@ function GroupDiscoverPage() {
   return (
     <>
       <div className="flex flex-col h-full">
-        <FeedSearchBar searchHandle={searchHandle} />
+        <FeedSearchBar
+          searchHandle={searchHandle}
+          tooltipMessage="그룹 채널의 검색은 검색어와 워케이션 지역에 따라 정렬된 결과입니다."
+        />
         {loading ? (
           <div className="flex justify-center items-center w-full h-full">
             <LoadingSpinner message="그룹 정보를 불러오는 중입니다." />

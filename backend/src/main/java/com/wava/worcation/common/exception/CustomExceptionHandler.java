@@ -5,6 +5,7 @@ import com.wava.worcation.common.response.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
@@ -63,5 +64,17 @@ public class CustomExceptionHandler {
     public ResponseEntity<ApiResponse<String>> handleMaxUploadSizeExceededException(MaxUploadSizeExceededException ex) {
         return ResponseEntity.status(HttpStatus.PAYLOAD_TOO_LARGE)
                 .body(ApiResponse.error(ErrorCode.FILE_TOO_LARGE));
+    }
+
+    /**
+     * 작성자   : 안진우
+     * 작성일   : 2024-08-11
+     * 설명     : 자격증명 예외 처리 핸들러 (이메일 또는 비밀번호 에러 시)
+     * @return HTTP 상태 코드와 ApiResponse를 포함한 응답 객체 .
+     */
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiResponse<String>> handleBadCredentialsException(BadCredentialsException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(ErrorCode.EMAIL_OR_PASSWORD_UNMATCH));
     }
 }

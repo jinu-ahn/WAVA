@@ -19,7 +19,7 @@ import GroupDiscoverPage from "./pages/Channel/Group/GroupDiscoverPage";
 
 function App() {
   const { user } = useAuthStore();
-  console.log(user);
+  // console.log(user);
 
   useEffect(() => {
     if (!sessionStorage.getItem("accessToken")) {

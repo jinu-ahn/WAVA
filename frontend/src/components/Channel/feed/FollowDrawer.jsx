@@ -5,87 +5,56 @@ import {
   UserCircleIcon,
 } from "@heroicons/react/24/outline";
 import useDeviceStore from "../../../store/deviceStore";
+import {
+  readFollowUserRequest,
+  readFollowerUserRequest,
+} from "../../../api/channelFeedApi";
 
 // 더미 데이터 (실제 구현 시 API에서 가져와야 함)
-const dummyUsers = [
-  { id: "1", name: "Alice", username: "alice123", followStatus: "follower" },
-  { id: "2", name: "Bob", username: "bob456", followStatus: "mutual" },
-  {
-    id: "3",
-    name: "Charlie",
-    username: "charlie789",
-    followStatus: "following",
-  },
-  { id: "4", name: "David", username: "david101", followStatus: "follower" },
-  { id: "5", name: "Eva", username: "eva202", followStatus: "none" },
-];
 
 const FollowDrawer = ({
   isOpen,
   onClose,
-  userId,
-  initialTab = "followers",
+  userNickName,
+  activeTab,
+  handleFollowClick,
+  loginedUserNickName,
+  setActiveTab,
 }) => {
   const isMobile = useDeviceStore((state) => state.isMobile);
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState(initialTab);
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    // 실제 구현에서는 여기서 API를 호출하여 팔로워와 팔로잉 목록을 가져옵니다.
-    setUsers(dummyUsers);
-  }, [userId]);
+    const getData = async () => {
+      if (!userNickName) return;
+      if (activeTab === "followers") {
+        const resp = await readFollowUserRequest(userNickName);
+        if (resp?.status === "OK") {
+          setUsers(resp.data?.userList);
+        }
+      } else if (activeTab === "following") {
+        const resp = await readFollowerUserRequest(userNickName);
+        if (resp?.status === "OK") {
+          setUsers(resp.data?.userList);
+        }
+      }
+    };
+    getData();
+  }, [activeTab, userNickName]);
 
   const handleUserClick = (userId) => {
     navigate(`/channel/feed/${userId}`);
     onClose();
   };
 
-  const handleFollowClick = (userId) => {
-    setUsers(
-      users.map((user) => {
-        if (user.id === userId) {
-          switch (user.followStatus) {
-            case "none":
-              return { ...user, followStatus: "following" };
-            case "follower":
-              return { ...user, followStatus: "mutual" };
-            case "following":
-            case "mutual":
-              return {
-                ...user,
-                followStatus:
-                  user.followStatus === "mutual" ? "follower" : "none",
-              };
-            default:
-              return user;
-          }
-        }
-        return user;
-      })
+  const handleRequestFollow = async (nickName, status) => {
+    setUsers((state) =>
+      state.map((el) =>
+        el.nickname === nickName ? { ...el, follower: !el.follower } : el
+      )
     );
-    // 실제 구현에서는 여기서 팔로우/언팔로우 API를 호출해야 합니다.
-  };
-
-  const filteredUsers =
-    activeTab === "followers"
-      ? users.filter((user) =>
-          ["follower", "mutual"].includes(user.followStatus)
-        )
-      : users.filter((user) =>
-          ["following", "mutual"].includes(user.followStatus)
-        );
-
-  const getFollowButtonText = (followStatus) => {
-    switch (followStatus) {
-      case "none":
-      case "follower":
-        return "팔로우";
-      case "following":
-      case "mutual":
-      default:
-        return "언팔로우";
-    }
+    await handleFollowClick("outContent", status, nickName);
   };
 
   return (
@@ -117,52 +86,62 @@ const FollowDrawer = ({
           <div className="flex justify-center mb-6">
             <button
               className={`px-4 py-2 ${
-                activeTab === "followers"
-                  ? "bg-mainBlue text-white"
-                  : "bg-gray-200"
-              } rounded-l-lg`}
-              onClick={() => setActiveTab("followers")}
-            >
-              팔로워
-            </button>
-            <button
-              className={`px-4 py-2 ${
                 activeTab === "following"
                   ? "bg-mainBlue text-white"
                   : "bg-gray-200"
-              } rounded-r-lg`}
+              } rounded-l-lg`}
               onClick={() => setActiveTab("following")}
             >
               팔로잉
             </button>
+            <button
+              className={`px-4 py-2 ${
+                activeTab === "followers"
+                  ? "bg-mainBlue text-white"
+                  : "bg-gray-200"
+              } rounded-r -lg`}
+              onClick={() => setActiveTab("followers")}
+            >
+              팔로워
+            </button>
           </div>
-
           <div className="flex-grow overflow-y-auto">
-            {filteredUsers.map((user) => (
+            {users.map((user) => (
               <div
-                key={user.id}
+                key={user.userId}
                 className="flex items-center justify-between p-4 hover:bg-gray-100"
               >
                 <div
                   className="flex items-center cursor-pointer"
-                  onClick={() => handleUserClick(user.id)}
+                  onClick={() => handleUserClick(user.nickname)}
                 >
-                  <UserCircleIcon className="h-12 w-12 text-gray-400 mr-4" />
+                  {user.profile ? (
+                    <img
+                      className="h-12 w-12 rounded-full border p-1 mx-1"
+                      src={user.profile}
+                    />
+                  ) : (
+                    <UserCircleIcon className="h-12 w-12 text-gray-400 mx-1" />
+                  )}
                   <div>
-                    <p className="font-semibold">{user.name}</p>
-                    <p className="text-gray-500">@{user.username}</p>
+                    <p className="text-black mx-2">{user.nickname}</p>
+                    <p className="text-gray-700 text-xs mx-2">
+                      {user?.hasFollowerRelationship && "나를 팔로우중"}
+                    </p>
                   </div>
                 </div>
-                <button
-                  className={`px-4 py-2 rounded ${
-                    ["following", "mutual"].includes(user.followStatus)
-                      ? "bg-gray-200"
-                      : "bg-mainBlue text-white"
-                  }`}
-                  onClick={() => handleFollowClick(user.id)}
-                >
-                  {getFollowButtonText(user.followStatus)}
-                </button>
+                {loginedUserNickName !== user.nickname && (
+                  <button
+                    className={`px-4 py-2 rounded ${
+                      user.follower ? "bg-gray-200" : "bg-mainBlue text-white"
+                    }`}
+                    onClick={() =>
+                      handleRequestFollow(user.nickname, user.follower)
+                    }
+                  >
+                    {user.follower ? "언팔로우" : "팔로우"}
+                  </button>
+                )}
               </div>
             ))}
           </div>

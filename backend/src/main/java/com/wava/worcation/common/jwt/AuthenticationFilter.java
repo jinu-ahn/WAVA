@@ -1,7 +1,5 @@
 package com.wava.worcation.common.jwt;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.wava.worcation.common.exception.CustomException;
 import com.wava.worcation.common.response.ApiResponse;
 import com.wava.worcation.common.response.ErrorCode;
 import com.wava.worcation.common.util.RedisUtil;
@@ -10,13 +8,10 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.ErrorResponse;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
@@ -52,6 +47,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
                 return;
             }
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            log.info("context : {}",SecurityContextHolder.getContext().getAuthentication());
+
         }
 
         filterChain.doFilter(request, response);

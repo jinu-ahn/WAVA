@@ -27,7 +27,6 @@ const DashboardContent = () => {
 
   const ai_test = async () => {
     const comment = await mainLogic();
-    console.log(comment);
     setComments(comment);
     setAnswer(comment);
   };

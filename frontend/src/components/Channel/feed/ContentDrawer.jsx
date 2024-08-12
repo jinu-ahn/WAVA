@@ -125,7 +125,7 @@ const ContentDrawer = ({
       cancelButtonText: "취소",
     }).then((result) => {
       if (result.isConfirmed) {
-        console.log(feedContent);
+        // console.log(feedContent);
         deleteFeedRequest(feedContent?.id);
         onDelete(feedContent?.id);
         handleCloseReset();

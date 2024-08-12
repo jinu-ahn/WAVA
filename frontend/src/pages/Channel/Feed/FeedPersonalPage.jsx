@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import ContentDrawer from "../../../components/Channel/feed/ContentDrawer";
 import ContentItemGrid from "../../../components/Channel/feed/ContentItemGrid";
 import CreateContentDrawer from "../../../components/Channel/feed/CreateContentDrawer";
@@ -29,6 +29,7 @@ function FeedPersonalPage() {
   const [isNoContent, setIsNoContent] = useState(false);
 
   const location = useLocation();
+  const navigate = useNavigate();
 
   const openDrawerRef = useRef(null);
 
@@ -37,11 +38,17 @@ function FeedPersonalPage() {
       try {
         setLoading(true);
         const feedInfoResp = await readFeedInfoRequest(userId);
-        if (feedInfoResp?.data) setUserInfo(feedInfoResp?.data);
+        if (feedInfoResp?.data) {
+          setUserInfo(feedInfoResp?.data);
+        } else {
+          // alert("존재하지 않는 유저입니다!");
+          navigate("/channel");
+        }
         const feedContResp = await readFeedContentRequest(userId);
         if (feedContResp?.data?.data?.length > 0) {
           setMaxPage(feedContResp?.data?.totalPages - 1); // 0부터 -1까지
           setContents(feedContResp.data.data);
+          setIsNoContent(false);
         } else {
           setMaxPage(-1);
           setContents([]);
@@ -54,7 +61,7 @@ function FeedPersonalPage() {
       }
     };
     getData();
-  }, [userId, location.pathname]);
+  }, [userId, location.pathname, navigate]);
 
   const handleSelectContent = (content) => {
     setSelectedFeedId(content.id);
@@ -127,7 +134,7 @@ function FeedPersonalPage() {
   return (
     <>
       <div className="flex h-full">
-        <div className="flex flex-col flex-1">
+        <div className={`flex flex-col flex-1 `}>
           <FeedHeader
             openDrawerRef={openDrawerRef}
             createFeedControl={createFeedControl}
@@ -136,16 +143,18 @@ function FeedPersonalPage() {
             openCreateDrawer={() => setIsCreateDrawerOpen(true)}
           />
           {loading ? (
-            <LoadingSpinner message="피드를 로딩중입니다." /> // 추가: 로딩 중일 때 스피너 표시
+            <LoadingSpinner message="게시글을 불러오는 중입니다." /> // 추가: 로딩 중일 때 스피너 표시
           ) : (
             <>
-              {isNoContent && (
-                <NoContent
-                  refStatus={openDrawerRef.current ? true : false}
-                  createFeedControl={createFeedControl}
-                />
-              )}
               <ContentItemGrid
+                isPersonal={true}
+                isNoContent={isNoContent}
+                noContentComponent={
+                  <NoContent
+                    refStatus={openDrawerRef.current ? true : false}
+                    createFeedControl={createFeedControl}
+                  />
+                }
                 loadMore={loadMore}
                 loading={itemLoading}
                 contents={contents}

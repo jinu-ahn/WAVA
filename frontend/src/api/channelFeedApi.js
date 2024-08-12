@@ -102,26 +102,35 @@ export const searchFeedRequest = async (keyword = "", page = 0) => {
 };
 
 // 팔로우 등록
-export const followRequest = async (channelId) => {
+export const followRequest = async (nickName) => {
   return await handleRequest(
-    () => local.post(`${address}/follow`, { channelId }),
+    () => local.post(`${address}/follow/${nickName}/follow`),
     "팔로우 등록"
+  );
+};
+
+// 팔로우 해제
+export const unfollowRequest = async (nickName) => {
+  return await handleRequest(
+    () => local.delete(`${address}/follow/${nickName}/unfollow`),
+    "팔로우 해제"
   );
 };
 
 // 팔로우? 상세
 export const readFollowUserRequest = async (nickName) => {
+  // console.log(nickName);
   return await handleRequest(
-    () => local.get(`${address}/${nickName}/follower`),
-    "팔로우 상세"
+    () => local.get(`${address}/follow/${nickName}/follower`),
+    "팔로워 상세"
   );
 };
 
 // 팔로워? 상세
 export const readFollowerUserRequest = async (nickName) => {
   return await handleRequest(
-    () => local.get(`${address}/${nickName}/followering`),
-    "팔로워 상세"
+    () => local.get(`${address}/follow/${nickName}/following`),
+    "팔로잉 상세"
   );
 };
 

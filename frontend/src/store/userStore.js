@@ -16,7 +16,6 @@ const useUserStore = create(
           await login(
             user,
             (response) => {
-              console.log("여기");
               console.log(response.status);
               if (response.status === httpStatusCode.OK) {
                 console.log("로그인 성공");
@@ -42,7 +41,8 @@ const useUserStore = create(
               await Swal.fire({
                 position: "center",
                 icon: "error",
-                titleText: errorMessage || "네트워크 연결을 확인해 주세요",
+                titleText:
+                  errorMessage || "아이디 혹은 비밀번호를 확인해 주세요",
                 showConfirmButton: false,
                 timer: 2500,
               });

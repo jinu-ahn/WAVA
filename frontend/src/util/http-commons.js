@@ -84,11 +84,10 @@ function refreshToken() {
       return accessToken;
     })
     .catch((e) => {
-      console.log(e, "에러");
       localStorage.removeItem("userStorage");
       sessionStorage.removeItem("accessToken");
       sessionStorage.removeItem("refreshToken");
-      console.error("장시간 미사용으로 로그아웃되었습니다");
+      console.error(e + " 장시간 미사용으로 로그아웃되었습니다");
     });
 }
 

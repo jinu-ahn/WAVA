@@ -22,32 +22,32 @@ function Footer() {
   const iconsTab = [
     {
       icon: <FaGithub />,
-      url: "https://github.com/your-github-org",
+      url: "https://github.com/MJ-Kor",
       name: "김민주",
     },
     {
       icon: <FaGithub />,
-      url: "https://github.com/your-github-org",
+      url: "https://github.com/wjswlgnsdlqslek",
       name: "전지훈",
     },
     {
       icon: <FaGithub />,
-      url: "https://github.com/your-github-org",
+      url: "https://github.com/DDARK00",
       name: "한세훈",
     },
     {
       icon: <FaGithub />,
-      url: "https://github.com/your-github-org",
+      url: "https://github.com/jinu-ahn",
       name: "안진우",
     },
     {
       icon: <FaGithub />,
-      url: "https://github.com/your-github-org",
+      url: "https://github.com/byeongsuLEE",
       name: "이병수",
     },
     {
       icon: <FaGithub />,
-      url: "https://github.com/your-github-org",
+      url: "https://github.com/S-Choi-1997",
       name: "최승호",
     },
     {
@@ -64,7 +64,10 @@ function Footer() {
   ];
 
   return (
-    <footer className="bg-white mt-auto hidden md:block">
+    <footer
+      className="bg-white mt-auto hidden md:block"
+      style={{ fontFamily: "'IBM Plex Sans KR', sans-serif" }}
+    >
       <div className="container mx-auto px-4 py-4 flex justify-between items-start">
         {/* 로고 및 아이콘 섹션 */}
         <div className="flex flex-col w-1/3 gap-4">
@@ -84,7 +87,7 @@ function Footer() {
               </div>
             ))}
           </div>
-          <p className="text-xs text-mainTxt">© C204 WORQ</p>
+          <p className="text-xs text-mainTxt">© C204 WAVA</p>
         </div>
 
         {/* 메뉴 및 팀 섹션 */}

@@ -58,6 +58,10 @@ dependencies {
 	//openvidu
 	implementation 'io.openvidu:openvidu-java-client:2.30.0'
 
+	// AOP
+	implementation 'org.springframework.boot:spring-boot-starter-aop:3.3.2'
+
+	// Mock
 	testImplementation 'org.mockito:mockito-core:4.6.1'
 	testImplementation 'org.mockito:mockito-junit-jupiter:4.6.1'
 }

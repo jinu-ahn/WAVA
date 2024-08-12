@@ -1,8 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 import useDeviceStore from "../../../store/deviceStore";
 
-const ContentItemGrid = ({ loadMore, onSelectContent, contents, loading }) => {
+const ContentItemGrid = ({
+  isPersonal = false,
+  isNoContent,
+  noContentComponent,
+  loadMore,
+  onSelectContent,
+  contents,
+  loading,
+}) => {
   const isMobile = useDeviceStore((state) => state.isMobile);
   const [ref, inView] = useInView({
     threshold: 1,
@@ -16,10 +24,15 @@ const ContentItemGrid = ({ loadMore, onSelectContent, contents, loading }) => {
 
   return (
     <>
+      {isNoContent && noContentComponent}
       <div
-        className={`grid overflow-y-auto h-full select-none user ${
-          isMobile ? "grid-cols-1 gap-y-6" : "grid-cols-2"
-        } 2xl:grid-cols-6 lg:grid-cols-4 md:grid-cols-3 gap-6 p-6`}
+        className={`grid select-none user ${
+          isMobile
+            ? "grid-cols-1 gap-y-6"
+            : "grid-cols-2 overflow-y-auto h-full"
+        } 
+         ${isMobile && !isPersonal && " overflow-y-auto h-full "}
+        2xl:grid-cols-6 lg:grid-cols-4 md:grid-cols-3 gap-6 p-6`}
       >
         {contents?.map((content, index) => (
           <div

@@ -1,6 +1,7 @@
 package com.wava.worcation.domain.channel.repository;
 
 import com.wava.worcation.domain.channel.domain.Channel;
+import com.wava.worcation.domain.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -34,4 +35,6 @@ public interface ChannelRepository extends JpaRepository<Channel, Long> {
             @Param("content") String content,
             @Param("channelType") String channelType,
             @Param("sido") String sido);
+
+    Optional<Channel> findByUser(User user);
 }

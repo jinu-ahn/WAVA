@@ -22,7 +22,6 @@ const useTodoStore = create((set) => ({
       });
       return true;
     } else {
-      console.log("server error-f");
       return false;
     }
   },
@@ -33,24 +32,20 @@ const useTodoStore = create((set) => ({
       set({
         todayEvents,
       });
-      console.log(todayEvents);
       return true;
     } else {
-      console.log("server error-f");
       return false;
     }
   },
 
   addEvent: async (newTodo) => {
     const event = await createTodoRequest(newTodo);
-    console.log(event);
     if (event) {
       set((state) => ({
         events: [...state.events, event],
       }));
       return true;
     } else {
-      console.log("add에러");
       return false;
     }
   },

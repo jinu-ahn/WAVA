@@ -1,15 +1,16 @@
 package com.wava.worcation.domain.channel.dto.info;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class FollowRequestDto {
-    private Long channelId;
+    private String nickname;
 
-    // Getters and setters
-    public Long getChannelId() {
-        return channelId;
-    }
-
-    public void setChannelId(Long channelId) {
-        this.channelId = channelId;
-    }
 }
 
