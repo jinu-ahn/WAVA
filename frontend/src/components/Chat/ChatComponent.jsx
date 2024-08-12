@@ -190,6 +190,8 @@ function ChatComponent(props) {
           handleInputChange={handleInputChange}
           sendMessage={sendMessage}
           handleKeyDown={handleKeyDown}
+          mode={props.mode}
+          setMode={props.setMode}
         />
       </div>
     </>

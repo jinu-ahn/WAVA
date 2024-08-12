@@ -16,22 +16,41 @@ const MapComponent = (props) => {
   const [markers, setMarkers] = useState([]);
   const [customMarkers, setCustomMarkers] = useState([]);
   const infowindow = useRef(null);
-  const [selectedUser, setSelectedUser] = useState("");
+  const {selectedUserNickName, channelId, setSelectedUserNickName } = props
 
 
   // 특정 사용자의 커서 위치로 지도 center를 이동
-  const handleFollowUser = () => {
-    const cursors = cursorsRef.current.getCursorMarkers();
-    if (selectedUser && map && cursors[selectedUser]) {
-      const position = cursors[selectedUser].getPosition();
-      map.panTo(position); // 선택된 사용자의 위치로 지도 이동
-    } else {
-      Swal.fire({
-        title: "사용자를 선택해주세요",
-        icon: "warning",
-      });
+  // const handleFollowUser = () => {
+  //   const cursors = cursorsRef.current.getCursorMarkers();
+  //   if (selectedUser && map && cursors[selectedUser]) {
+  //     const position = cursors[selectedUser].getPosition();
+  //     map.panTo(position); // 선택된 사용자의 위치로 지도 이동
+  //   } else {
+  //     Swal.fire({
+  //       title: "사용자를 선택해주세요",
+  //       icon: "warning",
+  //     });
+  //   }
+  // };
+  useEffect(() => {
+    if (selectedUserNickName && cursorsRef.current) {
+      const cursors = cursorsRef.current.getCursorMarkers();
+      const selectedCursor = cursors[selectedUserNickName];
+      
+      if (selectedCursor && map) {
+        const position = selectedCursor.getPosition();
+        map.panTo(position); // 선택된 사용자의 커서 위치로 지도 이동
+      } else {
+        Swal.fire({
+          title: "해당 사용자의 커서 위치를 찾을 수 없습니다.",
+          icon: "warning",
+        });
+      }
+
+      setSelectedUserNickName(null)
     }
-  };
+  }, [selectedUserNickName, map, setSelectedUserNickName]);
+
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -42,94 +61,131 @@ const MapComponent = (props) => {
 
     script.onload = () => {
       window.kakao.maps.load(() => {
-        const mapOption = {
-          center: new window.kakao.maps.LatLng(37.566826, 126.9786567),
-          level: 3,
-        };
-        const createdMap = new window.kakao.maps.Map(
-          mapContainer.current,
-          mapOption
-        );
-        setMap(createdMap);
-
-        infowindow.current = new window.kakao.maps.InfoWindow({
-          zIndex: 1,
-          removable: true,
-        });
-
-        const manager = new window.kakao.maps.drawing.DrawingManager({
-          map: createdMap,
-          drawingMode: [
-            window.kakao.maps.drawing.OverlayType.MARKER,
-            window.kakao.maps.drawing.OverlayType.POLYLINE,
-            window.kakao.maps.drawing.OverlayType.RECTANGLE,
-            window.kakao.maps.drawing.OverlayType.CIRCLE,
-            window.kakao.maps.drawing.OverlayType.POLYGON,
-          ],
-          guideTooltip: ["draw", "drag", "edit"],
-          markerOptions: {
-            draggable: true,
-          },
-          polylineOptions: {
-            draggable: true,
-            removable: true,
-            editable: true,
-          },
-          rectangleOptions: {
-            draggable: true,
-            removable: true,
-            editable: true,
-          },
-          circleOptions: {
-            draggable: true,
-            removable: true,
-            editable: true,
-          },
-          polygonOptions: {
-            draggable: true,
-            removable: true,
-            editable: true,
-          },
-        });
-        setDrawingManager(manager);
-
-        // 마커 생성 완료 이벤트 리스너
-        window.kakao.maps.event.addListener(
-          manager,
-          "drawend",
-          function (data) {
-            const overlay = data.target;
-            const overlayType = data.overlayType;
-            if (overlayType === window.kakao.maps.drawing.OverlayType.MARKER) {
-              handleMarkerCreated(overlay);
-            } else {
-              console.log(`Overlay created, but not handled:`, overlayType);
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const lat = position.coords.latitude;
+              const lng = position.coords.longitude;
+              const mapOption = {
+                center: new window.kakao.maps.LatLng(lat, lng),
+                level: 3,
+              };
+              const createdMap = new window.kakao.maps.Map(
+                mapContainer.current,
+                mapOption
+              )
+              setMap(createdMap);
+              initializeDrawingManager(createdMap);
+              initializeClickEventListener(createdMap);
+            },
+            (error) => {
+              console.error("Error fetching current location:", error);
+              const defaultCenter = new window.kakao.maps.LatLng(37.566826, 126.9786567);
+              const mapOption = {
+                center: defaultCenter,
+                level: 3,
+              };
+              const createdMap = new window.kakao.maps.Map(
+                mapContainer.current,
+                mapOption
+              );
+              setMap(createdMap);
+              initializeDrawingManager(createdMap);
+              initializeClickEventListener(createdMap);
             }
-          }
-        );
-        window.kakao.maps.event.addListener(createdMap, 'click', function(mouseEvent) {        
-            
-            // 클릭한 위도, 경도 정보를 가져옵니다 
-            var latlng = mouseEvent.latLng;
-            
-            var message = '클릭한 위치의 위도는 ' + latlng.getLat() + ' 이고, ';
-            message += '경도는 ' + latlng.getLng() + ' 입니다';
-            
-            console.log(message)
-            
-        });
-        // if (currentUser && !currentUser.color) {
-        //   const randomColor =
-        //     USER_COLORS[Math.floor(Math.random() * USER_COLORS.length)];
-        //   awareness.setLocalStateField("color", randomColor);
-        // }
+          )
+        } else {
+          const defaultCenter = new window.kakao.maps.LatLng(37.566826, 126.9786567);
+          const mapOption = {
+            center: defaultCenter,
+            level: 3,
+          };
+          const createdMap = new window.kakao.maps.Map(
+            mapContainer.current,
+            mapOption
+          );
+          setMap(createdMap);
+          initializeDrawingManager(createdMap);
+          initializeClickEventListener(createdMap);
+        }
+
+        const initializeDrawingManager = (createdMap) => {
+          infowindow.current = new window.kakao.maps.InfoWindow({
+            zIndex: 1,
+            removable: true,
+          });
+          const manager = new window.kakao.maps.drawing.DrawingManager({
+            map: createdMap,
+            drawingMode: [
+              window.kakao.maps.drawing.OverlayType.MARKER,
+              window.kakao.maps.drawing.OverlayType.POLYLINE,
+              window.kakao.maps.drawing.OverlayType.RECTANGLE,
+              window.kakao.maps.drawing.OverlayType.CIRCLE,
+              window.kakao.maps.drawing.OverlayType.POLYGON,
+            ],
+            guideTooltip: ["draw", "drag", "edit"],
+            markerOptions: {
+              draggable: true,
+            },
+            polylineOptions: {
+              draggable: true,
+              removable: true,
+              editable: true,
+            },
+            rectangleOptions: {
+              draggable: true,
+              removable: true,
+              editable: true,
+            },
+            circleOptions: {
+              draggable: true,
+              removable: true,
+              editable: true,
+            },
+            polygonOptions: {
+              draggable: true,
+              removable: true,
+              editable: true,
+            },
+          });
+          setDrawingManager(manager);
+  
+          // 마커 생성 완료 이벤트 리스너
+          window.kakao.maps.event.addListener(
+            manager,
+            "drawend",
+            function (data) {
+              const overlay = data.target;
+              const overlayType = data.overlayType;
+              if (overlayType === window.kakao.maps.drawing.OverlayType.MARKER) {
+                handleMarkerCreated(overlay);
+              } else {
+                console.log(`Overlay created, but not handled:`, overlayType);
+              }
+            }
+          );
+        }
+
+        const initializeClickEventListener = (createdMap) => {        
+          window.kakao.maps.event.addListener(createdMap, 'click', function(mouseEvent) {        
+              
+              // 클릭한 위도, 경도 정보를 가져옵니다 
+              var latlng = mouseEvent.latLng;
+              
+              var message = '클릭한 위치의 위도는 ' + latlng.getLat() + ' 이고, ';
+              message += '경도는 ' + latlng.getLng() + ' 입니다';
+              
+              console.log(message)
+              
+          });
+        }
       });
     };
 
     return () => {
       document.head.removeChild(script);
     };
-  }, []); // }, [currentUser]);
+  }, [channelId]);
 
   const handleMarkerCreated = useCallback((marker) => {
     Swal.fire({
@@ -342,8 +398,8 @@ const MapComponent = (props) => {
   );
 
   return (
-    <div className="flex flex-col h-full relative">
-      <div className="absolute top-0 left-0 w-full p-4 bg-white bg-opacity-60 z-10">
+    <div className="flex flex-col h-full relative ">
+      <div className="w-3/4 absolute top-0 left-0 p-4 bg-white bg-opacity-60 z-10">
         <div className="flex space-x-2">
           <input
             type="text"
@@ -397,7 +453,7 @@ const MapComponent = (props) => {
             다각형
           </button>
         </div>
-        <div className="p-2 flex space-x-2 mt-2">
+        {/* <div className="p-2 flex space-x-2 mt-2">
           <input
             type="text"
             value={selectedUser}
@@ -411,10 +467,10 @@ const MapComponent = (props) => {
           >
             사용자 따라가기
           </button>
-        </div>
+        </div> */}
       </div>
       <div ref={mapContainer} className="flex-grow h-screen">
-        {map && <Cursors ref={cursorsRef} channelId={props.channelId} map={map} />}
+        {map && <Cursors ref={cursorsRef} channelId={channelId} map={map} />}
       </div>
       <div className="absolute bottom-0 left-0 w-full p-4 bg-white bg-opacity-60 z-10 max-h-40 overflow-y-auto">
         <ul>
