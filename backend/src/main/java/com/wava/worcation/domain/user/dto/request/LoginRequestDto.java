@@ -1,5 +1,6 @@
 package com.wava.worcation.domain.user.dto.request;
 
+import lombok.Builder;
 import lombok.Getter;
 /**
  * 작성자 : jingu
@@ -7,6 +8,7 @@ import lombok.Getter;
  * 설명 : 로그인 Data Transport Object
  */
 @Getter
+@Builder
 public class LoginRequestDto {
     private String email;
     private String password;
