@@ -5,7 +5,7 @@ import useUserStore from "../../store/userStore";
 import {
   CalendarIcon,
   GlobeAltIcon,
-  ArrowLeftOnRectangleIcon,
+  ArrowRightStartOnRectangleIcon,
   HomeIcon,
   ArrowsPointingOutIcon,
   ArrowsPointingInIcon,
@@ -39,7 +39,7 @@ const Explorer = () => {
     <nav
       className={`sidebar ${
         collapsed ? "w-14" : "w-40"
-      } h-full bg-gray-800 text-white flex flex-col justify-between transition-all duration-200 ease-in-out`}
+      } h-full bg-gray-800 text-white flex flex-col justify-between transition-all duration-300 ease`}
     >
       <div>
         <div
@@ -48,7 +48,7 @@ const Explorer = () => {
           } p-4 border-b border-gray-700 mb-4`}
         >
           <h2
-            className={`text-lg font-semibold tracking-wide text-gray-300 ${
+            className={`text-lg font-semibold tracking-wide text-gray-200 ${
               collapsed ? "hidden" : "block"
             }`}
           >
@@ -80,14 +80,6 @@ const Explorer = () => {
             onClick={() => handleLinkClick("/")}
           />
           <SidebarLink
-            to="/channel"
-            icon={<GlobeAltIcon className="h-6 w-6" />}
-            title="Channels"
-            collapsed={collapsed}
-            active={activeLink === "/channel"}
-            onClick={() => handleLinkClick("/channel")}
-          />
-          <SidebarLink
             to="/dashboard"
             icon={<CalendarIcon className="h-6 w-6" />}
             title="Dashboard"
@@ -95,40 +87,52 @@ const Explorer = () => {
             active={activeLink === "/dashboard"}
             onClick={() => handleLinkClick("/dashboard")}
           />
+          <SidebarLink
+            to="/channel"
+            icon={<GlobeAltIcon className="h-6 w-6" />}
+            title="Channels"
+            collapsed={collapsed}
+            active={activeLink === "/channel"}
+            onClick={() => handleLinkClick("/channel")}
+          />
         </ul>
       </div>
 
       <div className="mt-4">
-        <div className="sidebar-profile p-4 border-t border-gray-700 mb-4">
-          <div className="avatar-wrapper flex items-center">
-            {userInfo?.profile ? (
-              <img
-                src={userInfo.profile}
-                alt="User Profile"
-                className="w-6 h-6 rounded-full object-cover"
-              />
-            ) : (
-              <UserCircleIcon className="w-8 h-8 text-gray-400" />
-            )}
-            {!collapsed && (
-              <div className="avatar-name ml-3">
-                <div className="user-name font-medium text-gray-200 text-sm">
-                  {userInfo?.nickName || "User Name"}
-                </div>
-                <div className="text-xs text-gray-400">
-                  {`@${userInfo?.worcation.sido}` || "@username"}
-                </div>
+        <div
+          className={`sidebar-profile p-4 border-t border-gray-700 mb-4 flex items-center ${
+            collapsed ? "justify-center" : "justify-start"
+          }`}
+        >
+          {userInfo?.profile ? (
+            <img
+              src={userInfo.profile}
+              alt="User Profile"
+              className="w-6 h-6 rounded-full object-cover"
+            />
+          ) : (
+            <UserCircleIcon className="w-8 h-8 text-gray-400" />
+          )}
+          {!collapsed && (
+            <div className="avatar-name ml-3">
+              <div className="user-name font-medium text-gray-200 text-sm">
+                {userInfo?.nickName || "User Name"}
               </div>
-            )}
-          </div>
+              <div className="text-xs text-gray-400">
+                {`@${userInfo?.worcation.sido}` || "@username"}
+              </div>
+            </div>
+          )}
         </div>
 
         <Link
           to="/"
           onClick={logoutFunc}
-          className="logout-btn flex items-center justify-center p-4 hover:bg-gray-700 transition-colors"
+          className={`logout-btn flex items-center p-4 hover:bg-gray-700 transition-colors w-full ${
+            collapsed ? "justify-center" : "justify-start"
+          }`}
         >
-          <ArrowLeftOnRectangleIcon className="h-5 w-5 text-gray-400" />
+          <ArrowRightStartOnRectangleIcon className="h-5 w-5 text-gray-400" />
           {!collapsed && (
             <span className="ml-2 text-gray-300 font-medium text-sm">
               Logout
@@ -141,7 +145,7 @@ const Explorer = () => {
 };
 
 const SidebarLink = ({ to, icon, title, collapsed, active, onClick }) => (
-  <li>
+  <li className="w-full">
     <NavLink
       to={to}
       className={`flex items-center p-3 w-full rounded-md transition-colors ${
@@ -151,8 +155,14 @@ const SidebarLink = ({ to, icon, title, collapsed, active, onClick }) => (
       }`}
       onClick={onClick}
     >
-      {icon}
-      {!collapsed && <span className="ml-2 text-sm">{title}</span>}
+      <div
+        className={`flex items-center ${
+          collapsed ? "justify-center" : "justify-start"
+        } w-full`}
+      >
+        {icon}
+        {!collapsed && <span className="ml-2 text-sm">{title}</span>}
+      </div>
     </NavLink>
   </li>
 );
