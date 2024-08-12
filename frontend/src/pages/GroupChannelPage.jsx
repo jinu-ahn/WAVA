@@ -182,6 +182,7 @@ import ControllerComponent from "../components/Channel/group/ControllerComponent
 import VideoChat from "../components/VideoChat/VideoChat";
 import { groupChannelAPI } from "../api/groupChannelAPI";
 import LoadingSpinner from "../components/Channel/LoadingSpinner";
+import Swal from "sweetalert2";
 
 const GroupChannelPage = () => {
   const { groupId } = useParams();
@@ -202,7 +203,13 @@ const GroupChannelPage = () => {
         }
       } catch (error) {
         console.error("권한 확인 중 오류 발생:", error);
-        alert("참여하지 않은 채널입니다!");
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "존재하지 않는 채널입니다!",
+          showConfirmButton: false,
+          timer: 2000,
+        });
 
         navigate("/channel/group/discover-groups"); // 오류 발생 시 검색 페이지로 이동
       } finally {
