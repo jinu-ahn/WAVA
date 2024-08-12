@@ -239,14 +239,14 @@ function HomePage() {
       </div>
 
       {/* 설치 권유창 */}
-      <div className="fixed inset-x-0 bottom-4 flex justify-center">
-        <div
-          className={`p-4 mb-4 bg-slate-400 shadow-lg rounded-lg transition-all duration-[400ms] ease-in-out ${
-            showInstallPrompt
-              ? "opacity-100 translate-y-0"
-              : "opacity-0 translate-y-4"
-          }`}
-        >
+      <div
+        className={`fixed inset-x-0 bottom-4 flex justify-center transition-all duration-[400ms] ease-in-out ${
+          showInstallPrompt
+            ? "visible opacity-100 translate-y-0"
+            : "invisible opacity-0 translate-y-4"
+        }`}
+      >
+        <div className="p-4 mb-4 bg-slate-400 shadow-lg rounded-lg">
           <p className="text-center text-base mb-3 font-medium text-white">
             WAVA를 설치하고 더 빠르고 편리하게 이용하세요!
           </p>
