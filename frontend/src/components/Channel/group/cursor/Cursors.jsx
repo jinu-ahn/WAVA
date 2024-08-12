@@ -100,30 +100,43 @@ const Cursors = forwardRef((props, ref) => {
   }, [nickName, socketUrl, channelId, isConnected, map]);
   
   useEffect(() => {
-    if (map && users) {
-      Object.keys(users).forEach((key) => {
-        if (key === nickName) return;
+    const updateCursorPositions = () => {
 
-        const { x, y } = users[key];
-        const position = new window.kakao.maps.LatLng(x, y);
-        console.log("상대 커서 위치 !!! position: " + position)
-
-        // 기존 마커가 없으면 새로 생성
-        if (!cursorMarkers.current[key]) {
-          const randomColor = getRandomColor();
-          const content = ReactDOMServer.renderToString(<MyCursor color={randomColor} nickName={key} />);
-          const marker = new window.kakao.maps.CustomOverlay({
-            position,
-            content,
-            map,
-          });
-          cursorMarkers.current[key] = marker;
-        } else {
-          // 기존 마커 위치 업데이트
-          cursorMarkers.current[key].setPosition(position);
-        }
-      });
+      if (map && users) {
+        Object.keys(users).forEach((key) => {
+          if (key === nickName) return;
+  
+          const { x, y } = users[key];
+          const position = new window.kakao.maps.LatLng(x, y);
+          console.log("상대 커서 위치 !!! position: " + position)
+  
+          // 기존 마커가 없으면 새로 생성
+          if (!cursorMarkers.current[key]) {
+            const randomColor = getRandomColor();
+            const content = ReactDOMServer.renderToString(<MyCursor color={randomColor} nickName={key} />);
+            const marker = new window.kakao.maps.CustomOverlay({
+              position,
+              content,
+              xAnchor: 0.5,
+              yAnchor: 0.5,
+              map,
+            });
+            cursorMarkers.current[key] = marker;
+          } else {
+          cursorMarkers.current[key].setMap(null);  // 기존 마커 제거
+          cursorMarkers.current[key].setPosition(position);  // 위치 업데이트
+          cursorMarkers.current[key].setMap(map);  // 다시 지도에 추가
+          }
+        });
+      }
     }
+
+    updateCursorPositions();
+
+    // 줌 레벨 변경 시 상대방 커서 위치를 업데이트하는 이벤트 리스너 추가
+    window.kakao.maps.event.addListener(map, 'zoom_changed', () => {
+      updateCursorPositions();
+    });
   }, [users, map, nickName]);
 
   return (

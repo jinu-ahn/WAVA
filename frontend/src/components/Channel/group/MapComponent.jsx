@@ -16,22 +16,41 @@ const MapComponent = (props) => {
   const [markers, setMarkers] = useState([]);
   const [customMarkers, setCustomMarkers] = useState([]);
   const infowindow = useRef(null);
-  const [selectedUser, setSelectedUser] = useState("");
+  const {selectedUserNickName, channelId, setSelectedUserNickName } = props
 
 
   // 특정 사용자의 커서 위치로 지도 center를 이동
-  const handleFollowUser = () => {
-    const cursors = cursorsRef.current.getCursorMarkers();
-    if (selectedUser && map && cursors[selectedUser]) {
-      const position = cursors[selectedUser].getPosition();
-      map.panTo(position); // 선택된 사용자의 위치로 지도 이동
-    } else {
-      Swal.fire({
-        title: "사용자를 선택해주세요",
-        icon: "warning",
-      });
+  // const handleFollowUser = () => {
+  //   const cursors = cursorsRef.current.getCursorMarkers();
+  //   if (selectedUser && map && cursors[selectedUser]) {
+  //     const position = cursors[selectedUser].getPosition();
+  //     map.panTo(position); // 선택된 사용자의 위치로 지도 이동
+  //   } else {
+  //     Swal.fire({
+  //       title: "사용자를 선택해주세요",
+  //       icon: "warning",
+  //     });
+  //   }
+  // };
+  useEffect(() => {
+    if (selectedUserNickName && cursorsRef.current) {
+      const cursors = cursorsRef.current.getCursorMarkers();
+      const selectedCursor = cursors[selectedUserNickName];
+      
+      if (selectedCursor && map) {
+        const position = selectedCursor.getPosition();
+        map.panTo(position); // 선택된 사용자의 커서 위치로 지도 이동
+      } else {
+        Swal.fire({
+          title: "해당 사용자의 커서 위치를 찾을 수 없습니다.",
+          icon: "warning",
+        });
+      }
+
+      setSelectedUserNickName(null)
     }
-  };
+  }, [selectedUserNickName, map, setSelectedUserNickName]);
+
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -166,7 +185,7 @@ const MapComponent = (props) => {
     return () => {
       document.head.removeChild(script);
     };
-  }, [props.channelId]);
+  }, [channelId]);
 
   const handleMarkerCreated = useCallback((marker) => {
     Swal.fire({
@@ -379,8 +398,8 @@ const MapComponent = (props) => {
   );
 
   return (
-    <div className="flex flex-col h-full relative">
-      <div className="absolute top-0 left-0 w-full p-4 bg-white bg-opacity-60 z-10">
+    <div className="flex flex-col h-full relative ">
+      <div className="w-3/4 absolute top-0 left-0 p-4 bg-white bg-opacity-60 z-10">
         <div className="flex space-x-2">
           <input
             type="text"
@@ -434,7 +453,7 @@ const MapComponent = (props) => {
             다각형
           </button>
         </div>
-        <div className="p-2 flex space-x-2 mt-2">
+        {/* <div className="p-2 flex space-x-2 mt-2">
           <input
             type="text"
             value={selectedUser}
@@ -448,10 +467,10 @@ const MapComponent = (props) => {
           >
             사용자 따라가기
           </button>
-        </div>
+        </div> */}
       </div>
       <div ref={mapContainer} className="flex-grow h-screen">
-        {map && <Cursors ref={cursorsRef} channelId={props.channelId} map={map} />}
+        {map && <Cursors ref={cursorsRef} channelId={channelId} map={map} />}
       </div>
       <div className="absolute bottom-0 left-0 w-full p-4 bg-white bg-opacity-60 z-10 max-h-40 overflow-y-auto">
         <ul>

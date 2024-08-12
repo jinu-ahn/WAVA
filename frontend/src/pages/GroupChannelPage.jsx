@@ -186,8 +186,13 @@ import LoadingSpinner from "../components/Channel/LoadingSpinner";
 const GroupChannelPage = () => {
   const { groupId } = useParams();
   const [loading, setLoading] = useState(true);
+  const [selectedUserNickName, setSelectedUserNickName] = useState("");
   const [hasAccess, setHasAccess] = useState(false);
   const navigate = useNavigate();
+
+  const handleSelectUser = (nickName) => {
+    setSelectedUserNickName(nickName)
+  }
 
   useEffect(() => {
     const isJoined = async () => {
@@ -210,7 +215,8 @@ const GroupChannelPage = () => {
       }
     };
     isJoined();
-  }, [groupId]);
+
+  }, [groupId, navigate]);
 
   const [mode, setMode] = useState(true);
 
@@ -221,26 +227,29 @@ const GroupChannelPage = () => {
   if (!hasAccess) {
     return null; // 리디렉션 처리 후에는 아무 것도 렌더링하지 않음
   }
+
+  
   console.log(groupId);
   return (
-    <div className="flex h-screen">
+    <div className="relative flex h-screen">
       {/* 지도 컴포넌트 (3/4) */}
-      <div className="w-11/12 h-full">
-        <MapComponent channelId={groupId} />
+      
+      <div className="w-full h-full">
+        <MapComponent channelId={groupId} selectedUserNickName={selectedUserNickName} setSelectedUserNickName={setSelectedUserNickName} />
       </div>
 
       {/* 채팅 컴포넌트 (1/4) */}
       {mode ? (
-        <div className="w-1/4 h-full grid grid-rows-12">
-          <div className="row-span-1">
-            <ControllerComponent mode={mode} setMode={setMode} />
+        <div className="absolute top-0 right-0 z-20 w-1/4 h-full grid grid-rows-12">
+          <div className="row-span-2 mb-10 mt-2 me-2" >
+            <ControllerComponent mode={mode} setMode={setMode} groupId={groupId} onSelectUser={handleSelectUser} />
           </div>
-          <div className="row-span-11">
-            <ChatComponent channelId={groupId} />
+          <div className="row-span-11 -mt-8 me-2 mb-2 bg-white rounded-md">
+            <ChatComponent mode={mode} setMode={setMode} channelId={groupId} />
           </div>
         </div>
       ) : (
-        <div className="w-2/12 overflow-auto bg-black">
+        <div className="absolute top-0 right-0 z-20 w-2/12 overflow-auto bg-black">
           <VideoChat channelId={groupId} mode={mode} setMode={setMode} />
         </div>
       )}
