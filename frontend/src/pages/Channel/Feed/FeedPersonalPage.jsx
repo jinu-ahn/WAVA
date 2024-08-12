@@ -146,13 +146,14 @@ function FeedPersonalPage() {
             <LoadingSpinner message="피드를 로딩중입니다." /> // 추가: 로딩 중일 때 스피너 표시
           ) : (
             <>
-              {isNoContent && (
-                <NoContent
-                  refStatus={openDrawerRef.current ? true : false}
-                  createFeedControl={createFeedControl}
-                />
-              )}
               <ContentItemGrid
+                isNoContent={isNoContent}
+                noContentComponent={
+                  <NoContent
+                    refStatus={openDrawerRef.current ? true : false}
+                    createFeedControl={createFeedControl}
+                  />
+                }
                 loadMore={loadMore}
                 loading={itemLoading}
                 contents={contents}

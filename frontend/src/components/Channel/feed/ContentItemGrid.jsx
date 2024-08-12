@@ -2,7 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import useDeviceStore from "../../../store/deviceStore";
 
-const ContentItemGrid = ({ loadMore, onSelectContent, contents, loading }) => {
+const ContentItemGrid = ({
+  isNoContent,
+  noContentComponent,
+  loadMore,
+  onSelectContent,
+  contents,
+  loading,
+}) => {
   const isMobile = useDeviceStore((state) => state.isMobile);
   const [ref, inView] = useInView({
     threshold: 1,
@@ -16,6 +23,7 @@ const ContentItemGrid = ({ loadMore, onSelectContent, contents, loading }) => {
 
   return (
     <>
+      {isNoContent && noContentComponent}
       <div
         className={`grid overflow-y-auto h-full select-none user ${
           isMobile ? "grid-cols-1 gap-y-6" : "grid-cols-2"

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ContentDrawer from "../../../components/Channel/feed/ContentDrawer";
 import ContentItemGrid from "../../../components/Channel/feed/ContentItemGrid";
 import FeedSearchBar from "../../../components/Channel/feed/FeedSearchbar";
@@ -13,6 +13,7 @@ function FeedAroundPage() {
   const [contents, setContents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [itemLoading, setItemLoading] = useState(false);
+  const searchBarRef = useRef(null);
 
   const [pages, setPages] = useState(0);
   const [maxPage, setMaxPage] = useState(-1);
@@ -107,18 +108,25 @@ function FeedAroundPage() {
       prevContents.filter((content) => content.id !== contentId)
     );
   };
+  const onRetry = () => {
+    searchBarRef.current.focus();
+  };
 
   return (
     <div className="flex h-full">
       <div className="flex flex-col flex-1">
-        <FeedSearchBar searchHandle={searchHandle} />
+        <FeedSearchBar
+          searchBarRef={searchBarRef}
+          searchHandle={searchHandle}
+        />
 
         {loading ? (
           <LoadingSpinner message="게시글을 불러오는 중입니다." />
         ) : (
           <>
-            {isNoContent && <NoResult />}
             <ContentItemGrid
+              isNoContent={isNoContent}
+              noContentComponent={<NoResult onRetry={onRetry} />}
               loadMore={loadMore}
               contents={contents}
               loading={itemLoading}
