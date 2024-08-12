@@ -22,32 +22,32 @@ function Footer() {
   const iconsTab = [
     {
       icon: <FaGithub />,
-      url: "https://github.com/your-github-org",
+      url: "https://github.com/MJ-Kor",
       name: "김민주",
     },
     {
       icon: <FaGithub />,
-      url: "https://github.com/your-github-org",
+      url: "https://github.com/wjswlgnsdlqslek",
       name: "전지훈",
     },
     {
       icon: <FaGithub />,
-      url: "https://github.com/your-github-org",
+      url: "https://github.com/DDARK00",
       name: "한세훈",
     },
     {
       icon: <FaGithub />,
-      url: "https://github.com/your-github-org",
+      url: "https://github.com/jinu-ahn",
       name: "안진우",
     },
     {
       icon: <FaGithub />,
-      url: "https://github.com/your-github-org",
+      url: "https://github.com/byeongsuLEE",
       name: "이병수",
     },
     {
       icon: <FaGithub />,
-      url: "https://github.com/your-github-org",
+      url: "https://github.com/S-Choi-1997",
       name: "최승호",
     },
     {
