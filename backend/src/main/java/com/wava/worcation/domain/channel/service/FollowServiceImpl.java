@@ -103,6 +103,7 @@ public class FollowServiceImpl implements com.wava.worcation.domain.channel.serv
                     .profile(user.getProfileImg())
                     .nickname(user.getNickName())
                     .isFollower(followRepository.existsByChannelAndUser(channelRepository.findChannelByUserId(user.getId()),authUser))
+                    .isFollowingThisisForSehun(followRepository.existsByChannelAndUser(channelRepository.findChannelByUserId(authUser.getId()),user))
                     .build();
             followerDtos.add(dto);
         }
@@ -133,6 +134,7 @@ public class FollowServiceImpl implements com.wava.worcation.domain.channel.serv
                     .profile(user.getProfileImg())
                     .nickname(user.getNickName())
                     .isFollower(followRepository.existsByChannelAndUser(channelRepository.findChannelByUserId(user.getId()),authUser))
+                    .isFollowingThisisForSehun(followRepository.existsByChannelAndUser(channelRepository.findChannelByUserId(authUser.getId()),user))
                     .build();
                     log.info("channel {} user {}",follow.getChannel(),authUser);
             followerDtos.add(dto);
