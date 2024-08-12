@@ -41,13 +41,14 @@ function FeedPersonalPage() {
         if (feedInfoResp?.data) {
           setUserInfo(feedInfoResp?.data);
         } else {
-          alert("존재하지 않는 유저입니다!");
+          // alert("존재하지 않는 유저입니다!");
           navigate("/channel");
         }
         const feedContResp = await readFeedContentRequest(userId);
         if (feedContResp?.data?.data?.length > 0) {
           setMaxPage(feedContResp?.data?.totalPages - 1); // 0부터 -1까지
           setContents(feedContResp.data.data);
+          setIsNoContent(false);
         } else {
           setMaxPage(-1);
           setContents([]);
