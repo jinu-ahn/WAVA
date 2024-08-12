@@ -84,9 +84,7 @@ function CreateContentDrawer({ isOpen, onClose, addItem }) {
       formData.append("sido", userInfo?.worcation?.sido);
       formData.append("sigungu", userInfo?.worcation?.sigungu);
       const resp = await createFeedRequest(formData);
-      console.log(resp);
       if (resp) {
-        // addItem();
         setImages([]);
         setTextContent("");
         setCurrentIndex(0);

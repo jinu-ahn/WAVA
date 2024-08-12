@@ -119,7 +119,7 @@ export const unfollowRequest = async (nickName) => {
 
 // 팔로우? 상세
 export const readFollowUserRequest = async (nickName) => {
-  console.log(nickName);
+  // console.log(nickName);
   return await handleRequest(
     () => local.get(`${address}/follow/${nickName}/follower`),
     "팔로워 상세"

@@ -95,7 +95,6 @@ const Calendar = ({ calendarRef }) => {
       default:
         break;
     }
-    console.log(events);
     if (Array.isArray(filtered)) {
       setFilteredEvents(filtered);
     }

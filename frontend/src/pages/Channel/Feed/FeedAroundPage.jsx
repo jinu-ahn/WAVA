@@ -5,10 +5,8 @@ import FeedSearchBar from "../../../components/Channel/feed/FeedSearchbar";
 import { searchFeedRequest } from "../../../api/channelFeedApi";
 import LoadingSpinner from "../../../components/Channel/LoadingSpinner";
 import NoResult from "../../../components/Channel/feed/NoResult";
-import useDeviceStore from "../../../store/deviceStore";
 
 function FeedAroundPage() {
-  const isMobile = useDeviceStore((state) => state.isMobile);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedFeedId, setSelectedFeedId] = useState(null);
 
@@ -118,8 +116,9 @@ function FeedAroundPage() {
     <div className="flex h-full">
       <div className="flex flex-col flex-1">
         <FeedSearchBar
-          searchBarRef={searchBarRef}
           searchHandle={searchHandle}
+          tooltipMessage="피드 검색은 게시글 내용 중 검색어와 일치하는 피드를 보여줍니다."
+          searchBarRef={searchBarRef}
         />
 
         {loading ? (

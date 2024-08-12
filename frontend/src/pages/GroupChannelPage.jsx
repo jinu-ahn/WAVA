@@ -195,7 +195,6 @@ const GroupChannelPage = () => {
       try {
         // 그룹에 가입한 사람인지 확인하는 작업
         const resp = await groupChannelAPI.isValidatedGroupMember(groupId);
-        console.log(resp);
         if (resp?.data?.isJoin) {
           setHasAccess(true);
         } else {
