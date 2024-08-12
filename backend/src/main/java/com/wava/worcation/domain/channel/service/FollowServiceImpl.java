@@ -1,7 +1,6 @@
 package com.wava.worcation.domain.channel.service;
 
 import com.wava.worcation.common.exception.CustomException;
-import com.wava.worcation.common.exception.CustomExceptionHandler;
 import com.wava.worcation.common.exception.ResourceNotFoundException;
 import com.wava.worcation.common.response.ErrorCode;
 import com.wava.worcation.domain.channel.domain.Channel;
@@ -14,11 +13,11 @@ import com.wava.worcation.domain.user.domain.User;
 import com.wava.worcation.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -99,7 +98,7 @@ public class FollowServiceImpl implements com.wava.worcation.domain.channel.serv
                     .userId(user.getId())
                     .profile(user.getProfileImg())
                     .nickname(user.getNickName())
-                    .isFollower(followRepository.existsByChannelAndUser(channel,authUser))
+                    .isFollower(followRepository.existsByChannelAndUser(follow.getChannel(),authUser))
                     .build();
             followerDtos.add(dto);
         }
@@ -129,7 +128,7 @@ public class FollowServiceImpl implements com.wava.worcation.domain.channel.serv
                     .userId(user.getId())
                     .profile(user.getProfileImg())
                     .nickname(user.getNickName())
-                    .isFollower(followRepository.existsByChannelAndUser(channel,authUser))
+                    .isFollower(followRepository.existsByChannelAndUser(follow.getChannel(),authUser))
                     .build();
             followerDtos.add(dto);
         }
