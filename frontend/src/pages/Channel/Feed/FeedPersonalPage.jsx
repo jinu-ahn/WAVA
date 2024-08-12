@@ -10,8 +10,10 @@ import {
 } from "../../../api/channelFeedApi";
 import NoContent from "../../../components/Channel/feed/NoContent";
 import LoadingSpinner from "../../../components/Channel/LoadingSpinner";
+import useDeviceStore from "../../../store/deviceStore";
 
 function FeedPersonalPage() {
+  const isMobile = useDeviceStore((state) => state.isMobile);
   const { userId } = useParams(); // URL에서 userId를 가져옵니다
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedFeedId, setSelectedFeedId] = useState(null);
@@ -134,7 +136,11 @@ function FeedPersonalPage() {
   return (
     <>
       <div className="flex h-full">
-        <div className={`flex flex-col flex-1 `}>
+        <div
+          className={`flex flex-col flex-1 ${
+            isMobile && " overflow-y-auto h-full"
+          }`}
+        >
           <FeedHeader
             openDrawerRef={openDrawerRef}
             createFeedControl={createFeedControl}
