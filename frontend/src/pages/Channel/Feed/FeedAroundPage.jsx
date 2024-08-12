@@ -5,10 +5,8 @@ import FeedSearchBar from "../../../components/Channel/feed/FeedSearchbar";
 import { searchFeedRequest } from "../../../api/channelFeedApi";
 import LoadingSpinner from "../../../components/Channel/LoadingSpinner";
 import NoResult from "../../../components/Channel/feed/NoResult";
-import useDeviceStore from "../../../store/deviceStore";
 
 function FeedAroundPage() {
-  const isMobile = useDeviceStore((state) => state.isMobile);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedFeedId, setSelectedFeedId] = useState(null);
 

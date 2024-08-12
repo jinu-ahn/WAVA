@@ -16,7 +16,6 @@ const useUserStore = create(
           await login(
             user,
             (response) => {
-              console.log("여기");
               console.log(response.status);
               if (response.status === httpStatusCode.OK) {
                 console.log("로그인 성공");

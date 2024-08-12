@@ -26,7 +26,6 @@ function GroupInfoModal({ onClose, groupId }) {
       addFollowChannels(resp.data);
       navigate("/channel/group/" + resp.data.channelId);
     }
-    console.log("join");
   };
 
   return (

@@ -53,7 +53,7 @@ export const getTodayTodoList = async () => {
     console.error("today todo 목록을 가져오는 중 오류 발생:", error);
     return false;
   }
-}
+};
 
 // C
 export const createTodoRequest = async (newTodoItem) => {
@@ -91,7 +91,7 @@ export const deleteTodoRequest = async (todoItem) => {
 // U
 export const updateTodoRequest = async (todoItem) => {
   try {
-    console.log(todoItem);
+    // console.log(todoItem);
     const response = await local.patch(
       address + "/update/" + todoItem?.id,
       todoItem

@@ -89,7 +89,6 @@ export function validateWorcation(data) {
 
   // 날짜 형식 검사
 
-  console.log(start);
   if (!start || isNaN(Date.parse(start))) {
     console.error("유효하지 않은 시작 날짜입니다.");
     return false;

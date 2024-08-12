@@ -35,7 +35,6 @@ const FollowDrawer = ({
         }
       } else if (activeTab === "following") {
         const resp = await readFollowerUserRequest(userNickName);
-        console.log(resp);
         if (resp?.status === "OK") {
           setUsers(resp.data?.userList);
         }

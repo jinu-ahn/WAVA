@@ -92,7 +92,6 @@ function WorcationPage() {
           }
           return;
         } else {
-          console.log(result);
           await Swal.fire({
             icon: "error",
             title: "에러!",
