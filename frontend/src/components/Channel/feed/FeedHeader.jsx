@@ -94,11 +94,13 @@ const FeedHeader = ({
             following: false,
           }));
         } else {
-          setUserInfo((status) => ({
-            ...status,
-            follower: status.follower - 1,
-            following: false,
-          }));
+          if (type === "inContent") {
+            setUserInfo((status) => ({
+              ...status,
+              follower: status.follower - 1,
+              following: false,
+            }));
+          }
         }
       }
     } else {
@@ -112,11 +114,13 @@ const FeedHeader = ({
             following: true,
           }));
         } else {
-          setUserInfo((status) => ({
-            ...status,
-            follower: status.follower + 1,
-            following: true,
-          }));
+          if (type === "inContent") {
+            setUserInfo((status) => ({
+              ...status,
+              follower: status.follower + 1,
+              following: true,
+            }));
+          }
         }
       }
       // }
