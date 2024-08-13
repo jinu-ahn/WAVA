@@ -119,7 +119,7 @@ const Explorer = () => {
                 {userInfo?.nickName || "User Name"}
               </div>
               <div className="text-xs text-gray-400">
-                {`@${userInfo?.worcation.sido}` || "@username"}
+                {`@${userInfo?.worcation?.sido || "미등록"}` || "@username"}
               </div>
             </div>
           )}
