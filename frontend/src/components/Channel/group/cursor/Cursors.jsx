@@ -62,7 +62,6 @@ const Cursors = forwardRef((props, ref) => {
 
     const socket = new WebSocket(socketUrl);
     stompClient.current = Stomp.over(socket);
-
     stompClient.current.connect(
       { Authorization: `Bearer ${sessionStorage.getItem("accessToken")}` },
       () => {
@@ -87,12 +86,12 @@ const Cursors = forwardRef((props, ref) => {
       if (stompClient.current?.connected && isConnected && nickName && map) {
         const latlng = mouseEvent.latLng;
         // const latlng = map.getProjection().coordsFromContainerPoint(new window.kakao.maps.Point(e.clientX, e.clientY));
-        console.log(
-          "나의 위치 !!!! 위도: " +
-            latlng.getLat() +
-            " 경도: " +
-            latlng.getLng()
-        );
+        // console.log(
+        //   "나의 위치 !!!! 위도: " +
+        //     latlng.getLat() +
+        //     " 경도: " +
+        //     latlng.getLng()
+        // );
         const cursorPosition = {
           channelId,
           nickName,
@@ -111,6 +110,7 @@ const Cursors = forwardRef((props, ref) => {
 
     // 신의 한 수
     window.kakao.maps.event.addListener(map, "mousemove", handlePointerMove);
+    stompClient.current.debug = () => {};
 
     return () => {
       window.removeEventListener("mousemove", handlePointerMove);

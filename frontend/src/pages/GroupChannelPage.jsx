@@ -183,6 +183,7 @@ import VideoChat from "../components/VideoChat/VideoChat";
 import { groupChannelAPI } from "../api/groupChannelAPI";
 import LoadingSpinner from "../components/Channel/LoadingSpinner";
 import Swal from "sweetalert2";
+import VideoChatFunction from "../components/VideoChat/VideoChatFunction";
 
 const GroupChannelPage = () => {
   const { groupId } = useParams();
@@ -265,7 +266,11 @@ const GroupChannelPage = () => {
         </div>
       ) : (
         <div className="absolute top-0 right-0 z-20 w-2/12 overflow-auto bg-black">
-          <VideoChat channelId={groupId} mode={mode} setMode={setMode} />
+          <VideoChatFunction
+            channelId={groupId}
+            mode={mode}
+            setMode={setMode}
+          />
         </div>
       )}
     </div>
