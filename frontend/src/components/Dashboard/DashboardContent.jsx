@@ -34,7 +34,7 @@ const DashboardContent = () => {
     setAnswer(comment);
   };
 
-  const [isWorcationInfoOpen, setIsWorcationInfoOpen] = useState(false);
+  const [isWorcationInfoOpen, setIsWorcationInfoOpen] = useState(true);
 
   const toggleDropdown = () => {
     setIsWorcationInfoOpen(!isWorcationInfoOpen);
@@ -53,7 +53,7 @@ const DashboardContent = () => {
   return (
     <>
       <div
-        className="bg-white text-mainTxt text-center flex flex-col h-full"
+        className="bg-white text-mainTxt text-center flex flex-col h-full ms-1.5 me-1 mt-1.5"
         style={{ fontFamily: "'IBM Plex Sans KR', sans-serif" }}
       >
         <div className="shadow-md rounded-lg p-2 flex-shrink-0 bg-slate-100">
@@ -61,26 +61,40 @@ const DashboardContent = () => {
             <div className="font-bold text-xl break-keep inline-block my-1 mt-1">
               나의 워케이션 정보
             </div>
-            <Weather />
             <div
               className={`overflow-hidden transition-max-height duration-500 ease-in-out ${
                 isWorcationInfoOpen ? "max-h-96" : "max-h-0"
               }`}
             >
-              <p className="text-gray-700 text-base">
-                {dayjs(worcation.start).format("YYYY-MM-DD")}
-                <br /> ~<br />
-                {dayjs(worcation.end).format("YYYY-MM-DD")} <br />
-                {worcation.sido} {worcation.sigungu}
-              </p>
-              <button
-                className="flex-grow sm:flex-grow-0 inline-flex justify-center items-center gap-2 rounded-md bg-gray-200 py-2 px-4 text-sm font-semibold text-gray-700 shadow-md transition-colors duration-300 hover:bg-gray-300 focus:outline-none mt-3"
-                onClick={handleClick}
-              >
-                워케이션 수정
-              </button>
+              <div className="flex gap-4 border-b border-gray-200 py-2">
+                <div className="flex-1 flex items-center justify-center">
+                  <Weather />
+                </div>
+                <div className="flex-1 flex flex-col justify-center border-l border-gray-200 pl-4">
+                  <p className="text-gray-700 text-sm">
+                    {dayjs(worcation.start).format("YYYY-MM-DD")}
+                    <br /> ~<br />
+                    {dayjs(worcation.end).format("YYYY-MM-DD")}
+                  </p>
+                  <p className="text-gray-700 text-sm mt-2">
+                    {worcation.sido} {worcation.sigungu}
+                  </p>
+                </div>
+              </div>
+              <div className="mt-4">
+                <button
+                  className="w-full inline-flex justify-center items-center gap-2 rounded-md bg-gray-200 py-2 px-4 text-sm font-semibold text-gray-700 shadow-sm transition-colors duration-300 hover:bg-gray-300 focus:outline-none"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleClick();
+                  }}
+                >
+                  워케이션 수정
+                </button>
+              </div>
             </div>
-            {/* {isWorcationInfoOpen && (
+          </div>
+          {/* {isWorcationInfoOpen && (
               <>
                 <p className="text-gray-700 text-base">
                   {dayjs(worcation.start).format("YYYY-MM-DD")}
@@ -96,7 +110,6 @@ const DashboardContent = () => {
                 </button>
               </>
             )} */}
-          </div>
         </div>
         <div className="w-full flex-shrink-0 flex flex-col items-center shadow-md rounded-lg py-2 me-3 ms-0.5 my-3">
           <GraphView />

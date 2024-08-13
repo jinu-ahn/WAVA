@@ -33,21 +33,22 @@ NOTE: for old browsers, will need to restart watcher after changing a variable
   --fc-bg-event-color: rgb(143, 223, 130);
   --fc-bg-event-opacity: 0.3;
   --fc-highlight-color: rgba(188, 232, 241, 0.3);
-  --fc-today-bg-color: rgba(189, 198, 201, 0.8);
+  --fc-today-bg-color: rgba(196, 190, 145, 0.8);
   --fc-now-indicator-color: black;
 
   /* 버튼들 */
   --fc-button-text-color: #fff;
-  --fc-button-bg-color: rgb(24, 51, 108);
-  --fc-button-border-color: rgb(24, 51, 108);
+
+  --fc-button-bg-color: rgb(74, 162, 238);
+  --fc-button-border-color: rgb(74, 162, 238);
   /* --fc-button-hover-bg-color: #1e2b37; */
-  --fc-button-hover-bg-color: rgb(26, 58, 144);
+  --fc-button-hover-bg-color: rgb(75, 115, 210);
   /* --fc-button-hover-border-color: #1a252f; */
-  --fc-button-hover-border-color: rgb(26, 58, 144);
+  --fc-button-hover-border-color: rgb(75, 115, 210);
   /* --fc-button-active-bg-color: #1a252f; */
-  --fc-button-active-bg-color: rgb(70, 90, 132);
+  --fc-button-active-bg-color: rgb(255, 183, 197);
   /* --fc-button-active-border-color: #151e27; */
-  --fc-button-active-border-color: rgb(70, 90, 132);
+  --fc-button-active-border-color: rgb(255, 183, 197);
   /* 끝 */
 
   /* daygrid 전용 */
@@ -65,7 +66,7 @@ NOTE: for old browsers, will need to restart watcher after changing a variable
 }
 
 .fc-col-header-cell {
-  background-color: rgb(180, 180, 180);
+  background-color: rgb(237, 248, 255);
 }
 
 .fc-button {
@@ -141,18 +142,18 @@ NOTE: for old browsers, will need to restart watcher after changing a variable
 /* 모바일 끝 */
 
 .HIGH {
-  background-color: rgb(138, 61, 64);
+  background-color: rgb(18, 46, 104);
   border: 0px;
 }
 
 .MID {
   border: 0px;
-  background-color: rgb(14, 53, 37);
+  background-color: rgb(67, 106, 186);
 }
 
 .LOW {
   border: 0px;
-  background-color: rgb(2, 45, 66);
+  background-color: rgb(122, 154, 221);
 }
 
 .todo-finish {

@@ -28,7 +28,7 @@ function Weather() {
     getWeather();
   }, [location, error]);
   return (
-    <div className="bg-white">
+    <div className="bg-slate-100">
       <img src={`http://openweathermap.org/img/wn/${weather}.png`}></img>
       <span>{temp}</span>
       <p>{city}</p>
