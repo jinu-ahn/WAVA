@@ -1,15 +1,14 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
 import Swal from "sweetalert2";
 import Cursors from "./cursor/Cursors";
-import { MagnifyingGlassCircleIcon } from "@heroicons/react/24/solid";
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
 import RestartAltOutlinedIcon from '@mui/icons-material/RestartAltOutlined';
 import AddLocationAltTwoToneIcon from '@mui/icons-material/AddLocationAltTwoTone';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
-// import { useUsers } from "y-presence";
-// import { awareness } from "./cursor/y";
-// import { USER_COLORS } from "./cursor/constants";
+import { Stomp } from "@stomp/stompjs";
+import { groupChannelAPI } from "../../../api/groupChannelAPI";
+import { v4 as uuidv4 } from "uuid";
 
 const MapComponent = (props) => {
   const mapContainer = useRef(null);
@@ -23,6 +22,16 @@ const MapComponent = (props) => {
   const [customMarkers, setCustomMarkers] = useState([]);
   const infowindow = useRef(null);
   const { selectedUserNickName, channelId, setSelectedUserNickName } = props;
+
+
+  const userPinStompClient = useRef(null);
+  const userPinLat = useRef(null);
+  const userPinLng = useRef(null);
+  const [userPinList, setUserPinList] = useState([]);
+  // const [pinInputValue, setPinInputValue] = useState(null);
+  // const [userPinStatus, setUserPinStatus] = useState(null);
+
+
 
   useEffect(() => {
     if (selectedUserNickName && cursorsRef.current) {
@@ -180,12 +189,17 @@ const MapComponent = (props) => {
                 "클릭한 위치의 위도는 " + latlng.getLat() + " 이고, ";
               message += "경도는 " + latlng.getLng() + " 입니다";
 
+              userPinLat.current=latlng.getLat();
+              userPinLng.current=latlng.getLng();
+
               console.log(message);
             }
           );
         };
       });
     };
+
+    connect();
 
     return () => {
       isMounted = false;
@@ -195,32 +209,47 @@ const MapComponent = (props) => {
       // 그래서 해당 스크립트와 생명주기를 같이하는 flag를 설정해서 의존성을 만들고,
       // flag가 있을 때에만 스크립트가 map을 참조하도록 설정
       document.head.removeChild(script);
+      disconnect()
     };
   }, [channelId]);
+
+  useEffect(() => {
+    if (map) {
+      fetchPins();
+    }
+  }, [map]);
 
   const handleMarkerCreated = useCallback((marker) => {
     Swal.fire({
       title: "마커 정보 입력",
       html:
-        '<input id="swal-input1" class="swal2-input" placeholder="제목">' +
-        '<input id="swal-input2" class="swal2-input" placeholder="설명">',
+        '<label class="block mb-2 text-lg font-medium text-gray-900 dark:text-white">pin 장소</label>' +
+        '<input id="pin-place" class="swal2-input" placeholder="장소 입력">' +
+        '<label for="message" class="block mb-2 text-lg font-medium text-gray-900 dark:text-white">Pin </label>' +
+        '<textarea id="pin-info" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="메모할 내용을 입력해주세요."></textarea>',
+        // '<label>pin 설명</label>' +
+        // '<input id="swal-input2" class="swal2-input" placeholder="장소에 대한 메모">',
       focusConfirm: false,
       preConfirm: () => {
         return {
-          title: document.getElementById("swal-input1").value,
-          description: document.getElementById("swal-input2").value,
+          title: document.getElementById("pin-place").value,
+          description: document.getElementById("pin-info").value,
         };
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        const newCustomMarker = {
+        const pinId = uuidv4();
+        const newUserPin = {
           marker: marker,
-          info: result.value,
+          content: result.value,
+          lat: userPinLat.current,
+          lng: userPinLng.current,
+          pinId: pinId
         };
-        setCustomMarkers((prev) => [...prev, newCustomMarker]);
-
+        setUserPinList((prev) => [...prev, newUserPin]);
+        sendPin(newUserPin, "ADD");
         // 마커 이벤트 리스너 추가
-        addMarkerEventListeners(newCustomMarker);
+        addMarkerEventListeners(newUserPin);
       } else {
         // 사용자가 취소한 경우 마커 제거
         marker.setMap(null);
@@ -261,7 +290,11 @@ const MapComponent = (props) => {
     }).then((result) => {
       if (result.isConfirmed) {
         customMarker.marker.setMap(null);
-        setCustomMarkers((prev) => prev.filter((cm) => cm !== customMarker));
+        console.log(customMarker)
+        console.log(customMarker.placeName)
+        console.log(customMarker.info)
+
+        setUserPinList((prev) => prev.filter((cm) => cm !== customMarker));
         Swal.fire("", "마커가 삭제되었습니다.", "success");
       }
     });
@@ -269,8 +302,8 @@ const MapComponent = (props) => {
 
   const displayCustomMarkerInfo = useCallback((customMarker) => {
     Swal.fire({
-      title: customMarker.info.title,
-      text: customMarker.info.description,
+      title: customMarker.content.title,
+      text: customMarker.content.description,
       icon: "info",
     });
   }, []);
@@ -278,8 +311,8 @@ const MapComponent = (props) => {
   const displayCustomMarkerInfoWindow = useCallback(
     (customMarker) => {
       const content = `<div style="padding:5px;font-size:12px;">
-        <strong>${customMarker.info.title}</strong><br>
-        ${customMarker.info.description}
+        <strong>${customMarker.content.title}</strong><br>
+        ${customMarker.content.description}
       </div>`;
 
       infowindow.current.setContent(content);
@@ -408,6 +441,109 @@ const MapComponent = (props) => {
     [map, markers, places]
   );
 
+  // 사용자 정의 핀
+
+  useEffect(() => {
+
+    return () => disconnect()
+  }, [channelId])
+
+  const connect = () => {
+    const socket = new WebSocket(process.env.REACT_APP_MARKER_WEBSOCKET_ADDRESS);
+    userPinStompClient.current = Stomp.over(socket);
+    userPinStompClient.current.connect(
+      {},
+      () => {
+        userPinStompClient.current.subscribe(
+          `/sub/map/${channelId}`,
+          (userPin) => {
+            const newPin = JSON.parse(userPin.body);
+
+            if (newPin.status === "ADD") {
+              displayFetchedPin(newPin)
+            } else if (newPin.status === "DELETE") {
+              setUserPinList((prevUserPinList) => 
+                prevUserPinList.filter(marker => marker.pinId !== newPin.pinId)
+              )
+            } 
+          },
+          {}
+        );
+      },
+      (error) => { }
+    );
+  };
+
+  const disconnect = () => {
+    if (userPinStompClient.current) {
+      userPinStompClient.current.disconnect();
+    }
+  }
+
+  const fetchPins = async () => {
+    try {
+      const userPinData = await groupChannelAPI.getMapPinRequest(channelId);
+      if (userPinData.status === "OK") {
+        console.log(userPinData)
+        userPinData.data.map((pin) => {
+          displayFetchedPin(pin);
+          console.log(pin)
+        })
+        setUserPinList(userPinData.data)
+      }
+    } catch (error) {
+      console.error("Error get userPins", error)
+    }
+  }
+
+  const sendPin = async (newUserPin, status) => {
+    if (userPinStompClient.current && newUserPin.content.title && newUserPin.content.description) {
+      const pinObj = {
+        pinId: newUserPin.pinId,
+        channelId: channelId,
+        lat: newUserPin.lat,
+        lng: newUserPin.lng,
+        placeName: newUserPin.content.title,
+        info: newUserPin.content.description,
+        status: status
+      }
+      await userPinStompClient.current.send(
+        `/pub/marker/position`,
+        { Authorization: `Bearer ${sessionStorage.getItem("accessToken")}` },
+        JSON.stringify(pinObj)
+      );
+      userPinLat.current = null;
+      userPinLng.current = null;
+    }
+  }
+
+  const displayFetchedPin = useCallback(
+    (pinData) => {
+      if (!map) return;
+      const pin = new window.kakao.maps.Marker({
+        map: map,
+        position: new window.kakao.maps.LatLng(pinData.lat, pinData.lng),
+      });
+      
+      const customPin = {
+        marker: pin,
+        content: {
+          title: pinData.placeName,
+          description: pinData.info,
+        },
+        lat: pinData.lat,
+        lng: pinData.lng,
+        pinId: pinData.pinId
+      };
+      setUserPinList((prev) => [...prev, customPin]);
+      addMarkerEventListeners(customPin);
+      console.log("등록 성공")
+    },
+    [map, addMarkerEventListeners, userPinList]
+  );
+
+  console.log(userPinList)
+
   return (
     <div className="flex flex-col h-full relative ">
       <div className="w-3/4 absolute top-0 left-0 p-2 bg-white bg-opacity-0 z-10">
@@ -481,6 +617,9 @@ const MapComponent = (props) => {
       </div>
       <div ref={mapContainer} className="flex-grow h-screen">
         {map && <Cursors ref={cursorsRef} channelId={channelId} map={map} />}
+      </div>
+      <div>
+        {/* <Markers /> */}
       </div>
       <div className="absolute bottom-0 left-0 w-full p-4 bg-white bg-opacity-60 z-10 max-h-40 overflow-y-auto">
         <ul>

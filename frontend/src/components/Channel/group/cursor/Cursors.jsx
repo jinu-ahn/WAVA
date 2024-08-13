@@ -9,7 +9,7 @@ const Cursors = forwardRef((props, ref) => {
   const channelId = props.channelId;
   const map = props.map;
   const [users, setUsers] = useState({});
-  const socketUrl = process.env.REACT_APP_CURSOR_WEBSOCKET_ADDRESS;
+  const socketUrl = process.env.REACT_APP_//CURSOR_WEBSOCKET_ADDRESS;
   const [isConnected, setIsConnected] = useState(false);
   const [nickName, setNickName] = useState("");
   const stompClient = useRef(null);
