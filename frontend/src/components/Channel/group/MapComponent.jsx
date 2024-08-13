@@ -199,8 +199,6 @@ const MapComponent = (props) => {
       });
     };
 
-    connect();
-
     return () => {
       isMounted = false;
       // kakaomap의 script를 제거하는게 비동기적이라서, 해당 함수의 제거가 완료되지 않은 채로
@@ -215,6 +213,7 @@ const MapComponent = (props) => {
 
   useEffect(() => {
     if (map) {
+      connect();
       fetchPins();
     }
   }, [map]);
@@ -246,10 +245,18 @@ const MapComponent = (props) => {
           lng: userPinLng.current,
           pinId: pinId
         };
-        setUserPinList((prev) => [...prev, newUserPin]);
+        console.log("생성: ")
+        console.log(newUserPin.marker)
+        console.log(newUserPin.content)
+        console.log(newUserPin.lat)
+        console.log(newUserPin.lng)
+        console.log(newUserPin.pinId)
+        // setUserPinList((prev) => [...prev, newUserPin]);
+        console.log("생성 후: " + userPinList)
         sendPin(newUserPin, "ADD");
         // 마커 이벤트 리스너 추가
-        addMarkerEventListeners(newUserPin);
+        // addMarkerEventListeners(newUserPin);
+        marker.setMap(null);
       } else {
         // 사용자가 취소한 경우 마커 제거
         marker.setMap(null);
@@ -290,11 +297,16 @@ const MapComponent = (props) => {
     }).then((result) => {
       if (result.isConfirmed) {
         customMarker.marker.setMap(null);
-        console.log(customMarker)
-        console.log(customMarker.placeName)
-        console.log(customMarker.info)
-
-        setUserPinList((prev) => prev.filter((cm) => cm !== customMarker));
+        const deleteUserPin = {
+          marker: customMarker.marker,
+          content: customMarker.content,
+          lat: customMarker.lat,
+          lng: customMarker.lng,
+          pinId: customMarker.pinId
+        };
+        sendPin(deleteUserPin, "DELETE");
+        
+        // setUserPinList((prev) => prev.filter((cm) => cm !== customMarker));
         Swal.fire("", "마커가 삭제되었습니다.", "success");
       }
     });
@@ -443,11 +455,6 @@ const MapComponent = (props) => {
 
   // 사용자 정의 핀
 
-  useEffect(() => {
-
-    return () => disconnect()
-  }, [channelId])
-
   const connect = () => {
     const socket = new WebSocket(process.env.REACT_APP_MARKER_WEBSOCKET_ADDRESS);
     userPinStompClient.current = Stomp.over(socket);
@@ -458,13 +465,20 @@ const MapComponent = (props) => {
           `/sub/map/${channelId}`,
           (userPin) => {
             const newPin = JSON.parse(userPin.body);
-
+            console.log("newPin: ", newPin)
             if (newPin.status === "ADD") {
+              console.log("들어가요?")
               displayFetchedPin(newPin)
             } else if (newPin.status === "DELETE") {
-              setUserPinList((prevUserPinList) => 
-                prevUserPinList.filter(marker => marker.pinId !== newPin.pinId)
+                setUserPinList((prevUserPinList) => 
+                  prevUserPinList.filter((marker) => {
+                    if(marker.pinId === newPin.pinId) {
+                      marker.marker.setMap(null);
+                    }
+                    return marker.pinId !== newPin.pinId;
+                  })
               )
+              newPin.marker.setMap(null)
             } 
           },
           {}
@@ -489,7 +503,7 @@ const MapComponent = (props) => {
           displayFetchedPin(pin);
           console.log(pin)
         })
-        setUserPinList(userPinData.data)
+        // setUserPinList(userPinData.data)
       }
     } catch (error) {
       console.error("Error get userPins", error)
@@ -519,7 +533,9 @@ const MapComponent = (props) => {
 
   const displayFetchedPin = useCallback(
     (pinData) => {
+      console.log("들어왔음")
       if (!map) return;
+      console.log("지도 있음")
       const pin = new window.kakao.maps.Marker({
         map: map,
         position: new window.kakao.maps.LatLng(pinData.lat, pinData.lng),
@@ -535,9 +551,17 @@ const MapComponent = (props) => {
         lng: pinData.lng,
         pinId: pinData.pinId
       };
+
+      console.log("fetch: ")
+      console.log(customPin.marker)
+      console.log(customPin.content)
+      console.log(customPin.lat)
+      console.log(customPin.lng)
+      console.log(customPin.pinId)
       setUserPinList((prev) => [...prev, customPin]);
       addMarkerEventListeners(customPin);
       console.log("등록 성공")
+      console.log("추가 후: " + userPinList)
     },
     [map, addMarkerEventListeners, userPinList]
   );
