@@ -163,63 +163,65 @@ function ChannelPage() {
 
       <div className="flex flex-col w-16 bg-blue-50 shadow-lg h-screen">
         {isMobile && <MobileExplorer />}
-        <div className="flex-grow overflow-y-auto">
-          {/* My channel */}
-          <div ref={myChannelRef}>
-            <div className="sticky top-0 bg-blue-50 z-10 py-1.5 font-semibold text-gray-700 text-xs text-center">
-              내 채널
-            </div>
-            <NavLink to={`/channel/feed/${myId}`} className="block p-2">
-              {userInfo?.profile ? (
-                <img
-                  src={userInfo.profile}
-                  alt="Profile"
-                  className="w-12 h-12 mx-auto rounded-full shadow-md hover:shadow-lg transition-all duration-300 border-2 border-blue-200 hover:border-blue-400"
-                />
-              ) : (
-                <UserCircleIcon className="w-12 h-12 mx-auto rounded-full text-blue-500 hover:text-blue-600 transition-all duration-300" />
-              )}
-            </NavLink>
+        {/* <div className="flex-grow"> */}
+        {/* My channel */}
+        <div ref={myChannelRef}>
+          <div className="sticky top-0 bg-blue-50 z-10 py-1.5 font-semibold text-gray-700 text-xs text-center">
+            내 채널
           </div>
+          <NavLink to={`/channel/feed/${myId}`} className="block p-2">
+            {userInfo?.profile ? (
+              <img
+                src={userInfo.profile}
+                alt="Profile"
+                className="w-12 h-12 mx-auto rounded-full shadow-md hover:shadow-lg transition-all duration-300 border-2 border-blue-200 hover:border-blue-400"
+              />
+            ) : (
+              <UserCircleIcon className="w-12 h-12 mx-auto rounded-full text-blue-500 hover:text-blue-600 transition-all duration-300" />
+            )}
+          </NavLink>
+        </div>
 
-          {/* Info channels */}
-          <div ref={infoChannelsRef}>
-            <div className="sticky top-0 bg-blue-50 z-10 py-1.5 font-semibold text-gray-700 text-xs text-center">
-              정보 채널
-            </div>
-            <NavLink to={`/channel/feed`} className="block p-2">
-              <GlobeAltIcon className="w-12 h-12 mx-auto border border-gray-300 rounded-full shadow-md hover:shadow-lg hover:border-blue-400 transition-all duration-300 text-blue-500" />
-            </NavLink>
+        {/* Info channels */}
+        <div ref={infoChannelsRef}>
+          <div className="sticky top-0 bg-blue-50 z-10 py-1.5 font-semibold text-gray-700 text-xs text-center">
+            정보 채널
           </div>
+          <NavLink to={`/channel/feed`} className="block p-2">
+            <GlobeAltIcon className="w-12 h-12 mx-auto border border-gray-300 rounded-full shadow-md hover:shadow-lg hover:border-blue-400 transition-all duration-300 text-blue-500" />
+          </NavLink>
+        </div>
 
-          {/* Group channels */}
-          <div ref={GroupChannelsRef}>
-            <ChannelSubExplorer
-              type="group"
-              data={followChannels}
-              toolbarBtn={
-                <div className="sticky top-0 bg-blue-50 z-10">
-                  <div className="py-1.5 font-semibold text-gray-700 text-xs text-center">
-                    모임 채널
-                  </div>
-                  <div className="flex flex-col items-center space-y-3 mb-3">
-                    <button
-                      onClick={handleChannelPortalOpen}
-                      className="w-12 h-12 border border-gray-300 rounded-full hover:border-blue-400 hover:bg-gray-100 transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center"
-                    >
-                      <PlusIcon className="w-6 h-6 text-blue-500" />
-                    </button>
-                    <NavLink
-                      to="/channel/group/discover-groups"
-                      className="w-12 h-12 border border-gray-300 rounded-full hover:border-blue-400 hover:bg-gray-100 transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center"
-                    >
-                      <MagnifyingGlassIcon className="w-6 h-6 text-blue-500" />
-                    </NavLink>
-                  </div>
+        {/* Group channels */}
+        <div
+          className="flex flex-1 overflow-y-auto flex-col mb-2"
+          ref={GroupChannelsRef}
+        >
+          <ChannelSubExplorer
+            type="group"
+            data={followChannels}
+            toolbarBtn={
+              <div className="sticky top-0 bg-blue-50 z-10">
+                <div className="py-1.5 font-semibold text-gray-700 text-xs text-center">
+                  모임 채널
                 </div>
-              }
-            />
-          </div>
+                <div className="flex flex-col items-center space-y-3 mb-3">
+                  <button
+                    onClick={handleChannelPortalOpen}
+                    className="w-12 h-12 border border-gray-300 rounded-full hover:border-blue-400 hover:bg-gray-100 transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center"
+                  >
+                    <PlusIcon className="w-6 h-6 text-blue-500" />
+                  </button>
+                  <NavLink
+                    to="/channel/group/discover-groups"
+                    className="w-12 h-12 border border-gray-300 rounded-full hover:border-blue-400 hover:bg-gray-100 transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center"
+                  >
+                    <MagnifyingGlassIcon className="w-6 h-6 text-blue-500" />
+                  </NavLink>
+                </div>
+              </div>
+            }
+          />
         </div>
       </div>
 
