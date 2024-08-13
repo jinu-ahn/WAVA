@@ -1,6 +1,7 @@
 import { localAxios as local } from "../util/http-commons";
 import { nanoid } from "nanoid";
 import { get_response } from "./dummy";
+import axios from "axios";
 
 // api 함수용 파일
 const address = "/plan";
@@ -97,9 +98,6 @@ export const updateTodoRequest = async (todoItem) => {
       todoItem
     );
 
-    // 테스트코드
-    // const response = { status: 200 };
-
     if (response.status === 200) {
       return true;
     } else {
@@ -108,5 +106,20 @@ export const updateTodoRequest = async (todoItem) => {
   } catch (e) {
     console.error("todo 항목을 수정하는 중 오류 발생:", e);
     return false;
+  }
+};
+
+export const getWeatherStatus = async (lat, lng) => {
+  try {
+    const appkey = process.env.REACT_APP_OPENWEATHER_API_KEY;
+    const response = await axios.get(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${appkey}&units=metric`
+    );
+    if (response.status === 200) {
+      return response.data;
+    }
+  } catch (e) {
+    console.error("날씨정보에러: ", e);
+    return e;
   }
 };

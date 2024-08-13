@@ -12,6 +12,7 @@ import { CalendarDaysIcon } from "lucide-react";
 import useTodoStore from "../../store/todoStore";
 import remarkGfm from "remark-gfm";
 import TypingEffect from "./TypingEffect";
+import Weather from "./Weather";
 
 const DashboardContent = () => {
   const navigate = useNavigate();
@@ -60,6 +61,7 @@ const DashboardContent = () => {
             <div className="font-bold text-xl break-keep inline-block my-1 mt-1">
               나의 워케이션 정보
             </div>
+            <Weather />
             <div
               className={`overflow-hidden transition-max-height duration-500 ease-in-out ${
                 isWorcationInfoOpen ? "max-h-96" : "max-h-0"
