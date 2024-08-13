@@ -24,7 +24,7 @@ export default function ControllerComponent(props) {
 
   useEffect(() => {
     getUserList();
-  }, [groupId]);
+  }, [groupId])
 
   useEffect(() => {
     if (userList) {
