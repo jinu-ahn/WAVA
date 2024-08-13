@@ -7,8 +7,7 @@ import dayjs from "dayjs";
 import ReactMarkdown from "react-markdown";
 import { useState } from "react";
 import mainLogic from "../../util/assistant-logic";
-import { ArrowPathRoundedSquareIcon } from "@heroicons/react/24/outline";
-import { CalendarDaysIcon } from "lucide-react";
+import { ArrowPathIcon, PlayCircleIcon } from "@heroicons/react/24/outline";
 import useTodoStore from "../../store/todoStore";
 import remarkGfm from "remark-gfm";
 import TypingEffect from "./TypingEffect";
@@ -125,17 +124,17 @@ const DashboardContent = () => {
             <button
               type="button"
               onClick={setAIComment}
-              className=" drop-shadow-md text-[#ffe9ae] bg-[#3d5893]"
+              className="rounded-full drop-shadow-md text-[#ffe9ae]"
             >
-              <CalendarDaysIcon className="w-8" />
+              <PlayCircleIcon className="w-8" />
             </button>
             <p className="self-center text-white">WAVA'S AI ASISTANT</p>
             <button
               type="button"
               onClick={setAIComment}
-              className=" drop-shadow-md text-[#ffe9ae] bg-[#3d5893]"
+              className="rounded-full drop-shadow-md text-[#ffe9ae]"
             >
-              <ArrowPathRoundedSquareIcon className="w-8" />
+              <ArrowPathIcon className="w-8" />
             </button>
           </div>
           {isComment && <TypingEffect text={comment} />}

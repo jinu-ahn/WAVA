@@ -19,7 +19,7 @@ NOTE: for old browsers, will need to restart watcher after changing a variable
 
   --fc-event-bg-color: rgb(47, 102, 144);
   --fc-event-border-color: rgb(47, 102, 144);
-  --fc-event-text-color: rgb(255, 255, 255);
+  --fc-event-text-color: #f9f9fd;
   --fc-event-selected-overlay-color: rgba(0, 0, 0, 0.25);
 
   --fc-more-link-bg-color: #d0d0d0;
@@ -33,7 +33,7 @@ NOTE: for old browsers, will need to restart watcher after changing a variable
   --fc-bg-event-color: rgb(143, 223, 130);
   --fc-bg-event-opacity: 0.3;
   --fc-highlight-color: rgba(188, 232, 241, 0.3);
-  --fc-today-bg-color: rgba(140, 171, 194, 0.9);
+  --fc-today-bg-color: rgba(140, 171, 194, 0.6);
   --fc-now-indicator-color: black;
 
   /* 버튼들 */
@@ -142,18 +142,18 @@ NOTE: for old browsers, will need to restart watcher after changing a variable
 /* 모바일 끝 */
 
 .HIGH {
-  background-color: rgb(181, 59, 54);
+  background-color: #4b6eaf;
   border: 0px;
 }
 
 .MID {
   border: 0px;
-  background-color: rgb(202, 157, 148);
+  background-color: #74c1b4;
 }
 
 .LOW {
   border: 0px;
-  background-color: rgb(245, 221, 221);
+  background-color: #f3d3d3;
 }
 
 .todo-finish {
