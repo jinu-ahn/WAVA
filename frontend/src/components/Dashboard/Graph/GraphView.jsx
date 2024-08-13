@@ -84,7 +84,7 @@ function GraphView() {
 
   return (
     <div
-      className="relative"
+      className="relative bg-[#ffe9ae]"
       style={{
         maxWidth: "200px",
         height: "100%",
@@ -107,7 +107,7 @@ function GraphView() {
         plugins={[centerTextPlugin]} // 플러그인을 이곳에 추가
         // height={"31rem"}
       />
-      <div className="mb-1">
+      <div className="mb-1 text-[#18336c]">
         {`완료 : ${finishCnt} 개`} <br />
         {`미완료 : ${filteredEvents.length - finishCnt} 개`} <br />
       </div>
