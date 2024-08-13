@@ -14,6 +14,7 @@ function FeedSearchBar({ searchHandle, searchBarRef, tooltipMessage }) {
         <form onSubmit={submitHandle} className="flex-grow">
           <label className="input input-bordered flex items-center gap-2">
             <input
+              ref={searchBarRef}
               required
               value={searchText}
               onChange={(e) => setsearchText(e.target.value)}

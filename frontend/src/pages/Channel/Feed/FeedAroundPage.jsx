@@ -53,18 +53,23 @@ function FeedAroundPage() {
   };
 
   const searchHandle = async (searchText) => {
-    const resp = await searchFeedRequest(searchText);
-    if (resp?.data?.data.length > 0) {
-      setIsNoContent(false);
-      setContents(resp?.data?.data);
-      setMaxPage(resp?.data?.totalPages);
-    } else {
-      setIsNoContent(true);
-      setContents([]);
-      setMaxPage(-1);
+    setIsNoContent(false);
+    try {
+      const resp = await searchFeedRequest(searchText);
+
+      if (resp?.data?.data.length > 0) {
+        setIsNoContent(false);
+        setContents(resp?.data?.data);
+        setMaxPage(resp?.data?.totalPages);
+      } else {
+        setIsNoContent(true);
+        setContents([]);
+        setMaxPage(-1);
+      }
+    } finally {
+      setPages(0);
+      setSearchKeyword(searchText);
     }
-    setPages(0);
-    setSearchKeyword(searchText);
   };
 
   const handleChange = (contentId, type, status) => {
@@ -109,7 +114,7 @@ function FeedAroundPage() {
     );
   };
   const onRetry = () => {
-    searchBarRef.current.focus();
+    searchBarRef.current?.focus();
   };
 
   return (
