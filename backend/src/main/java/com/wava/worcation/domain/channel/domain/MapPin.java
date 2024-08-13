@@ -45,6 +45,5 @@ public class MapPin {
         this.lng = requestDto.getLng();
         this.placeName = requestDto.getPlaceName();
         this.info = requestDto.getInfo();
-        this.pinOrder = requestDto.getPinOrder();
     }
 }
