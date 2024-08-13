@@ -22,8 +22,7 @@ public enum ErrorCode {
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
     UNSUPPORTED_TOKEN(HttpStatus.FORBIDDEN, "지원되지 않는 토큰입니다."),
     PLAN_NOT_FOUND(HttpStatus.NOT_FOUND,"일정을 찾을 수 없습니다."),
-    DUPLICATE_PIN_ORDER(HttpStatus.CONFLICT,"핀 번호가 중복되었습니다."),
-    NOT_FOUND_MAP_PIN(HttpStatus.NOT_FOUND,"핀 번호를 찾을 수 없습니다."),
+    NOT_FOUND_MARKER(HttpStatus.NOT_FOUND,"마커를 찾을 수 없습니다."),
     PERMISSION_DENIED(HttpStatus.FORBIDDEN,"해당 작업을 수행할 권한이 없습니다."),
     AUTHENTICATION_ERROR(HttpStatus.UNAUTHORIZED, "인증에 실패했습니다."),
     FEED_NOT_FOUND(HttpStatus.NOT_FOUND,"피드를 찾을 수 없습니다."),
@@ -37,7 +36,9 @@ public enum ErrorCode {
     SELF_FOLLOWING(HttpStatus.BAD_REQUEST,"자기를 팔로우할수는 없습니다."),
     IOEXCEPTION(HttpStatus.BAD_REQUEST,"IOEXCEPTION 발생"),
     BAD_WORD(HttpStatus.BAD_REQUEST,"비속어를 사용할 수 없습니다."),
-    NO_CONTENT(HttpStatus.NO_CONTENT, "빈 값을 넣었습니다. 다시 입력해주세요");
+    NO_CONTENT(HttpStatus.NO_CONTENT, "빈 값을 넣었습니다. 다시 입력해주세요"),
+    METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED,"HTTP METHOD를 확인해주세요.");
+
     private HttpStatus status;
     private String message;
 }

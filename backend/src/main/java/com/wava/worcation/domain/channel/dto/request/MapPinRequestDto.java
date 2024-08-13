@@ -18,7 +18,5 @@ public class MapPinRequestDto {
     private Double lng;
     private String placeName;
     private String info;
-    private Long pinOrder;
-    private List<CompanionRequestDto> user;
     private String status;
 }
