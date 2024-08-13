@@ -58,7 +58,7 @@ async function mainLogic() {
                         
                         현재 대한민국 서울 시각은 "${getCurrentDate()}" 입니다.
                         사용자의 하루 일정 정보는
-                        "${todayEvents}"
+                        "${JSON.stringify(todayEvents)}"
                         입니다.
 
                         제공한 시간과 데이터를 기반으로 아래의 과정에 대한 답만 순서대로 출력해주세요. 대신 순서를 뜻하는 숫자는 제외하고 출력해주세요.
