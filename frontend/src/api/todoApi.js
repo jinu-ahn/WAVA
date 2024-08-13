@@ -109,17 +109,18 @@ export const updateTodoRequest = async (todoItem) => {
   }
 };
 
-export const getWeatherStatus = async (lat, lng) => {
-  try {
-    const appkey = process.env.REACT_APP_OPENWEATHER_API_KEY;
-    const response = await axios.get(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${appkey}&units=metric`
-    );
-    if (response.status === 200) {
-      return response.data;
-    }
-  } catch (e) {
-    console.error("날씨정보에러: ", e);
-    return e;
-  }
-};
+// WeatherService.js
+// export const getWeatherStatus = async (lat, lng) => {
+//   try {
+//     const appkey = process.env.REACT_APP_OPENWEATHER_API_KEY;
+//     const response = await axios.get(
+//       `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lng}&appid=${appkey}&units=metric`
+//     );
+//     if (response.status === 200) {
+//       return response.data;
+//     }
+//   } catch (e) {
+//     console.error("날씨정보에러: ", e);
+//     return e;
+//   }
+// };
