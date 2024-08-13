@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Carousel from "../components/Home/Carousel";
 import AnimatedDiv from "../components/Home/AnimatedDiv";
 import useDeviceStore from "../store/deviceStore";
+import { Link } from "react-router-dom";
 
 function HomePage() {
   const [animate, setAnimate] = useState(false);
@@ -10,6 +11,7 @@ function HomePage() {
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
   const promptTimeout = useRef(null);
+  const sectionRef = useRef(null);
 
   useEffect(() => {
     setAnimate(true);
@@ -47,6 +49,10 @@ function HomePage() {
       }
     };
   }, []);
+
+  const scrollToSection = () => {
+    sectionRef.current.scrollIntoView({ behavior: "smooth" });
+  };
 
   const handleInstallClick = () => {
     if (deferredPrompt) {
@@ -96,20 +102,43 @@ function HomePage() {
         {/* 카드 섹션 */}
         <section className="container mx-auto px-4 py-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              "진행중인 워케이션.webp",
-              "대시보드.webp",
-              "모임 채널.webp",
-              "개인 채널.webp",
-            ].map((img, index) => (
-              <div key={index} className="aspect-w-4 aspect-h-3">
+            <div
+              onClick={scrollToSection}
+              className="aspect-w-4 aspect-h-3 cursor-pointer"
+            >
+              <img
+                src={`/assets/메인/진행중인 워케이션.webp`}
+                alt="진행중인 워케이션"
+                className="object-cover w-full h-full rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
+              />
+            </div>
+            <div className="aspect-w-4 aspect-h-3">
+              <Link to="/dashboard">
                 <img
-                  src={`/assets/메인/${img}`}
-                  alt={img.split(".")[0]}
+                  src={`/assets/메인/대시보드.webp`}
+                  alt="대시보드"
                   className="object-cover w-full h-full rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
                 />
-              </div>
-            ))}
+              </Link>
+            </div>
+            <div className="aspect-w-4 aspect-h-3">
+              <Link to="/channel/group/discover-groups">
+                <img
+                  src={`/assets/메인/모임 채널.webp`}
+                  alt="모임 채널"
+                  className="object-cover w-full h-full rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
+                />
+              </Link>
+            </div>
+            <div className="aspect-w-4 aspect-h-3">
+              <Link to="/channel/feed">
+                <img
+                  src={`/assets/메인/개인 채널.webp`}
+                  alt="개인 채널"
+                  className="object-cover w-full h-full rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
+                />
+              </Link>
+            </div>
           </div>
         </section>
 
@@ -165,6 +194,7 @@ function HomePage() {
 
         {/* 진행중인 워케이션 */}
         <section
+          ref={sectionRef}
           id="진행중인 워케이션"
           className="py-16 text-center px-6 bg-cover bg-center bg-no-repeat"
           style={{ backgroundImage: "url('/assets/bgbg.webp')" }}
