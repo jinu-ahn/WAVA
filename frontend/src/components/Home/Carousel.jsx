@@ -113,7 +113,7 @@ const CarouselComponent = () => {
               {item.title}
             </h2>
           </div>
-          <figure className="relative">
+          <figure className="relative hover:shadow-xl transition-shadow duration-300 cursor-pointer">
             <img
               draggable={false}
               className="rounded-xl w-full h-auto"
