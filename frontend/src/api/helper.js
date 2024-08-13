@@ -16,6 +16,7 @@ export const handleRequest = async (requestFunction, type) => {
     }
   } catch (error) {
     console.error(type + " : Error - " + error);
+    if (error.response?.data?.error) alert(error.response.data.error);
     return false;
   }
 };

@@ -32,9 +32,8 @@ function CreateGroupChannel({ onClose }) {
         addFollowChannels(resp.data);
         navigate("/channel/group/" + resp?.data?.channelId);
         onClose();
-        // if (await groupChannelAPI.createGroupChannel(data)) {
-        //   window.location.reload();
-        // }
+      } else {
+        console.log(resp);
       }
     } catch (error) {
       console.error("Error creating channel:", error);

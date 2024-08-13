@@ -43,11 +43,11 @@ function GroupInfoModal({ onClose, groupId }) {
       </p>
 
       <div className="divider" />
-      <div>
+      <div className="p-2">
         {channelData?.user?.map((person) => (
           <div
             key={person.nickName}
-            className="flex w-full items-center space-x-3"
+            className="flex w-full items-center space-x-3 my-2"
           >
             {person.profile ? (
               <img
