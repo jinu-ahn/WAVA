@@ -47,9 +47,7 @@ function DashboardPage() {
       )}
 
       <div
-        className={`flex-grow ${
-          isMobile ? "w-full" : "w-4/5"
-        } min-h-[500px] mx-1 my-1`}
+        className={`${isMobile ? "w-full" : "w-3/5"} min-h-[500px] mx-1 my-1`}
       >
         <Calendar calendarRef={calendarRef} />
       </div>

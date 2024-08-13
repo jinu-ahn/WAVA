@@ -37,8 +37,9 @@ const Explorer = () => {
 
   return (
     <nav
+      style={{ fontFamily: "'IBM Plex Sans KR', sans-serif" }}
       className={`sidebar ${
-        collapsed ? "w-14" : "w-40"
+        collapsed ? "w-14" : "w-36"
       } h-full bg-gradient-to-b from-gray-700 to-gray-900 text-white flex flex-col justify-between transition-all duration-300 ease shadow-lg`}
     >
       <div>
@@ -100,7 +101,7 @@ const Explorer = () => {
 
       <div className="mt-4">
         <div
-          className={`sidebar-profile p-4 border-t border-gray-700 mb-4 flex items-center ${
+          className={`sidebar-profile py-4 px-2 border-t border-gray-700 mb-4 flex items-center ${
             collapsed ? "justify-center" : "justify-start"
           }`}
         >
