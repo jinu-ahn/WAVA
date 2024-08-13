@@ -174,10 +174,10 @@ function ChannelPage() {
               <img
                 src={userInfo.profile}
                 alt="Profile"
-                className="w-12 h-12 mx-auto rounded-full shadow-md hover:shadow-lg transition-all duration-300 border-2 border-blue-200 hover:border-blue-400"
+                className="w-12 h-12 mx-auto rounded-full shadow-md hover:shadow-lg transition-all duration-300 border-2 hover:border-gray-400"
               />
             ) : (
-              <UserCircleIcon className="w-12 h-12 mx-auto rounded-full text-blue-500 hover:text-blue-600 transition-all duration-300" />
+              <UserCircleIcon className="w-12 h-12 mx-auto border border-gray-300 rounded-full shadow-md hover:shadow-lg hover:bg-slate-400 transition-all duration-300 text-gray-900" />
             )}
           </NavLink>
         </div>
@@ -188,7 +188,7 @@ function ChannelPage() {
             정보 채널
           </div>
           <NavLink to={`/channel/feed`} className="block p-2">
-            <GlobeAltIcon className="w-12 h-12 mx-auto border border-gray-300 rounded-full shadow-md hover:shadow-lg hover:border-blue-400 transition-all duration-300 text-blue-500" />
+            <GlobeAltIcon className="w-12 h-12 mx-auto border border-gray-300 rounded-full shadow-md hover:shadow-lg hover:bg-slate-400 transition-all duration-300 text-gray-900" />
           </NavLink>
         </div>
 
@@ -208,15 +208,15 @@ function ChannelPage() {
                 <div className="flex flex-col items-center space-y-3 mb-3">
                   <button
                     onClick={handleChannelPortalOpen}
-                    className="w-12 h-12 border border-gray-300 rounded-full hover:border-blue-400 hover:bg-gray-100 transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center"
+                    className="w-12 h-12 border border-gray-300 rounded-full hover:bg-slate-400 transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center"
                   >
-                    <PlusIcon className="w-6 h-6 text-blue-500" />
+                    <PlusIcon className="w-6 h-6 text-gray-900" />
                   </button>
                   <NavLink
                     to="/channel/group/discover-groups"
-                    className="w-12 h-12 border border-gray-300 rounded-full hover:border-blue-400 hover:bg-gray-100 transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center"
+                    className="w-12 h-12 border border-gray-300 rounded-full hover:bg-slate-400 transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center"
                   >
-                    <MagnifyingGlassIcon className="w-6 h-6 text-blue-500" />
+                    <MagnifyingGlassIcon className="w-6 h-6 text-gray-900" />
                   </NavLink>
                 </div>
               </div>

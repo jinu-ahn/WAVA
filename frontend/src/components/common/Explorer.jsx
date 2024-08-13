@@ -39,7 +39,7 @@ const Explorer = () => {
     <nav
       style={{ fontFamily: "'IBM Plex Sans KR', sans-serif" }}
       className={`sidebar ${
-        collapsed ? "w-14" : "w-36"
+        collapsed ? "w-14" : "w-38"
       } h-full bg-gradient-to-b from-gray-700 to-gray-900 text-white flex flex-col justify-between transition-all duration-300 ease shadow-lg`}
     >
       <div>
@@ -115,7 +115,7 @@ const Explorer = () => {
             <UserCircleIcon className="w-8 h-8 text-gray-400 shadow-md" />
           )}
           {!collapsed && (
-            <div className="avatar-name ml-3">
+            <div className="avatar-name ml-3 pe-1">
               <div className="user-name font-medium text-gray-200 text-sm">
                 {userInfo?.nickName || "User Name"}
               </div>
