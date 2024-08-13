@@ -11,6 +11,7 @@ import { ArrowPathRoundedSquareIcon } from "@heroicons/react/24/outline";
 import { CalendarDaysIcon } from "lucide-react";
 import useTodoStore from "../../store/todoStore";
 import remarkGfm from "remark-gfm";
+import TypingEffect from "./TypingEffect";
 
 const DashboardContent = () => {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ const DashboardContent = () => {
   };
 
   const [answer, setAnswer] = useState(null);
+  const [isComment, setIsComment] = useState(false);
 
   const { setComments, comment } = useGptStore();
 
@@ -35,6 +37,16 @@ const DashboardContent = () => {
 
   const toggleDropdown = () => {
     setIsWorcationInfoOpen(!isWorcationInfoOpen);
+  };
+
+  // 컴포넌트를 unMount해서 삭제
+  const setAIComment = async () => {
+    try {
+      setIsComment(false);
+    } finally {
+      await ai_test();
+      setIsComment(true);
+    }
   };
 
   return (
@@ -91,7 +103,7 @@ const DashboardContent = () => {
           <div className="flex justify-between shadow-md sticky top-0 bg-sky-100">
             <button
               type="button"
-              onClick={ai_test}
+              onClick={setAIComment}
               className="border rounded-lg drop-shadow-md text-black"
             >
               <CalendarDaysIcon className="w-8" />
@@ -99,15 +111,15 @@ const DashboardContent = () => {
             <p className="self-center">WAVA'S AI ASISTANT</p>
             <button
               type="button"
-              onClick={ai_test}
+              onClick={setAIComment}
               className="border rounded-lg drop-shadow-md text-black"
             >
               <ArrowPathRoundedSquareIcon className="w-8" />
             </button>
           </div>
+          {isComment && <TypingEffect text={comment} />}
           <article className="text-pretty p-3">
             <p style={{ fontFamily: "'IBM Plex Sans KR', sans-serif" }}>
-              {comment}
               {/* <ReactMarkdown className="" children={answer} remarkPlugins={[remarkGfm]} /> */}
             </p>
           </article>

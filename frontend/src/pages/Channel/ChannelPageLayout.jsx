@@ -43,7 +43,7 @@ function ChannelPage() {
     if (location.pathname?.replaceAll("/", "") === "channel") {
       navigate(`/channel/feed/${myId}`);
     }
-  }, [location.pathname, navigate, userId]);
+  }, [location.pathname, navigate, userId, myId]);
 
   useEffect(() => {
     const getMyGroupData = async () => {
@@ -51,7 +51,7 @@ function ChannelPage() {
       if (resp) setFollowChannels(resp?.data);
     };
     getMyGroupData();
-  }, []);
+  }, [setFollowChannels]);
 
   const handleMouseEvents = (ref) => {
     let isDown = false;
