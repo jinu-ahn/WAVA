@@ -47,6 +47,7 @@ public class MapPinServiceImpl implements MapPinService {
     public MapPinResponseDto createMarker(final MapPinRequestDto mapPinRequestDto) {
         Channel channel = validateChannel(mapPinRequestDto.getChannelId());
         MapPin mapPin = mapPinRepository.save(MapPin.builder()
+                .id(mapPinRequestDto.getPinId())
                 .channel(channel)
                 .lat(mapPinRequestDto.getLat())
                 .lng(mapPinRequestDto.getLng())
@@ -129,7 +130,7 @@ public class MapPinServiceImpl implements MapPinService {
      * @return
      * @status 성공 : 200
      */
-    public MapPinResponseDto deleteMarker(Long pinId, String status) {
+    public MapPinResponseDto deleteMarker(String pinId, String status) {
         MapPin mapPin = mapPinRepository.findById(pinId).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_MARKER)
         );

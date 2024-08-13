@@ -14,9 +14,8 @@ import java.util.List;
 @Builder
 public class MapPin {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pin_id")
-    private Long id;
+    private String id;
 
     @Column(name="cord_x")
     private Double lat;
@@ -29,9 +28,6 @@ public class MapPin {
 
     @Column(name="info")
     private String info;
-
-    @Column(name="pin_order")
-    private Long pinOrder;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="channel_id")

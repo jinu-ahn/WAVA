@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Builder
 public class MapPinResponseDto {
-    private Long pinId;
+    private String pinId;
     private Long channelId;
     private Double lat;
     private Double lng;

@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @ToString
 public class MapPinRequestDto {
-    private Long pinId;
+    private String pinId;
     private Long channelId;
     private Double lat;
     private Double lng;

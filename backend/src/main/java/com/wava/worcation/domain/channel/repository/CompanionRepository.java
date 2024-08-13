@@ -10,6 +10,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface CompanionRepository extends JpaRepository<Companion, Long> {
-    List<Companion> findByMapPinId(Long pinId);
-    void deleteAllByMapPinId(Long pinId);
+    List<Companion> findByMapPinId(String pinId);
+    void deleteAllByMapPinId(String pinId);
 }
