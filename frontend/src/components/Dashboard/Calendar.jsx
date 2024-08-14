@@ -134,7 +134,9 @@ const Calendar = ({ calendarRef }) => {
     return (
       <div
         className={
-          `${eventInfo.event?.extendedProps?.isFinish ? "todo-finish " : ""}` +
+          `todo-item-container ${
+            eventInfo.event?.extendedProps?.isFinish ? "todo-finish " : ""
+          }` +
           [...eventInfo.event.classNames] +
           " animate-fade-in-fast"
         }

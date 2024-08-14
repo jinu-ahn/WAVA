@@ -5,11 +5,11 @@ import { ChevronDown } from "lucide-react";
 // import { useUsers } from "y-presence";
 // import { awareness } from "./cursor/y";
 // import { USER_COLORS } from "./cursor/constants";
-import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import RestartAltOutlinedIcon from '@mui/icons-material/RestartAltOutlined';
-import AddLocationAltTwoToneIcon from '@mui/icons-material/AddLocationAltTwoTone';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
+import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import RestartAltOutlinedIcon from "@mui/icons-material/RestartAltOutlined";
+import AddLocationAltTwoToneIcon from "@mui/icons-material/AddLocationAltTwoTone";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
 import { Stomp } from "@stomp/stompjs";
 import { groupChannelAPI } from "../../../api/groupChannelAPI";
 import { nanoid } from "nanoid";
@@ -29,15 +29,12 @@ const MapComponent = (props) => {
   const [isToolbarOpen, setIsToolbarOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-
   const userPinStompClient = useRef(null);
   const userPinLat = useRef(null);
   const userPinLng = useRef(null);
   const [userPinList, setUserPinList] = useState([]);
   // const [pinInputValue, setPinInputValue] = useState(null);
   // const [userPinStatus, setUserPinStatus] = useState(null);
-
-
 
   useEffect(() => {
     if (selectedUserNickName && cursorsRef.current) {
@@ -195,8 +192,8 @@ const MapComponent = (props) => {
                 "클릭한 위치의 위도는 " + latlng.getLat() + " 이고, ";
               message += "경도는 " + latlng.getLng() + " 입니다";
 
-              userPinLat.current=latlng.getLat();
-              userPinLng.current=latlng.getLng();
+              userPinLat.current = latlng.getLat();
+              userPinLng.current = latlng.getLng();
 
               console.log(message);
             }
@@ -213,7 +210,7 @@ const MapComponent = (props) => {
       // 그래서 해당 스크립트와 생명주기를 같이하는 flag를 설정해서 의존성을 만들고,
       // flag가 있을 때에만 스크립트가 map을 참조하도록 설정
       document.head.removeChild(script);
-      disconnect()
+      disconnect();
     };
   }, [channelId]);
 
@@ -232,8 +229,8 @@ const MapComponent = (props) => {
         '<input id="pin-place" class="swal2-input" placeholder="장소 입력">' +
         '<label for="message" class="block mb-2 text-lg font-medium text-gray-900 dark:text-white">Pin </label>' +
         '<textarea id="pin-info" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="메모할 내용을 입력해주세요."></textarea>',
-        // '<label>pin 설명</label>' +
-        // '<input id="swal-input2" class="swal2-input" placeholder="장소에 대한 메모">',
+      // '<label>pin 설명</label>' +
+      // '<input id="swal-input2" class="swal2-input" placeholder="장소에 대한 메모">',
       focusConfirm: false,
       preConfirm: () => {
         return {
@@ -249,16 +246,16 @@ const MapComponent = (props) => {
           content: result.value,
           lat: userPinLat.current,
           lng: userPinLng.current,
-          pinId: pinId
+          pinId: pinId,
         };
-        console.log("생성: ")
-        console.log(newUserPin.marker)
-        console.log(newUserPin.content)
-        console.log(newUserPin.lat)
-        console.log(newUserPin.lng)
-        console.log(newUserPin.pinId)
+        console.log("생성: ");
+        console.log(newUserPin.marker);
+        console.log(newUserPin.content);
+        console.log(newUserPin.lat);
+        console.log(newUserPin.lng);
+        console.log(newUserPin.pinId);
         // setUserPinList((prev) => [...prev, newUserPin]);
-        console.log("생성 후: " + userPinList)
+        console.log("생성 후: " + userPinList);
         sendPin(newUserPin, "ADD");
         // 마커 이벤트 리스너 추가
         // addMarkerEventListeners(newUserPin);
@@ -308,10 +305,10 @@ const MapComponent = (props) => {
           content: customMarker.content,
           lat: customMarker.lat,
           lng: customMarker.lng,
-          pinId: customMarker.pinId
+          pinId: customMarker.pinId,
         };
         sendPin(deleteUserPin, "DELETE");
-        
+
         // setUserPinList((prev) => prev.filter((cm) => cm !== customMarker));
         Swal.fire("", "마커가 삭제되었습니다.", "success");
       }
@@ -462,7 +459,9 @@ const MapComponent = (props) => {
   // 사용자 정의 핀
 
   const connect = () => {
-    const socket = new WebSocket(process.env.REACT_APP_MARKER_WEBSOCKET_ADDRESS);
+    const socket = new WebSocket(
+      process.env.REACT_APP_MARKER_WEBSOCKET_ADDRESS
+    );
     userPinStompClient.current = Stomp.over(socket);
     userPinStompClient.current.connect(
       {},
@@ -471,26 +470,26 @@ const MapComponent = (props) => {
           `/sub/map/${channelId}`,
           (userPin) => {
             const newPin = JSON.parse(userPin.body);
-            console.log("newPin: ", newPin)
+            console.log("newPin: ", newPin);
             if (newPin.status === "ADD") {
-              console.log("들어가요?")
-              displayFetchedPin(newPin)
+              console.log("들어가요?");
+              displayFetchedPin(newPin);
             } else if (newPin.status === "DELETE") {
-                setUserPinList((prevUserPinList) => 
-                  prevUserPinList.filter((marker) => {
-                    if(marker.pinId === newPin.pinId) {
-                      marker.marker.setMap(null);
-                    }
-                    return marker.pinId !== newPin.pinId;
-                  })
-              )
-              newPin.marker.setMap(null)
-            } 
+              setUserPinList((prevUserPinList) =>
+                prevUserPinList.filter((marker) => {
+                  if (marker.pinId === newPin.pinId) {
+                    marker.marker.setMap(null);
+                  }
+                  return marker.pinId !== newPin.pinId;
+                })
+              );
+              newPin.marker.setMap(null);
+            }
           },
           {}
         );
       },
-      (error) => { }
+      (error) => {}
     );
   };
 
@@ -498,26 +497,30 @@ const MapComponent = (props) => {
     if (userPinStompClient.current) {
       userPinStompClient.current.disconnect();
     }
-  }
+  };
 
   const fetchPins = async () => {
     try {
       const userPinData = await groupChannelAPI.getMapPinRequest(channelId);
       if (userPinData.status === "OK") {
-        console.log(userPinData)
+        console.log(userPinData);
         userPinData.data.map((pin) => {
           displayFetchedPin(pin);
-          console.log(pin)
-        })
+          console.log(pin);
+        });
         // setUserPinList(userPinData.data)
       }
     } catch (error) {
-      console.error("Error get userPins", error)
+      console.error("Error get userPins", error);
     }
-  }
+  };
 
   const sendPin = async (newUserPin, status) => {
-    if (userPinStompClient.current && newUserPin.content.title && newUserPin.content.description) {
+    if (
+      userPinStompClient.current &&
+      newUserPin.content.title &&
+      newUserPin.content.description
+    ) {
       const pinObj = {
         pinId: newUserPin.pinId,
         channelId: channelId,
@@ -525,8 +528,8 @@ const MapComponent = (props) => {
         lng: newUserPin.lng,
         placeName: newUserPin.content.title,
         info: newUserPin.content.description,
-        status: status
-      }
+        status: status,
+      };
       await userPinStompClient.current.send(
         `/pub/marker/position`,
         { Authorization: `Bearer ${sessionStorage.getItem("accessToken")}` },
@@ -535,18 +538,18 @@ const MapComponent = (props) => {
       userPinLat.current = null;
       userPinLng.current = null;
     }
-  }
+  };
 
   const displayFetchedPin = useCallback(
     (pinData) => {
-      console.log("들어왔음")
+      console.log("들어왔음");
       if (!map) return;
-      console.log("지도 있음")
+      console.log("지도 있음");
       const pin = new window.kakao.maps.Marker({
         map: map,
         position: new window.kakao.maps.LatLng(pinData.lat, pinData.lng),
       });
-      
+
       const customPin = {
         marker: pin,
         content: {
@@ -555,24 +558,24 @@ const MapComponent = (props) => {
         },
         lat: pinData.lat,
         lng: pinData.lng,
-        pinId: pinData.pinId
+        pinId: pinData.pinId,
       };
 
-      console.log("fetch: ")
-      console.log(customPin.marker)
-      console.log(customPin.content)
-      console.log(customPin.lat)
-      console.log(customPin.lng)
-      console.log(customPin.pinId)
+      console.log("fetch: ");
+      console.log(customPin.marker);
+      console.log(customPin.content);
+      console.log(customPin.lat);
+      console.log(customPin.lng);
+      console.log(customPin.pinId);
       setUserPinList((prev) => [...prev, customPin]);
       addMarkerEventListeners(customPin);
-      console.log("등록 성공")
-      console.log("추가 후: " + userPinList)
+      console.log("등록 성공");
+      console.log("추가 후: " + userPinList);
     },
     [map, addMarkerEventListeners, userPinList]
   );
 
-  console.log(userPinList)
+  console.log(userPinList);
 
   return (
     <div className="flex flex-col h-full relative ">
@@ -591,16 +594,13 @@ const MapComponent = (props) => {
               onClick={searchPlaces}
               className="p-2 rounded hover: shadow-sm"
             >
-            {/* <MagnifyingGlassCircleIcon className="w-10"/> */}
+              {/* <MagnifyingGlassCircleIcon className="w-10"/> */}
               <SearchOutlinedIcon fontSize="large" />
             </button>
           </Tooltip>
           <Tooltip title="검색 결과 초기화" placement="bottom" arrow>
-            <button
-              onClick={resetMap}
-              className="p-2 mb-0.5 "
-            >
-              <RestartAltOutlinedIcon fontSize="large" color="danger"/>
+            <button onClick={resetMap} className="p-2 mb-0.5 ">
+              <RestartAltOutlinedIcon fontSize="large" color="danger" />
             </button>
           </Tooltip>
           <Tooltip title="일정 마커 추가" placement="bottom" arrow>
@@ -608,7 +608,7 @@ const MapComponent = (props) => {
               onClick={() => handleDrawingModeChange("MARKER")}
               className="p-2 "
             >
-              <AddLocationAltTwoToneIcon fontSize="large" color="primary"/>
+              <AddLocationAltTwoToneIcon fontSize="large" color="primary" />
             </button>
           </Tooltip>
         </div>
@@ -649,9 +649,7 @@ const MapComponent = (props) => {
       <div ref={mapContainer} className="flex-grow h-screen">
         {map && <Cursors ref={cursorsRef} channelId={channelId} map={map} />}
       </div>
-      <div>
-        {/* <Markers /> */}
-      </div>
+      <div>{/* <Markers /> */}</div>
       <div className="absolute bottom-0 left-0 w-full p-4 bg-white bg-opacity-60 z-10 max-h-40 overflow-y-auto">
         <ul>
           {places.map((place, index) => (

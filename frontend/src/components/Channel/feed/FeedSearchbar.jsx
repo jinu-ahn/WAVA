@@ -3,10 +3,17 @@ import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 
 function FeedSearchBar({ searchHandle, searchBarRef, tooltipMessage }) {
   const [searchText, setsearchText] = useState("");
+  const [isFetch, setIsFeth] = useState(false);
 
-  const submitHandle = (e) => {
-    e.preventDefault();
-    searchHandle(searchText);
+  const submitHandle = async (e) => {
+    if (isFetch) return;
+    try {
+      setIsFeth(true);
+      e.preventDefault();
+      await searchHandle(searchText);
+    } finally {
+      setIsFeth(false);
+    }
   };
   return (
     <div className="flex items-center justify-center my-5">

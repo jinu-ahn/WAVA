@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import useUserStore from "../../store/userStore";
-import { Navigate, useNavigate } from "react-router-dom";
-import NotFoundPage from "../../pages/NotFoundPage";
+import { useNavigate } from "react-router-dom";
 
 // PrivateRoute component to protect routes
 // 로그인 여부에 따라서 로그인으로 안내하는 라우터

@@ -23,11 +23,10 @@ public class LoggingAspect {
     /**
      * 작성자   : 안진우
      * 작성일   : 2024-08-11
-     * 설명     : 모든 컨트롤러 패키지에서 사용할 포인트 컷
+     * 설명     : 모든 컨트롤러 패키지에서 사용할 포인트 컷 (@MessageMapping 어노테이션 제외)
      */
     @Pointcut("execution(* com.wava.worcation.domain.*.controller..*(..))"
-        + " && !execution(* com.wava.worcation.domain.chat.controller..*(..))"
-        + " && !execution(* com.wava.worcation.domain.cursor.controller..*(..))")
+        + "&& !@annotation(org.springframework.messaging.handler.annotation.MessageMapping)")
     private void controllerExecution() {}
 
     /**
