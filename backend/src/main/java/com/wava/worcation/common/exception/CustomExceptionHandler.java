@@ -3,13 +3,19 @@ package com.wava.worcation.common.exception;
 import com.wava.worcation.common.response.ApiResponse;
 import com.wava.worcation.common.response.ErrorCode;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.connection.DefaultMessage;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
+
+import java.util.List;
+import java.util.Objects;
 
 /**
  * 작성자   : 이병수
@@ -83,5 +89,27 @@ public class CustomExceptionHandler {
     public ResponseEntity<ApiResponse<String>> handleHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex) {
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
                 .body(ApiResponse.error(ErrorCode.METHOD_NOT_ALLOWED));
+    }
+
+    /**
+     * 작성자   : 안진우
+     * 작성일   : 2024-08-11
+     * 설명     : Validation 에러 핸들러
+     * @return HTTP 상태 코드와 ApiResponse를 포함한 응답 객체 .
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiResponse<String>> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        log.info(ex.getObjectName());
+        log.info(ex.getBindingResult().toString());
+        log.info(ex.getTitleMessageCode());
+
+        String errorMessage = ex.getBindingResult().getAllErrors().stream()
+                .map(error -> error.getDefaultMessage())       // DefaultMessage를 추출하고
+                .filter(Objects::nonNull)                      // Null이 아닌 메시지만 필터링
+                .findFirst()                                   // 첫 번째 메시지만 가져옴
+                .orElse(null);                                 // 메시지가 없으면 null 반환
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.error(HttpStatus.BAD_REQUEST,errorMessage));
     }
 }
