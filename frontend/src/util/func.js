@@ -91,31 +91,31 @@ export function validateWorcation(data) {
 
   if (!start || isNaN(Date.parse(start))) {
     console.error("유효하지 않은 시작 날짜입니다.");
-    return false;
+    return "유효하지 않은 시작 날짜입니다.";
   }
   if (!end || isNaN(Date.parse(end))) {
     console.error("유효하지 않은 종료 날짜입니다.");
-    return false;
+    return "유효하지 않은 종료 날짜입니다.";
   }
-  if (end <= start) {
+  if (new Date(end) <= new Date(start)) {
     console.error("종료 날짜는 시작 날짜 이후여야 합니다.");
-    return false;
+    return "종료 날짜는 시작 날짜 이후여야 합니다.";
   }
 
   // 문자열 필드 유효성 검사
   if (typeof sido !== "string" || sido.trim() === "") {
     console.error("시/도 정보가 유효하지 않습니다.");
-    return false;
+    return "시/도 정보가 유효하지 않습니다.";
   }
   if (typeof sigungu !== "string" || sigungu.trim() === "") {
     console.error("구/군 정보가 유효하지 않습니다.");
-    return false;
+    return "구/군 정보가 유효하지 않습니다.";
   }
   if (typeof job !== "string" || job.trim() === "") {
     console.error("직업 정보가 유효하지 않습니다.");
-    return false;
+    return "직업 정보가 유효하지 않습니다.";
   }
 
   // 모든 검사를 통과한 경우
-  return true;
+  return false;
 }
