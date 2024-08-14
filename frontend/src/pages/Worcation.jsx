@@ -107,7 +107,7 @@ function WorcationPage() {
       Swal.fire({
         icon: "error",
         title: "확인해 주세요",
-        text: valid,
+        text: valid ?? "입력값이 잘못되었어요!",
         // footer: '<a href="#">Why do I have this issue?</a>',
         // timer: 1000,
         showConfirmButton: true,

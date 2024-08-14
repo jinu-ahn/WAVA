@@ -204,7 +204,7 @@ const Calendar = ({ calendarRef }) => {
       Swal.fire({
         icon: "warning",
         title: "입력 오류",
-        text: valid + " 확인해 주세요.",
+        text: valid ?? "입력값이 잘못되었어요!" + " 확인해 주세요.",
       });
     }
   };
@@ -227,7 +227,7 @@ const Calendar = ({ calendarRef }) => {
       await Swal.fire({
         icon: "warning",
         title: "입력 오류",
-        text: valid + " 확인해 주세요.",
+        text: valid ?? "입력값이 잘못되었어요!" + " 확인해 주세요.",
       });
       return;
     }
