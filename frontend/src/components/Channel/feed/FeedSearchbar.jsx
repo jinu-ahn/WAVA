@@ -11,7 +11,7 @@ function FeedSearchBar({ searchHandle, searchBarRef, tooltipMessage }) {
       return Swal.fire({
         position: "center",
         icon: "error",
-        title: "검색어를 입력해 주세요",
+        title: "검색어를 입력해주세요",
         showConfirmButton: true,
         timer: 2000,
       });

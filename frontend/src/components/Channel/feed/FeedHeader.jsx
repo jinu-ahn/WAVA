@@ -258,7 +258,9 @@ const FeedHeader = ({
             ) : (
               <div className="flex items-center">
                 <p className="text-gray-700 mr-2">
-                  {userInfo?.description || " - - - - - "}
+                  {typeof userInfo?.description === "string"
+                    ? userInfo?.description
+                    : " - - - - - "}
                 </p>
                 {loginedUserNickName === ownerUserNickName && (
                   <button

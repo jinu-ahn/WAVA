@@ -32,7 +32,9 @@ function GroupDiscoverPage() {
     try {
       setLoading(true);
       const resp = await groupChannelAPI.getSearchedChannelList(searchText);
-      setGroupList(resp.data);
+      if (resp) {
+        setGroupList(resp.data);
+      }
     } finally {
       setLoading(false);
     }
