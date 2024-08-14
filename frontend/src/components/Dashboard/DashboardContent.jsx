@@ -12,6 +12,8 @@ import useTodoStore from "../../store/todoStore";
 import remarkGfm from "remark-gfm";
 import TypingEffect from "./TypingEffect";
 import Weather from "./Weather";
+import CalendarMonthTwoToneIcon from "@mui/icons-material/CalendarMonthTwoTone";
+import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 
 const DashboardContent = () => {
   const navigate = useNavigate();
@@ -52,11 +54,11 @@ const DashboardContent = () => {
   return (
     <>
       <div
-        className="bg-white text-mainTxt text-center flex flex-col h-full ms-1 me-0.5 mt-1.5"
+        className="bg-white text-mainTxt text-center flex flex-col h-full ms-1 me-0.5 pt-1.5"
         style={{ fontFamily: "'IBM Plex Sans KR', sans-serif" }}
       >
-        <div className="shadow-md rounded-b-xl rounded-t-md p-2 flex-shrink-0 bg-[#4aa2ee] text-white">
-          <div className="px-4 cursor-pointer mt-1" onClick={toggleDropdown}>
+        <div className="shadow-md rounded-b-xl rounded-t-sm p-2 flex-shrink-0 bg-[#4aa2ee] text-white">
+          <div className="px-1 cursor-pointer mt-1" onClick={toggleDropdown}>
             <div className="font-bold text-xl break-keep inline-block mb-2 mt-1">
               나의 워케이션 정보
             </div>
@@ -66,20 +68,24 @@ const DashboardContent = () => {
               }`}
             >
               <div className="flex gap-2 py-1">
-                <div className="flex-1 flex items-center justify-center">
+                <div className="flex-2 flex items-center justify-center">
                   <div className="h-full flex items-center">
                     <Weather />
                   </div>
                 </div>
-                <div className="flex-1 flex flex-col justify-between pl-2">
-                  <div className="bg-[#3d5893] p-2 rounded-lg shadow-md flex-1 flex items-center justify-center">
+                <div className="flex-1 flex flex-col justify-between">
+                  <div className="bg-[#3d5893] p-0.5 rounded-lg shadow-md flex-1 flex items-center justify-center">
                     <div className="text-center">
-                      <p className="text-[#edf1f5] text-sm mb-5">
+                      <p className="text-[#edf1f5] text-sm mb-5 font-medium">
+                        <CalendarMonthTwoToneIcon className="me-1 mb-0.5 text-slate-200" />
                         {dayjs(worcation.start).format("YY/MM/DD")}
-                        <br /> ~<br />
+                        <br />
+                        ~ <br />
+                        <CalendarMonthTwoToneIcon className="me-1 mb-0.5 text-slate-200" />
                         {dayjs(worcation.end).format("YY/MM/DD")}
                       </p>
-                      <p className="text-[#edf1f5] text-sm mt-1">
+                      <p className="text-[#edf1f5] text-sm mt-1 font-medium">
+                        <FmdGoodOutlinedIcon className="me-1 mb-0.5 text-slate-200" />
                         {worcation.sido} {worcation.sigungu}
                       </p>
                     </div>
