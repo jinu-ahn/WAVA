@@ -132,8 +132,8 @@ public class PlanServiceImpl implements PlanService {
                 .id(existingPlan.getId()) // 기존 ID 유지
                 .taskTitle(planRequestDto.getTitle())
                 .taskContent(planRequestDto.getContent())
-                .taskStartTime(planRequestDto.getStart())
-                .taskEndTime(planRequestDto.getEnd())
+                .taskStartTime(changeTime(planRequestDto.getStart()))
+                .taskEndTime(changeTime(planRequestDto.getEnd()))
                 .taskImportant(planRequestDto.getImportant())
                 .taskType(planRequestDto.getType())
                 .taskIsFinish(planRequestDto.getIsFinish())
