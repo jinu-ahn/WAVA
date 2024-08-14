@@ -37,6 +37,7 @@ const MapComponent = (props) => {
   const userPinLat = useRef(null);
   const userPinLng = useRef(null);
   const [userPinList, setUserPinList] = useState([]);
+  const [userOverLayList, setUserOverLayList] = useState([]);
 
   const myInfo = useChannelStore((state) => state.myInfo)
 
@@ -219,13 +220,14 @@ const MapComponent = (props) => {
   }, [channelId]);
 
   useEffect(() => {
-    if (map) {
+    if (map && myInfo) {
       connect();
       fetchPins();
     }
-  }, [map]);
+  }, [map, myInfo]);
 
   const handleMarkerCreated = useCallback((marker) => {
+    if (!myInfo) return;
     Swal.fire({
       title: "마커 정보 입력",
       html:
@@ -251,6 +253,7 @@ const MapComponent = (props) => {
           lat: userPinLat.current,
           lng: userPinLng.current,
           pinId: pinId,
+          profileImg: myInfo.profileImg
         };
         console.log("생성: ");
         console.log(newUserPin.marker);
@@ -269,25 +272,24 @@ const MapComponent = (props) => {
         marker.setMap(null);
       }
     });
-  }, []);
+  }, [myInfo]);
 
   const addMarkerEventListeners = useCallback((customMarker) => {
     const { marker } = customMarker;
-    console.log("marker: ", marker.a)
 
-    window.kakao.maps.event.addListener(marker.a, "click", () => {
+    window.kakao.maps.event.addListener(marker, "click", () => {
       displayCustomMarkerInfo(customMarker);
     });
 
-    window.kakao.maps.event.addListener(marker.a, "mouseover", () => {
+    window.kakao.maps.event.addListener(marker, "mouseover", () => {
       displayCustomMarkerInfoWindow(customMarker);
     });
 
-    window.kakao.maps.event.addListener(marker.a, "mouseout", () => {
+    window.kakao.maps.event.addListener(marker, "mouseout", () => {
       infowindow.current.close();
     });
 
-    window.kakao.maps.event.addListener(marker.a, "rightclick", () => {
+    window.kakao.maps.event.addListener(marker, "rightclick", () => {
       deleteCustomMarker(customMarker);
     });
   }, []);
@@ -311,6 +313,7 @@ const MapComponent = (props) => {
           lat: customMarker.lat,
           lng: customMarker.lng,
           pinId: customMarker.pinId,
+          profileImg: myInfo.profileImg
         };
         sendPin(deleteUserPin, "DELETE");
 
@@ -488,7 +491,15 @@ const MapComponent = (props) => {
                   return marker.pinId !== newPin.pinId;
                 })
               );
-              newPin.marker.setMap(null);
+              setUserOverLayList((prevUserOverLayList) =>
+                prevUserOverLayList.filter((marker) => {
+                  if (marker.pinId === newPin.pinId) {
+                    marker.overlay.setMap(null);
+                  }
+                  return marker.pinId !== newPin.pinId;
+                })
+              );
+              // newPin.marker.setMap(null);
             }
           },
           {}
@@ -533,6 +544,7 @@ const MapComponent = (props) => {
         lng: newUserPin.lng,
         placeName: newUserPin.content.title,
         info: newUserPin.content.description,
+        profileImg: newUserPin.profileImg,
         status: status,
       };
       await userPinStompClient.current.send(
@@ -552,13 +564,27 @@ const MapComponent = (props) => {
       console.log("지도 있음");
       console.log("프로필 사진", myInfo)
       const profileImgPin = ReactDOMServer.renderToString(
-        <MyPin profileImg={myInfo.profileImg} />
+        <MyPin profileImg={pinData.profileImg} />
       )
-      const pin = new window.kakao.maps.CustomOverlay({
+      const overlay = new window.kakao.maps.CustomOverlay({
         map: map,
         position: new window.kakao.maps.LatLng(pinData.lat, pinData.lng),
         content: profileImgPin,
-        clickable: true
+        // clickable: true
+      });
+
+      // let imageSrc = myInfo?.profileImg || 'https://raw.githubusercontent.com/tailwindlabs/heroicons/56c073c2c9a66d2e51adb93d8e87e2e941d5b6db/src/20/solid/user-circle.svg';
+      // // if (pinData.profileImg)
+      // let imageSize = new window.kakao.maps.Size(64, 69);
+      // let imageOption = { offset: new window.kakao.maps.Point(27, 69) };
+
+      // console.log("profile: ", imageSrc)
+      // const markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+
+      const pin = new window.kakao.maps.Marker({
+        map: map,
+        position: new window.kakao.maps.LatLng(pinData.lat, pinData.lng),
+        // image: markerImage
       });
 
       const customPin = {
@@ -572,6 +598,11 @@ const MapComponent = (props) => {
         pinId: pinData.pinId,
       };
 
+      const customOverLay = {
+        overlay: overlay,
+        pinId: pinData.pinId
+      }
+
       console.log("fetch: ");
       console.log(customPin.marker);
       console.log(customPin.content);
@@ -579,11 +610,13 @@ const MapComponent = (props) => {
       console.log(customPin.lng);
       console.log(customPin.pinId);
       setUserPinList((prev) => [...prev, customPin]);
+      setUserOverLayList((prevList) => [...prevList, customOverLay]);
       addMarkerEventListeners(customPin);
       console.log("등록 성공");
       console.log("추가 후: " + userPinList);
+      console.log("추가 후 오버레이: " + userOverLayList)
     },
-    [map, addMarkerEventListeners, userPinList]
+    [map, addMarkerEventListeners, userPinList, myInfo, userOverLayList]
   );
 
   console.log(userPinList);
