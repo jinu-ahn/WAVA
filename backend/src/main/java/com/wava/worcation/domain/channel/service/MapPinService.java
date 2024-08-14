@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface MapPinService {
     List<MapPinResponseDto> getChannelPins(final Long channelId);
-    MapPinResponseDto markerFunction(final MapPinRequestDto mapPinRequestDto);
+    MapPinResponseDto markerFunction(final MapPinRequestDto mapPinRequestDto, final String userToken);
 }

@@ -2,6 +2,7 @@ package com.wava.worcation.domain.user.domain;
 
 import com.wava.worcation.domain.channel.domain.ChannelUser;
 import com.wava.worcation.domain.channel.domain.Companion;
+import com.wava.worcation.domain.channel.domain.MapPin;
 import com.wava.worcation.domain.chat.domain.Chat;
 import com.wava.worcation.domain.worcation.domain.Worcation;
 import jakarta.persistence.*;
@@ -64,6 +65,9 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Companion> companions;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<MapPin> markers;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
