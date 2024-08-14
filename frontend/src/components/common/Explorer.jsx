@@ -13,7 +13,7 @@ import {
 } from "@heroicons/react/24/outline";
 
 const Explorer = () => {
-  const [collapsed, setCollapsed] = useState(false);
+  const [collapsed, setCollapsed] = useState(window.innerWidth <= 1024);
   const [activeLink, setActiveLink] = useState("");
   const isMobile = useDeviceStore((state) => state.isMobile);
   const logoutFunc = useUserStore((state) => state.logoutFunc);
@@ -21,6 +21,15 @@ const Explorer = () => {
 
   useEffect(() => {
     setActiveLink(window.location.pathname);
+  }, []);
+
+  const handleResize = () => {
+    setCollapsed(window.innerWidth <= 1024);
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const handleToggleCollapse = () => {
