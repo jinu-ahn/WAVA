@@ -14,6 +14,7 @@ import TypingEffect from "./TypingEffect";
 import Weather from "./Weather";
 import CalendarMonthTwoToneIcon from "@mui/icons-material/CalendarMonthTwoTone";
 import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
+import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 
 const DashboardContent = () => {
   const navigate = useNavigate();
@@ -23,6 +24,8 @@ const DashboardContent = () => {
   const handleClick = () => {
     navigate("/worcation");
   };
+
+  const [showTooltip, setShowTooltip] = useState(false);
 
   const [answer, setAnswer] = useState(null);
   const [isComment, setIsComment] = useState(false);
@@ -59,7 +62,10 @@ const DashboardContent = () => {
       >
         <div className="shadow-md rounded-b-xl rounded-t-sm p-2 flex-shrink-0 bg-[#4aa2ee] text-white">
           <div className="px-1 cursor-pointer mt-1" onClick={toggleDropdown}>
-            <div className="font-bold text-xl break-keep inline-block mb-2 mt-1">
+            <div
+              className="font-bold text-xl break-keep inline-block mb-2 mt-1 relative tooltip tooltip-bottom"
+              data-tip="클릭하면 카드가 열리거나 닫힙니다."
+            >
               나의 워케이션 정보
             </div>
             <div
@@ -122,9 +128,11 @@ const DashboardContent = () => {
               </>
             )} */}
         </div>
+
         <div className="w-full flex-shrink-0 flex flex-col items-center shadow-md rounded-lg py-2 me-3 ms-0.5 my-3 bg-[#ffe9ae]">
           <GraphView />
         </div>
+
         <div className="w-full text-wrap flex-col items-center shadow-md rounded-lg me-3 ms-0.5 mb-1 flex-grow overflow-auto min-h-[200px] break-all">
           <div className="flex justify-between shadow-md sticky top-0 bg-[#4aa2ee]">
             <button
@@ -134,7 +142,15 @@ const DashboardContent = () => {
             >
               <PlayCircleIcon className="w-8" />
             </button>
-            <p className="self-center text-white">WAVA'S AI ASISTANT</p>
+
+            <p
+              className="self-center text-white relative tooltip tooltip-bottom"
+              data-tip="좌상단 플레이버튼을 클릭하면 WAVA AI 어시스턴트가 일정에 대한 브리핑을 진행합니다.
+              우상단 새로고침 버튼을 클릭하면 브리핑을 새로 진행합니다."
+            >
+              WAVA'S AI ASISTANT
+            </p>
+
             <button
               type="button"
               onClick={setAIComment}

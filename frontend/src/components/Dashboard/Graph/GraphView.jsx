@@ -84,7 +84,8 @@ function GraphView() {
 
   return (
     <div
-      className="relative bg-[#ffe9ae]"
+      className="relative bg-[#ffe9ae] tooltip tooltip-right z-[50]"
+      data-tip="필터 버튼을 클릭하면 필터링된 정보의 통계가 출력됩니다."
       style={{
         maxWidth: "200px",
         height: "100%",
