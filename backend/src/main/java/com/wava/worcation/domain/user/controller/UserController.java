@@ -40,8 +40,19 @@ public class UserController {
     public ResponseEntity<ApiResponse<String>> reissue(HttpServletRequest request,HttpServletResponse response) {
         return userService.reissue(request,response);
     }
+
     @PostMapping("/nickname/check/{nickName}")
     public ResponseEntity<ApiResponse<String>> nickNameCheck(@PathVariable(name="nickName") String nickName) {
         return userService.nickNameCheck(nickName);
+    }
+
+    @PostMapping("/email/check/{email}")
+    public ResponseEntity<ApiResponse<String>> emailCheck(@PathVariable(name="email") String email) {
+        return userService.emailCheck(email);
+    }
+
+    @PostMapping("/phoneNumber/check/{phoneNumber}")
+    public ResponseEntity<ApiResponse<String>> phoneNumberCheck(@PathVariable(name="phoneNumber") String phoneNumber) {
+        return userService.phoneNumberCheck(phoneNumber);
     }
 }

@@ -205,10 +205,44 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public ResponseEntity<ApiResponse<String>> nickNameCheck(String nickName) {
-        nickNameValidate(nickName); // 닉네임 중복 체크
+        nickNameValidate(nickName);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success("사용가능한 닉네임 입니다."));
+    }
+
+    /**
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-08-14
+     * @ 설명     : 이메일 중복 여부
+     * @param email 사용할 이메일
+     * @return 닉네임 사용 가능 여부 메세지
+     * @status 성공 : 200, 실패 : 409
+     */
+    @Override
+    @Transactional
+    public ResponseEntity<ApiResponse<String>> emailCheck(String email) {
+        emailValidate(email);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.success("사용가능한 이메일 입니다."));
+    }
+
+    /**
+     * @ 작성자   : 안진우
+     * @ 작성일   : 2024-08-14
+     * @ 설명     : 전화번호 중복 여부
+     * @param phone 사용할 닉네임
+     * @return 닉네임 사용 가능 여부 메세지
+     * @status 성공 : 200, 실패 : 409
+     */
+    @Override
+    @Transactional
+    public ResponseEntity<ApiResponse<String>> phoneNumberCheck(String phone) {
+        phoneNumberValidate(phone);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponse.success("사용가능한 전화번호 입니다."));
     }
 
     /**
