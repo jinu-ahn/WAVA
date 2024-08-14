@@ -603,7 +603,11 @@ const MapComponent = (props) => {
               <RestartAltOutlinedIcon fontSize="large" color="danger" />
             </button>
           </Tooltip>
-          <Tooltip title="일정 마커 추가" placement="bottom" arrow>
+          <Tooltip
+            title="공유지도에 마커를 등록하면, 그룹원들이 마커를 볼 수 있습니다. 가고 싶은 장소에 마커를 등록해보세요!"
+            placement="right"
+            arrow
+          >
             <button
               onClick={() => handleDrawingModeChange("MARKER")}
               className="p-2 "
