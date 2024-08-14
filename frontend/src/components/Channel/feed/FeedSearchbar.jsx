@@ -1,12 +1,29 @@
 import { useState } from "react";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
+import Swal from "sweetalert2";
 
 function FeedSearchBar({ searchHandle, searchBarRef, tooltipMessage }) {
   const [searchText, setsearchText] = useState("");
+  const [isFetch, setIsFeth] = useState(false);
 
-  const submitHandle = (e) => {
-    e.preventDefault();
-    searchHandle(searchText);
+  const submitHandle = async (e) => {
+    if (!searchText || searchText?.length === 0) {
+      return Swal.fire({
+        position: "center",
+        icon: "error",
+        title: "검색어를 입력해주세요",
+        showConfirmButton: true,
+        timer: 2000,
+      });
+    }
+    if (isFetch) return;
+    try {
+      setIsFeth(true);
+      e.preventDefault();
+      await searchHandle(searchText);
+    } finally {
+      setIsFeth(false);
+    }
   };
   return (
     <div className="flex items-center justify-center my-5">

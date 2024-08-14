@@ -5,6 +5,15 @@ import { ChevronDown } from "lucide-react";
 // import { useUsers } from "y-presence";
 // import { awareness } from "./cursor/y";
 // import { USER_COLORS } from "./cursor/constants";
+import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import RestartAltOutlinedIcon from "@mui/icons-material/RestartAltOutlined";
+import AddLocationAltTwoToneIcon from "@mui/icons-material/AddLocationAltTwoTone";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import { Stomp } from "@stomp/stompjs";
+import { groupChannelAPI } from "../../../api/groupChannelAPI";
+import { nanoid } from "nanoid";
+import "./CustomAlert.css";
 
 const MapComponent = (props) => {
   const mapContainer = useRef(null);
@@ -21,19 +30,13 @@ const MapComponent = (props) => {
   const [isToolbarOpen, setIsToolbarOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // 특정 사용자의 커서 위치로 지도 center를 이동
-  // const handleFollowUser = () => {
-  //   const cursors = cursorsRef.current.getCursorMarkers();
-  //   if (selectedUser && map && cursors[selectedUser]) {
-  //     const position = cursors[selectedUser].getPosition();
-  //     map.panTo(position); // 선택된 사용자의 위치로 지도 이동
-  //   } else {
-  //     Swal.fire({
-  //       title: "사용자를 선택해주세요",
-  //       icon: "warning",
-  //     });
-  //   }
-  // };
+  const userPinStompClient = useRef(null);
+  const userPinLat = useRef(null);
+  const userPinLng = useRef(null);
+  const [userPinList, setUserPinList] = useState([]);
+  // const [pinInputValue, setPinInputValue] = useState(null);
+  // const [userPinStatus, setUserPinStatus] = useState(null);
+
   useEffect(() => {
     if (selectedUserNickName && cursorsRef.current) {
       const cursors = cursorsRef.current.getCursorMarkers();
@@ -190,6 +193,9 @@ const MapComponent = (props) => {
                 "클릭한 위치의 위도는 " + latlng.getLat() + " 이고, ";
               message += "경도는 " + latlng.getLng() + " 입니다";
 
+              userPinLat.current = latlng.getLat();
+              userPinLng.current = latlng.getLng();
+
               console.log(message);
             }
           );
@@ -205,49 +211,55 @@ const MapComponent = (props) => {
       // 그래서 해당 스크립트와 생명주기를 같이하는 flag를 설정해서 의존성을 만들고,
       // flag가 있을 때에만 스크립트가 map을 참조하도록 설정
       document.head.removeChild(script);
+      disconnect();
     };
   }, [channelId]);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsToolbarOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  const toggleToolbar = () => {
-    setIsToolbarOpen(!isToolbarOpen);
-  };
+    if (map) {
+      connect();
+      fetchPins();
+    }
+  }, [map]);
 
   const handleMarkerCreated = useCallback((marker) => {
     Swal.fire({
       title: "마커 정보 입력",
-      html:
-        '<input id="swal-input1" class="swal2-input" placeholder="제목">' +
-        '<input id="swal-input2" class="swal2-input" placeholder="설명">',
+      html: `
+      <div>
+        <input id="pin-place" class="custom-input" placeholder="장소를 입력해 주세요" />
+        <textarea id="pin-info" rows="4" class="custom-textarea" placeholder="메모할 내용을 입력해주세요."></textarea>
+      </div>
+    `,
       focusConfirm: false,
       preConfirm: () => {
         return {
-          title: document.getElementById("swal-input1").value,
-          description: document.getElementById("swal-input2").value,
+          title: document.getElementById("pin-place").value,
+          description: document.getElementById("pin-info").value,
         };
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        const newCustomMarker = {
+        const pinId = nanoid();
+        const newUserPin = {
           marker: marker,
-          info: result.value,
+          content: result.value,
+          lat: userPinLat.current,
+          lng: userPinLng.current,
+          pinId: pinId,
         };
-        setCustomMarkers((prev) => [...prev, newCustomMarker]);
-
+        console.log("생성: ");
+        console.log(newUserPin.marker);
+        console.log(newUserPin.content);
+        console.log(newUserPin.lat);
+        console.log(newUserPin.lng);
+        console.log(newUserPin.pinId);
+        // setUserPinList((prev) => [...prev, newUserPin]);
+        console.log("생성 후: " + userPinList);
+        sendPin(newUserPin, "ADD");
         // 마커 이벤트 리스너 추가
-        addMarkerEventListeners(newCustomMarker);
+        // addMarkerEventListeners(newUserPin);
+        marker.setMap(null);
       } else {
         // 사용자가 취소한 경우 마커 제거
         marker.setMap(null);
@@ -288,7 +300,16 @@ const MapComponent = (props) => {
     }).then((result) => {
       if (result.isConfirmed) {
         customMarker.marker.setMap(null);
-        setCustomMarkers((prev) => prev.filter((cm) => cm !== customMarker));
+        const deleteUserPin = {
+          marker: customMarker.marker,
+          content: customMarker.content,
+          lat: customMarker.lat,
+          lng: customMarker.lng,
+          pinId: customMarker.pinId,
+        };
+        sendPin(deleteUserPin, "DELETE");
+
+        // setUserPinList((prev) => prev.filter((cm) => cm !== customMarker));
         Swal.fire("", "마커가 삭제되었습니다.", "success");
       }
     });
@@ -296,8 +317,8 @@ const MapComponent = (props) => {
 
   const displayCustomMarkerInfo = useCallback((customMarker) => {
     Swal.fire({
-      title: customMarker.info.title,
-      text: customMarker.info.description,
+      title: customMarker.content.title,
+      text: customMarker.content.description,
       icon: "info",
     });
   }, []);
@@ -305,8 +326,8 @@ const MapComponent = (props) => {
   const displayCustomMarkerInfoWindow = useCallback(
     (customMarker) => {
       const content = `<div style="padding:5px;font-size:12px;">
-        <strong>${customMarker.info.title}</strong><br>
-        ${customMarker.info.description}
+        <strong>${customMarker.content.title}</strong><br>
+        ${customMarker.content.description}
       </div>`;
 
       infowindow.current.setContent(content);
@@ -435,84 +456,204 @@ const MapComponent = (props) => {
     [map, markers, places]
   );
 
+  // 사용자 정의 핀
+
+  const connect = () => {
+    const socket = new WebSocket(
+      process.env.REACT_APP_MARKER_WEBSOCKET_ADDRESS
+    );
+    userPinStompClient.current = Stomp.over(socket);
+    userPinStompClient.current.connect(
+      {},
+      () => {
+        userPinStompClient.current.subscribe(
+          `/sub/map/${channelId}`,
+          (userPin) => {
+            const newPin = JSON.parse(userPin.body);
+            console.log("newPin: ", newPin);
+            if (newPin.status === "ADD") {
+              console.log("들어가요?");
+              displayFetchedPin(newPin);
+            } else if (newPin.status === "DELETE") {
+              setUserPinList((prevUserPinList) =>
+                prevUserPinList.filter((marker) => {
+                  if (marker.pinId === newPin.pinId) {
+                    marker.marker.setMap(null);
+                  }
+                  return marker.pinId !== newPin.pinId;
+                })
+              );
+              newPin.marker.setMap(null);
+            }
+          },
+          {}
+        );
+      },
+      (error) => {}
+    );
+  };
+
+  const disconnect = () => {
+    if (userPinStompClient.current) {
+      userPinStompClient.current.disconnect();
+    }
+  };
+
+  const fetchPins = async () => {
+    try {
+      const userPinData = await groupChannelAPI.getMapPinRequest(channelId);
+      if (userPinData.status === "OK") {
+        console.log(userPinData);
+        userPinData.data.map((pin) => {
+          displayFetchedPin(pin);
+          console.log(pin);
+        });
+        // setUserPinList(userPinData.data)
+      }
+    } catch (error) {
+      console.error("Error get userPins", error);
+    }
+  };
+
+  const sendPin = async (newUserPin, status) => {
+    if (
+      userPinStompClient.current &&
+      newUserPin.content.title &&
+      newUserPin.content.description
+    ) {
+      const pinObj = {
+        pinId: newUserPin.pinId,
+        channelId: channelId,
+        lat: newUserPin.lat,
+        lng: newUserPin.lng,
+        placeName: newUserPin.content.title,
+        info: newUserPin.content.description,
+        status: status,
+      };
+      await userPinStompClient.current.send(
+        `/pub/marker/position`,
+        { Authorization: `Bearer ${sessionStorage.getItem("accessToken")}` },
+        JSON.stringify(pinObj)
+      );
+      userPinLat.current = null;
+      userPinLng.current = null;
+    }
+  };
+
+  const displayFetchedPin = useCallback(
+    (pinData) => {
+      console.log("들어왔음");
+      if (!map) return;
+      console.log("지도 있음");
+      const pin = new window.kakao.maps.Marker({
+        map: map,
+        position: new window.kakao.maps.LatLng(pinData.lat, pinData.lng),
+      });
+
+      const customPin = {
+        marker: pin,
+        content: {
+          title: pinData.placeName,
+          description: pinData.info,
+        },
+        lat: pinData.lat,
+        lng: pinData.lng,
+        pinId: pinData.pinId,
+      };
+
+      console.log("fetch: ");
+      console.log(customPin.marker);
+      console.log(customPin.content);
+      console.log(customPin.lat);
+      console.log(customPin.lng);
+      console.log(customPin.pinId);
+      setUserPinList((prev) => [...prev, customPin]);
+      addMarkerEventListeners(customPin);
+      console.log("등록 성공");
+      console.log("추가 후: " + userPinList);
+    },
+    [map, addMarkerEventListeners, userPinList]
+  );
+
+  console.log(userPinList);
+
   return (
     <div className="flex flex-col h-full relative ">
-      <div className="w-3/4 absolute top-0 left-0 p-4 bg-white bg-opacity-60 z-10">
-        <div className="flex space-x-2 items-center">
+      <div className="w-3/4 absolute top-0 left-0 p-2 bg-white bg-opacity-0 z-10">
+        <div className="flex justify-end space-x-2 mx-52 bg-white rounded-full shadow-md shadow-slate-300 hover:shadow-slate-400 focus:shadow-slate-400">
           <input
             type="text"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             placeholder="검색할 키워드를 입력하세요"
-            className="p-2 border rounded w-3/4 focus:bg-opacity-100"
+            className="ps-4 p-1 rounded-s-full w-full focus:outline-none"
           />
-          <button
-            onClick={searchPlaces}
-            className="p-2 bg-mainBlue text-white rounded hover:bg-blue-600"
-          >
-            검색
-          </button>
-          <div className="relative" ref={dropdownRef}>
+          <div className="w-[1px] bg-gray-300 h-10 self-center"></div>
+          <Tooltip title="검색" placement="bottom" arrow>
             <button
-              type="button"
-              className="flex items-center space-x-1 p-2 bg-gray-500 text-white rounded hover:bg-toolBtn"
-              onClick={toggleToolbar}
+              onClick={searchPlaces}
+              className="p-2 rounded hover: shadow-sm"
             >
-              <span>도구</span>
-              <ChevronDown className="w-4 h-4" />
+              {/* <MagnifyingGlassCircleIcon className="w-10"/> */}
+              <SearchOutlinedIcon fontSize="large" />
             </button>
-
-            <div
-              className={`absolute left-0 mt-2 w-24 bg-[#1e1e1e] rounded-md shadow-lg overflow-hidden transition-all duration-200 ease-in-out ${
-                isToolbarOpen ? "opacity-100 visible" : "opacity-0 invisible"
-              }`}
-            >
-              <div className="py-1">
-                <button
-                  onClick={() => handleDrawingModeChange("MARKER")}
-                  className="block w-full text-center px-4 py-2 text-xs text-white hover:bg-[#333]"
-                >
-                  마커
-                </button>
-                <button
-                  onClick={() => handleDrawingModeChange("POLYLINE")}
-                  className="block w-full text-center px-4 py-2 text-xs text-white hover:bg-[#333]"
-                >
-                  선
-                </button>
-                <button
-                  onClick={() => handleDrawingModeChange("RECTANGLE")}
-                  className="block w-full text-center px-4 py-2 text-xs text-white hover:bg-[#333]"
-                >
-                  사각형
-                </button>
-                <button
-                  onClick={() => handleDrawingModeChange("CIRCLE")}
-                  className="block w-full text-center px-4 py-2 text-xs text-white hover:bg-[#333]"
-                >
-                  원
-                </button>
-                <button
-                  onClick={() => handleDrawingModeChange("POLYGON")}
-                  className="block w-full text-center px-4 py-2 text-xs text-white hover:bg-[#333]"
-                >
-                  다각형
-                </button>
-              </div>
-            </div>
-          </div>
-          <button
-            onClick={resetMap}
-            className="p-2 bg-gray-600 text-white rounded hover:bg-red-600"
+          </Tooltip>
+          <Tooltip title="검색 결과 초기화" placement="bottom" arrow>
+            <button onClick={resetMap} className="p-2 mb-0.5 ">
+              <RestartAltOutlinedIcon fontSize="large" color="danger" />
+            </button>
+          </Tooltip>
+          <Tooltip
+            title="공유지도에 마커를 등록하면, 그룹원들이 마커를 볼 수 있습니다. 가고 싶은 장소에 마커를 등록해보세요!"
+            placement="right"
+            arrow
           >
-            초기화
-          </button>
+            <button
+              onClick={() => handleDrawingModeChange("MARKER")}
+              className="p-2 "
+            >
+              <AddLocationAltTwoToneIcon fontSize="large" color="primary" />
+            </button>
+          </Tooltip>
         </div>
+        {/* <div className="p-2 flex space-x-2 mt-2">
+          <button
+            onClick={() => handleDrawingModeChange("MARKER")}
+            className="p-2 bg-gray-500 text-white rounded hover:bg-toolBtn"
+          >
+            마커
+          </button>
+          <button
+            onClick={() => handleDrawingModeChange("POLYLINE")}
+            className="p-2 bg-gray-500 text-white rounded hover:bg-toolBtn"
+          >
+            선
+          </button>
+          <button
+            onClick={() => handleDrawingModeChange("RECTANGLE")}
+            className="p-2 bg-gray-500 text-white rounded hover:bg-toolBtn"
+          >
+            사각형
+          </button>
+          <button
+            onClick={() => handleDrawingModeChange("CIRCLE")}
+            className="p-2 bg-gray-500 text-white rounded hover:bg-toolBtn"
+          >
+            원
+          </button>
+          <button
+            onClick={() => handleDrawingModeChange("POLYGON")}
+            className="p-2 bg-gray-500 text-white rounded hover:bg-toolBtn"
+          >
+            다각형
+          </button>
+        </div> */}
       </div>
 
       <div ref={mapContainer} className="flex-grow h-screen">
         {map && <Cursors ref={cursorsRef} channelId={channelId} map={map} />}
       </div>
+      <div>{/* <Markers /> */}</div>
       <div className="absolute bottom-0 left-0 w-full p-4 bg-white bg-opacity-60 z-10 max-h-40 overflow-y-auto">
         <ul>
           {places.map((place, index) => (

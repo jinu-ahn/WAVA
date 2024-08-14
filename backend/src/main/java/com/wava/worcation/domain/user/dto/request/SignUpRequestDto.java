@@ -17,6 +17,7 @@ public class SignUpRequestDto {
     @Email
     private String email;
     @NotBlank
+    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d).+$", message="비밀번호는 영문 및 숫자 포함 8자리 이상 20자리 이하 가능합니다.")
     private String password;
     @NotBlank
     private String nickName;

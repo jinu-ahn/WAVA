@@ -1,6 +1,7 @@
 package com.wava.worcation.domain.channel.domain;
 
 import com.wava.worcation.domain.channel.dto.request.MapPinRequestDto;
+import com.wava.worcation.domain.user.domain.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -35,6 +36,10 @@ public class MapPin {
 
     @OneToMany(mappedBy = "mapPin", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<Companion> companions;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public void update(MapPinRequestDto requestDto) {
         this.lat = requestDto.getLat();

@@ -30,7 +30,7 @@ const TypingEffect = ({ text }) => {
 
   return (
     <div
-      className={`text-lg p-2 font-mono typing-effect ${
+      className={`text-lg p-2 font-mono typing-effect bg-[#dde8ee] text-[#18336c] ${
         isCompleted ? "completed" : ""
       }`}
     >

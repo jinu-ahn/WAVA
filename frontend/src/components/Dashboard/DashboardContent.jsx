@@ -7,12 +7,14 @@ import dayjs from "dayjs";
 import ReactMarkdown from "react-markdown";
 import { useState } from "react";
 import mainLogic from "../../util/assistant-logic";
-import { ArrowPathRoundedSquareIcon } from "@heroicons/react/24/outline";
-import { CalendarDaysIcon } from "lucide-react";
+import { ArrowPathIcon, PlayCircleIcon } from "@heroicons/react/24/outline";
 import useTodoStore from "../../store/todoStore";
 import remarkGfm from "remark-gfm";
 import TypingEffect from "./TypingEffect";
 import Weather from "./Weather";
+import CalendarMonthTwoToneIcon from "@mui/icons-material/CalendarMonthTwoTone";
+import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
+import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 
 const DashboardContent = () => {
   const navigate = useNavigate();
@@ -22,6 +24,8 @@ const DashboardContent = () => {
   const handleClick = () => {
     navigate("/worcation");
   };
+
+  const [showTooltip, setShowTooltip] = useState(false);
 
   const [answer, setAnswer] = useState(null);
   const [isComment, setIsComment] = useState(false);
@@ -53,44 +57,57 @@ const DashboardContent = () => {
   return (
     <>
       <div
-        className="bg-white text-mainTxt text-center flex flex-col h-full ms-1.5 me-1 mt-1.5"
+        className="bg-white text-mainTxt text-center flex flex-col h-full ms-1 me-0.5 pt-1.5"
         style={{ fontFamily: "'IBM Plex Sans KR', sans-serif" }}
       >
-        <div className="shadow-md rounded-lg p-2 flex-shrink-0 bg-slate-100">
-          <div className="px-6 cursor-pointer mt-2" onClick={toggleDropdown}>
-            <div className="font-bold text-xl break-keep inline-block my-1 mt-1">
+        <div className="shadow-md rounded-b-xl rounded-t-sm p-2 flex-shrink-0 bg-[#4aa2ee] text-white">
+          <div className="px-1 cursor-pointer mt-1" onClick={toggleDropdown}>
+            <div
+              className="font-bold text-xl break-keep inline-block mb-2 mt-1 relative tooltip tooltip-bottom"
+              data-tip="클릭하면 카드가 열리거나 닫힙니다."
+            >
               나의 워케이션 정보
             </div>
             <div
               className={`overflow-hidden transition-max-height duration-500 ease-in-out ${
-                isWorcationInfoOpen ? "max-h-96" : "max-h-0"
+                isWorcationInfoOpen ? "max-h-72" : "max-h-0"
               }`}
             >
-              <div className="flex gap-4 border-b border-gray-200 py-2">
-                <div className="flex-1 flex items-center justify-center">
-                  <Weather />
+              <div className="flex gap-2 py-1">
+                <div className="flex-2 flex items-center justify-center">
+                  <div className="h-full flex items-center">
+                    <Weather />
+                  </div>
                 </div>
-                <div className="flex-1 flex flex-col justify-center border-l border-gray-200 pl-4">
-                  <p className="text-gray-700 text-sm">
-                    {dayjs(worcation.start).format("YYYY-MM-DD")}
-                    <br /> ~<br />
-                    {dayjs(worcation.end).format("YYYY-MM-DD")}
-                  </p>
-                  <p className="text-gray-700 text-sm mt-2">
-                    {worcation.sido} {worcation.sigungu}
-                  </p>
+                <div className="flex-1 flex flex-col justify-between">
+                  <div className="bg-[#3d5893] p-0.5 rounded-lg shadow-md flex-1 flex items-center justify-center">
+                    <div className="text-center">
+                      <p className="text-[#edf1f5] text-sm mb-5 font-medium">
+                        <CalendarMonthTwoToneIcon className="me-1 mb-0.5 text-slate-200" />
+                        {dayjs(worcation.start).format("YY/MM/DD")}
+                        <br />
+                        ~ <br />
+                        <CalendarMonthTwoToneIcon className="me-1 mb-0.5 text-slate-200" />
+                        {dayjs(worcation.end).format("YY/MM/DD")}
+                      </p>
+                      <p className="text-[#edf1f5] text-sm mt-1 font-medium">
+                        <FmdGoodOutlinedIcon className="me-1 mb-0.5 text-slate-200" />
+                        {worcation.sido} {worcation.sigungu}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="mt-3">
+                    <button
+                      className="w-full inline-flex justify-center items-center gap-2 rounded-md bg-[#3d5893] py-2 px-3 text-sm font-semibold text-[#edf1f5] shadow-sm transition-colors duration-300 hover:bg-[#18336c] hover:text-white focus:outline-none"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleClick();
+                      }}
+                    >
+                      워케이션 수정
+                    </button>
+                  </div>
                 </div>
-              </div>
-              <div className="mt-4">
-                <button
-                  className="w-full inline-flex justify-center items-center gap-2 rounded-md bg-gray-200 py-2 px-4 text-sm font-semibold text-gray-700 shadow-sm transition-colors duration-300 hover:bg-gray-300 focus:outline-none"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleClick();
-                  }}
-                >
-                  워케이션 수정
-                </button>
               </div>
             </div>
           </div>
@@ -111,29 +128,39 @@ const DashboardContent = () => {
               </>
             )} */}
         </div>
-        <div className="w-full flex-shrink-0 flex flex-col items-center shadow-md rounded-lg py-2 me-3 ms-0.5 my-3">
+
+        <div className="w-full flex-shrink-0 flex flex-col items-center shadow-md rounded-lg py-2 me-3 ms-0.5 my-3 bg-[#ffe9ae]">
           <GraphView />
         </div>
+
         <div className="w-full text-wrap flex-col items-center shadow-md rounded-lg me-3 ms-0.5 mb-1 flex-grow overflow-auto min-h-[200px] break-all">
-          <div className="flex justify-between shadow-md sticky top-0 bg-sky-100">
+          <div className="flex justify-between shadow-md sticky top-0 bg-[#4aa2ee]">
             <button
               type="button"
               onClick={setAIComment}
-              className="border rounded-lg drop-shadow-md text-black"
+              className="rounded-full drop-shadow-md text-[#ffe9ae]"
             >
-              <CalendarDaysIcon className="w-8" />
+              <PlayCircleIcon className="w-8" />
             </button>
-            <p className="self-center">WAVA'S AI ASISTANT</p>
+
+            <p
+              className="self-center text-white relative tooltip tooltip-bottom"
+              data-tip="좌상단 플레이버튼을 클릭하면 WAVA AI 어시스턴트가 일정에 대한 브리핑을 진행합니다.
+              우상단 새로고침 버튼을 클릭하면 브리핑을 새로 진행합니다."
+            >
+              WAVA'S AI ASISTANT
+            </p>
+
             <button
               type="button"
               onClick={setAIComment}
-              className="border rounded-lg drop-shadow-md text-black"
+              className="rounded-full drop-shadow-md text-[#ffe9ae]"
             >
-              <ArrowPathRoundedSquareIcon className="w-8" />
+              <ArrowPathIcon className="w-8" />
             </button>
           </div>
           {isComment && <TypingEffect text={comment} />}
-          <article className="text-pretty p-3">
+          <article className="text-pretty p-3 bg-[#dde8ee] h-full">
             <p style={{ fontFamily: "'IBM Plex Sans KR', sans-serif" }}>
               {/* <ReactMarkdown className="" children={answer} remarkPlugins={[remarkGfm]} /> */}
             </p>

@@ -93,7 +93,7 @@ const Explorer = () => {
             icon={<GlobeAltIcon className="h-6 w-6" />}
             title="Channels"
             collapsed={collapsed}
-            active={activeLink === "/channel"}
+            active={activeLink?.includes("/channel")}
             onClick={() => handleLinkClick("/channel")}
           />
         </ul>

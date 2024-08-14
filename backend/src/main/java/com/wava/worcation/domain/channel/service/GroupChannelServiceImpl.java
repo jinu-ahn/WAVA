@@ -17,6 +17,7 @@ import com.wava.worcation.domain.channel.repository.ChannelUserRepository;
 import com.wava.worcation.domain.user.domain.User;
 import com.wava.worcation.domain.user.dto.response.GroupUserResponseDto;
 import com.wava.worcation.domain.worcation.repository.WorcationRepository;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -49,7 +50,7 @@ public class GroupChannelServiceImpl implements GroupChannelService {
      */
     @Override
     @Transactional
-    public ResponseEntity<ApiResponse<GroupChannelResponseDto>> createGroupChannel(final GroupChannelRequestDto groupChannelRequestDto, final User user) {
+    public ResponseEntity<ApiResponse<GroupChannelResponseDto>> createGroupChannel(@Valid final GroupChannelRequestDto groupChannelRequestDto, final User user) {
         String title = groupChannelRequestDto.getChannelTitle();
         if(title == null || title.trim().equals("")) {
             throw new CustomException(ErrorCode.NO_CONTENT);
@@ -88,6 +89,7 @@ public class GroupChannelServiceImpl implements GroupChannelService {
                  .channelSido(channel.getChannelSido())
                  .channelSigungu(channel.getChannelSigungu())
                  .channelMemo(channel.getChannelMemo())
+                 .channelType(channel.getChannelType())
                  .userCount(channelUserRepository.countByChannelId(channel.getId()))
                  .r(channel.getRed())
                  .g(channel.getGreen())

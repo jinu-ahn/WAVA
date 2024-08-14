@@ -84,7 +84,8 @@ function GraphView() {
 
   return (
     <div
-      className="relative"
+      className="relative bg-[#ffe9ae] tooltip tooltip-right z-[50]"
+      data-tip="필터 버튼을 클릭하면 필터링된 정보의 통계가 출력됩니다."
       style={{
         maxWidth: "200px",
         height: "100%",
@@ -107,7 +108,7 @@ function GraphView() {
         plugins={[centerTextPlugin]} // 플러그인을 이곳에 추가
         // height={"31rem"}
       />
-      <div className="mb-1">
+      <div className="mb-1 text-[#18336c]">
         {`완료 : ${finishCnt} 개`} <br />
         {`미완료 : ${filteredEvents.length - finishCnt} 개`} <br />
       </div>

@@ -1,6 +1,7 @@
 package com.wava.worcation.domain.channel.service;
 
 import com.wava.worcation.common.exception.CustomException;
+import com.wava.worcation.common.jwt.TokenProvider;
 import com.wava.worcation.common.response.ErrorCode;
 import com.wava.worcation.domain.channel.domain.Channel;
 import com.wava.worcation.domain.channel.domain.MapPin;
@@ -8,9 +9,12 @@ import com.wava.worcation.domain.channel.dto.request.MapPinRequestDto;
 import com.wava.worcation.domain.channel.dto.response.MapPinResponseDto;
 import com.wava.worcation.domain.channel.repository.ChannelRepository;
 import com.wava.worcation.domain.channel.repository.MapPinRepository;
+import com.wava.worcation.domain.user.domain.User;
+import com.wava.worcation.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;;
 import java.util.List;
 
@@ -20,15 +24,21 @@ import java.util.List;
 public class MapPinServiceImpl implements MapPinService {
     private final ChannelRepository channelRepository;
     private final MapPinRepository mapPinRepository;
+    private final UserRepository userRepository;
+    private final TokenProvider tokenProvider;
 
 
     @Override
     @Transactional
-    public MapPinResponseDto markerFunction(final MapPinRequestDto mapPinRequestDto) {
+    public MapPinResponseDto markerFunction(final MapPinRequestDto mapPinRequestDto, final String userToken) {
+        String email = tokenProvider.getAuthentication(userToken).getName();
+        User user = userRepository.findByEmail(email).orElseThrow(
+                () -> new CustomException(ErrorCode.USER_NOT_FOUND)
+        );
         if(mapPinRequestDto.getStatus().equals("ADD"))
-            return createMarker(mapPinRequestDto);
+            return createMarker(mapPinRequestDto, user);
         if(mapPinRequestDto.getStatus().equals("MODIFY"))
-            return updateMarker(mapPinRequestDto);
+            return updateMarker(mapPinRequestDto, user);
         if(mapPinRequestDto.getStatus().equals("DELETE"))
             return deleteMarker(mapPinRequestDto.getPinId(), mapPinRequestDto.getStatus());
 
@@ -44,7 +54,7 @@ public class MapPinServiceImpl implements MapPinService {
      * @return 생성한 핀 정보
      * @status 성공 : 201, 실패 : 404
      */
-    public MapPinResponseDto createMarker(final MapPinRequestDto mapPinRequestDto) {
+    public MapPinResponseDto createMarker(final MapPinRequestDto mapPinRequestDto, final User user) {
         Channel channel = validateChannel(mapPinRequestDto.getChannelId());
         MapPin mapPin = mapPinRepository.save(MapPin.builder()
                 .id(mapPinRequestDto.getPinId())
@@ -53,6 +63,7 @@ public class MapPinServiceImpl implements MapPinService {
                 .lng(mapPinRequestDto.getLng())
                 .placeName(mapPinRequestDto.getPlaceName())
                 .info(mapPinRequestDto.getInfo())
+                .user(user)
                 .build());
 
         return MapPinResponseDto.builder()
@@ -62,6 +73,8 @@ public class MapPinServiceImpl implements MapPinService {
                 .lng(mapPin.getLng())
                 .placeName(mapPin.getPlaceName())
                 .info(mapPin.getInfo())
+                .profileImg(user.getProfileImg())
+                .nickName(user.getNickName())
                 .status(mapPinRequestDto.getStatus())
                 .build();
     }
@@ -74,7 +87,7 @@ public class MapPinServiceImpl implements MapPinService {
      * @return 업데이트한 핀 정보
      * @status 성공 : 200, 실패 : 404
      */
-    public MapPinResponseDto updateMarker(MapPinRequestDto mapPinRequestDto) {
+    public MapPinResponseDto updateMarker(MapPinRequestDto mapPinRequestDto, final User user) {
         MapPin mapPin = mapPinRepository.findById(mapPinRequestDto.getPinId()).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_MARKER)
         );
@@ -87,6 +100,8 @@ public class MapPinServiceImpl implements MapPinService {
                 .lng(mapPin.getLng())
                 .placeName(mapPin.getPlaceName())
                 .info(mapPin.getInfo())
+                .profileImg(user.getProfileImg())
+                .nickName(user.getNickName())
                 .status(mapPinRequestDto.getStatus())
                 .build();
     }

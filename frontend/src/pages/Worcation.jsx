@@ -64,7 +64,8 @@ function WorcationPage() {
     try {
       let result = false;
       let newWorcationData = null;
-      if (validateWorcation(data)) {
+      const valid = validateWorcation(data);
+      if (!valid) {
         if (isEdit) {
           // 에딧 api 호출
           const worcationId = worcation?.id;
@@ -106,9 +107,10 @@ function WorcationPage() {
       Swal.fire({
         icon: "error",
         title: "확인해 주세요",
-        text: "입력값이 잘못되었어요!",
+        text: valid ?? "입력값이 잘못되었어요!",
         // footer: '<a href="#">Why do I have this issue?</a>',
-        timer: 1000,
+        // timer: 1000,
+        showConfirmButton: true,
       });
     } catch (e) {
       console.error(e, "worcation create에러");

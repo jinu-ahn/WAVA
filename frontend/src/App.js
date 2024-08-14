@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect } from "react";
 import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import useAuthStore from "./store/authStore";
+// import useAuthStore from "./store/authStore";
 import ChannelPageLayout from "./pages/Channel/ChannelPageLayout";
 import GroupChannelPage from "./pages/GroupChannelPage";
 import WorcationPage from "./pages/Worcation";
@@ -14,11 +14,11 @@ import Footer from "./components/common/Footer";
 import FeedAroundPage from "./pages/Channel/Feed/FeedAroundPage";
 import FeedPersonalPage from "./pages/Channel/Feed/FeedPersonalPage";
 import AuthenticatedRouter from "./components/common/AuthenticatedRouter";
-import VideoChat from "./components/VideoChat/VideoChat";
+// import VideoChat from "./components/VideoChat/VideoChat";
 import GroupDiscoverPage from "./pages/Channel/Group/GroupDiscoverPage";
 
 function App() {
-  const { user } = useAuthStore();
+  // const { user } = useAuthStore();
   // console.log(user);
 
   useEffect(() => {
@@ -54,13 +54,16 @@ function App() {
                 }
               />
 
-              <Route path="/video-chat" element={<VideoChat />} />
+              {/* <Route path="/video-chat" element={<VideoChat />} /> */}
 
               {/* 중첩 라우팅 */}
               <Route
                 path="/channel"
                 element={
-                  <AuthenticatedRouter element={<ChannelPageLayout />} />
+                  <AuthenticatedRouter
+                    worcation={true}
+                    element={<ChannelPageLayout />}
+                  />
                 }
               >
                 {/* 그룹 시작 / 그룹 검색, 그룹 방 */}

@@ -32,7 +32,22 @@ function Weather() {
   useEffect(() => {
     const fetchWeatherData = async () => {
       try {
+        // 먼저 캐시된 날씨 데이터 확인
+        const cachedWeather = JSON.parse(
+          localStorage.getItem("cached_weather")
+        );
+        if (
+          cachedWeather &&
+          Date.now() - cachedWeather.timestamp < 10 * 60 * 1000
+        ) {
+          setWeatherData(cachedWeather.data);
+          setLoading(false);
+        }
+
+        // 위치 정보 가져오기
         const location = await getLocation();
+
+        // 새로운 날씨 데이터 가져오기
         const weather = await getWeatherStatus(
           location.latitude,
           location.longitude
@@ -51,7 +66,7 @@ function Weather() {
     return () => clearInterval(intervalId);
   }, []);
 
-  if (loading) return <div>날씨 정보를 불러오는 중...</div>;
+  if (loading && !weatherData) return <div>날씨 정보를 불러오는 중...</div>;
   if (error)
     return (
       <div>
@@ -61,17 +76,17 @@ function Weather() {
   if (!weatherData) return null;
 
   return (
-    <div className="bg-slate-100 p-4 rounded-lg shadow-md">
+    <div className="bg-[#ffe9ae] p-2 rounded-lg shadow-md">
       <img
         src={`http://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`}
         alt={weatherData.weather[0].description}
         className="mx-auto"
       />
-      <p className="text-2xl font-bold text-center">
+      <p className="text-2xl font-bold text-center text-[#18336c]">
         {weatherData.main.temp.toFixed(1)}°C
       </p>
-      <p className="text-center">{weatherData.name}</p>
-      <p className="text-sm text-center">
+      <p className="text-center text-[#18336c]">{weatherData.name}</p>
+      <p className="text-sm text-center text-[#18336c]">
         {weatherData.weather[0].description}
       </p>
     </div>
