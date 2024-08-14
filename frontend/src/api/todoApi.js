@@ -1,7 +1,4 @@
 import { localAxios as local } from "../util/http-commons";
-import { nanoid } from "nanoid";
-import { get_response } from "./dummy";
-import axios from "axios";
 
 // api 함수용 파일
 const address = "/plan";
