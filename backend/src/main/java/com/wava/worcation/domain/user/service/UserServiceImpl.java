@@ -21,6 +21,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -37,6 +38,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class UserServiceImpl implements UserService{
+    @Value("${default.image}")
+    private String defaultImage;
+
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
     private final AuthenticationManagerBuilder managerBuilder;
@@ -68,6 +72,7 @@ public class UserServiceImpl implements UserService{
                 .nickName(requestDto.getNickName())
                 .sido(requestDto.getSido())
                 .sigungu(requestDto.getSigungu())
+                .profileImg(defaultImage)
                 .report(0L)
                 .roles(Collections.singletonList("VISITOR"))
                 .build());
