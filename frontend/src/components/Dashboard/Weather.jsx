@@ -76,7 +76,7 @@ function Weather() {
   if (!weatherData) return null;
 
   return (
-    <div className="bg-[#ffe9ae] p-2 rounded-lg shadow-md">
+    <div className="bg-[#ffe9ae] p-2 rounded-lg shadow-md select-none">
       <img
         src={`http://openweathermap.org/img/wn/${weatherData.weather[0].icon}@2x.png`}
         alt={weatherData.weather[0].description}
