@@ -126,7 +126,6 @@ const FeedHeader = ({
       // }
     }
   };
-
   return (
     <div
       className={isMobile ? "p-4" : "p-6"}
@@ -217,24 +216,26 @@ const FeedHeader = ({
                 글 작성
               </button>
             ) : (
-              <>
-                <button
-                  className={`px-4 py-2 rounded ${
-                    userInfo?.following
-                      ? "bg-gray-200"
-                      : "bg-mainBlue text-white"
-                  }`}
-                  onClick={() =>
-                    handleFollowClick(
-                      "inContent",
-                      userInfo.following,
-                      userInfo.nickName
-                    )
-                  }
-                >
-                  {userInfo?.following ? "언팔로우" : "팔로우"}
-                </button>
-              </>
+              userInfo && (
+                <>
+                  <button
+                    className={`px-4 py-2 rounded ${
+                      userInfo?.following
+                        ? "bg-gray-200"
+                        : "bg-mainBlue text-white"
+                    }`}
+                    onClick={() =>
+                      handleFollowClick(
+                        "inContent",
+                        userInfo.following,
+                        userInfo.nickName
+                      )
+                    }
+                  >
+                    {userInfo?.following ? "언팔로우" : "팔로우"}
+                  </button>
+                </>
+              )
             )}
           </div>
 

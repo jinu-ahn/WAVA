@@ -1,0 +1,35 @@
+/* 레이블 스타일 */
+.swal2-html-container .custom-label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+/* 입력 필드 스타일 */
+.swal2-html-container .custom-input,
+.swal2-html-container .custom-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: #ffffff;
+  color: #111827;
+  placeholder-color: #9ca3af;
+  margin-bottom: 16px;
+}
+
+/* 포커스 상태 스타일 */
+.swal2-html-container .custom-input:focus,
+.swal2-html-container .custom-textarea:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.swal2-modal {
+  background-color: #f9fafb !important;
+  border-radius: 8px !important;
+  padding: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1) !important;
+}

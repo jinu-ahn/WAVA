@@ -226,11 +226,11 @@ const GroupChannelPage = () => {
   }, [groupId, navigate]);
 
   const [mode, setMode] = useState(true);
-  
+
   useEffect(() => {
-    setMode(true)
-  }, [groupId])
-  
+    setMode(true);
+  }, [groupId]);
+
   if (loading) {
     return <LoadingSpinner message={"채널을 이동중입니다."} />; // 로딩 중 표시
   }
@@ -255,7 +255,7 @@ const GroupChannelPage = () => {
 
       {/* 채팅 컴포넌트 (1/4) */}
       {mode ? (
-        <div className="absolute top-0 right-0 z-20 w-1/4 h-full grid grid-rows-12">
+        <div className="absolute top-0 right-0 z-20 h-full grid grid-rows-12">
           <div className="row-span-2 mb-10 mt-2 me-2">
             <ControllerComponent
               mode={mode}
