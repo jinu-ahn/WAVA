@@ -1,6 +1,11 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { register, checkNicknameAvailability } from "../../api/userApi";
+import {
+  register,
+  checkNicknameAvailability,
+  checkEmailAvailability,
+  checkNumberAvailability,
+} from "../../api/userApi";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import useDeviceStore from "../../store/deviceStore";
@@ -59,6 +64,7 @@ function SignupComponent() {
   const onChangeEmail = (e) => {
     const currentEmail = e.target.value;
     setEmail(currentEmail);
+
     const emailRegEx =
       /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/;
 
@@ -67,9 +73,21 @@ function SignupComponent() {
       setEmailMessage("올바른 이메일 형식이 아닙니다.");
       onChangeFormVaild();
     } else {
-      setIsEmail(true);
-      setEmailMessage("올바른 이메일 형식입니다.");
-      onChangeFormVaild();
+      // 이메일 형식이 올바르면 중복 검사 진행
+      checkEmailAvailability(
+        currentEmail,
+        () => {
+          setIsEmail(true);
+          setEmailMessage("사용 가능한 이메일입니다.");
+          onChangeFormVaild();
+        },
+        (error) => {
+          console.error("이메일 중복 검사 중 오류 발생:", error);
+          setIsEmail(false);
+          setEmailMessage("이미 사용 중인 이메일입니다.");
+          onChangeFormVaild();
+        }
+      );
     }
     onChangeFormVaild();
   };
@@ -145,17 +163,32 @@ function SignupComponent() {
   };
 
   const onChangePhone = (e) => {
-    const currentPhone = e.target.value;
-    setPhone(currentPhone);
-    // const phoneRegExp = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
+    let currentPhone = e.target.value;
 
-    // if (!phoneRegExp.test(currentPhone)) {
-    //     setPhoneMessage("올바른 형식이 아닙니다!");
-    //     setIsPhone(false);
-    // } else {
-    //     setPhoneMessage("사용 가능한 번호입니다:-)");
-    //     setIsPhone(true);
-    // }
+    // 숫자만 남기고 나머지 문자 제거
+    currentPhone = currentPhone.replace(/[^0-9]/g, "");
+
+    setPhone(currentPhone);
+
+    const phoneRegExp = /^01([0|1|6|7|8|9])([0-9]{3,4})([0-9]{4})$/;
+
+    if (!phoneRegExp.test(currentPhone)) {
+      setPhoneMessage("올바른 형식이 아닙니다!");
+      setIsPhone(false);
+    } else {
+      // 휴대폰 번호 형식이 올바르면 중복 검사 진행
+      checkNumberAvailability(
+        currentPhone,
+        () => {
+          setIsPhone(true);
+          setPhoneMessage("사용 가능한 번호입니다:-)");
+        },
+        () => {
+          setIsPhone(false);
+          setPhoneMessage("이미 사용 중인 번호입니다.");
+        }
+      );
+    }
   };
 
   const sidoChangeHandle = (e) => {
