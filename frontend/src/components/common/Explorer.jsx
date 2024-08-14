@@ -49,7 +49,7 @@ const Explorer = () => {
       style={{ fontFamily: "'IBM Plex Sans KR', sans-serif" }}
       className={`sidebar ${
         collapsed ? "w-14" : "w-38"
-      } h-full bg-gradient-to-b from-gray-700 to-gray-900 text-white flex flex-col justify-between transition-all duration-300 ease shadow-lg`}
+      } select-none h-full bg-gradient-to-b from-gray-700 to-gray-900 text-white flex flex-col justify-between transition-all duration-300 ease shadow-lg`}
     >
       <div>
         <div
@@ -57,13 +57,15 @@ const Explorer = () => {
             collapsed ? "justify-center" : "justify-between"
           } p-4 border-b border-gray-700 mb-4 shadow-md`}
         >
-          <h2
-            className={`text-lg font-semibold tracking-wide text-gray-200 ${
-              collapsed ? "hidden" : "block"
-            }`}
-          >
-            WAVA
-          </h2>
+          <NavLink to="/">
+            <h2
+              className={`text-lg font-semibold tracking-wide text-gray-200 ${
+                collapsed ? "hidden" : "block"
+              }`}
+            >
+              WAVA
+            </h2>
+          </NavLink>
           <button
             className="expand-btn bg-gray-700 p-2 rounded-full focus:outline-none hover:bg-gray-600 transition-colors flex items-center justify-center shadow-md"
             onClick={handleToggleCollapse}
