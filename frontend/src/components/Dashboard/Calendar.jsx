@@ -524,7 +524,7 @@ const Calendar = ({ calendarRef }) => {
               >
                 시작 날짜(시간) - 마감 날짜(시간)
               </Label>
-              <div className="divider" />
+              <div className="divider my-1" />
               {!isMobile && (
                 <>
                   <DateRangePicker

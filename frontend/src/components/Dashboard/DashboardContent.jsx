@@ -63,7 +63,7 @@ const DashboardContent = () => {
         <div className="shadow-md rounded-b-xl rounded-t-sm p-2 flex-shrink-0 bg-[#4aa2ee] text-white">
           <div className="px-1 cursor-pointer mt-1" onClick={toggleDropdown}>
             <div
-              className="font-bold text-xl break-keep inline-block mb-2 mt-1 relative tooltip tooltip-bottom"
+              className="font-bold text-xl break-keep inline-block mb-1 relative tooltip tooltip-bottom"
               data-tip="클릭하면 카드가 열리거나 닫힙니다."
             >
               나의 워케이션 정보
@@ -111,29 +111,13 @@ const DashboardContent = () => {
               </div>
             </div>
           </div>
-          {/* {isWorcationInfoOpen && (
-              <>
-                <p className="text-gray-700 text-base">
-                  {dayjs(worcation.start).format("YYYY-MM-DD")}
-                  <br /> ~<br />
-                  {dayjs(worcation.end).format("YYYY-MM-DD")} <br />
-                  {worcation.sido} {worcation.sigungu}
-                </p>
-                <button
-                  className="flex-grow sm:flex-grow-0 inline-flex justify-center items-center gap-2 rounded-md bg-gray-200 py-2 px-4 text-sm font-semibold text-gray-700 shadow-md transition-colors duration-300 hover:bg-gray-300 focus:outline-none mt-3"
-                  onClick={handleClick}
-                >
-                  워케이션 수정
-                </button>
-              </>
-            )} */}
         </div>
 
-        <div className="w-full flex-shrink-0 flex flex-col items-center shadow-md rounded-lg py-2 me-3 ms-0.5 my-3 bg-[#ffe9ae]">
+        <div className="w-full flex-shrink-0 flex flex-col items-center shadow-md rounded-lg pt-2 pb-1 me-3 ms-0.5 my-3 bg-[#ffe9ae]">
           <GraphView />
         </div>
 
-        <div className="w-full text-wrap flex-col items-center shadow-md rounded-lg me-3 ms-0.5 mb-1 flex-grow overflow-auto min-h-[200px] break-all">
+        <div className="w-full text-wrap flex-col items-center shadow-md rounded-lg me-3 ms-0.5 mb-1 flex-grow overflow-auto min-h-[100px] break-all">
           <div className="flex justify-between shadow-md sticky top-0 bg-[#4aa2ee]">
             <button
               type="button"
