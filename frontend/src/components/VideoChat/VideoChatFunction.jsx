@@ -178,36 +178,35 @@ const VideoChatFunction = ({ channelId, mode, setMode }) => {
   );
 
   return (
-    <div className="container">
+    <div className="h-full bg-black flex flex-col">
       {session !== undefined ? (
-        <div id="session" className="bg-black">
-          <div id="video-container" className="col-lg-12 p-1">
-            {publisher !== undefined ? (
+        <div id="session" className="h-full flex-grow overflow-y-auto p-2">
+          <div
+            id="video-container"
+            className="flex flex-wrap gap-2 justify-center"
+          >
+            {publisher !== undefined && (
               <div
-                className="stream-container col-md-6 col-xs-6 relative group"
+                className="stream-container flex-1 bg-black relative group"
                 onClick={() => handleMainVideoStream(publisher)}
+                style={{ minWidth: "300px", maxWidth: "600px" }}
               >
-                <UserVideoComponent streamManager={publisher} />
-                <div className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <button
-                    className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-2 rounded-md inline-flex items-center"
-                    onClick={() => {
-                      leaveSession();
-                      setMode(!mode);
-                    }}
-                    id="buttonLeaveSession"
-                  >
-                    <PhoneXMarkIcon className="h-5 w-5 mr-2" />
-                    통화 종료
-                  </button>
-                </div>
+                <UserVideoComponent
+                  streamManager={publisher}
+                  isPublisher={true}
+                  leaveSession={() => {
+                    leaveSession();
+                    setMode(!mode);
+                  }}
+                />
               </div>
-            ) : null}
+            )}
             {subscribers.map((sub) => (
               <div
                 key={sub.id}
-                className="stream-container col-md-6 col-xs-6"
+                className="stream-container flex-1 bg-black relative group"
                 onClick={() => handleMainVideoStream(sub)}
+                style={{ minWidth: "300px", maxWidth: "600px" }}
               >
                 <UserVideoComponent streamManager={sub} />
               </div>

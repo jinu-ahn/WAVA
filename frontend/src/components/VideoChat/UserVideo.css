@@ -1,18 +1,44 @@
 video {
   width: 100%;
   height: auto;
-  float: left;
   cursor: pointer;
+  object-fit: cover;
 }
-.streamcomponent div {
-  position: absolute;
-  background: #f8f8f8;
-  padding-left: 5px;
-  padding-right: 5px;
-  color: #777777;
+
+.stream-container {
+  position: relative;
+  width: 100%;
+  height: auto;
+  background-color: black;
+  flex: 1;
+}
+
+.stream-container .absolute {
+  background: rgba(0, 0, 0, 0.6);
+  padding: 5px;
+  color: #ffffff;
   font-weight: bold;
-  border-bottom-right-radius: 4px;
+  border-radius: 4px;
 }
-p {
-  margin: 0;
+
+.stream-container .nickname-label {
+  top: 10px;
+  left: 10px;
+}
+
+.stream-container .end-call-button {
+  top: 10px;
+  right: 10px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.group:hover .end-call-button {
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .stream-container {
+    width: 100%;
+  }
 }

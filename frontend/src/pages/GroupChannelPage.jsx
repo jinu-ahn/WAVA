@@ -64,10 +64,10 @@ const GroupChannelPage = () => {
 
   console.log(groupId);
   return (
-    <div className="relative flex h-screen">
+    <div className="relative flex flex-col lg:flex-row h-screen">
       {/* 지도 컴포넌트 (3/4) */}
 
-      <div className="w-full h-full">
+      <div className="flex-grow lg:w-3/4 h-1/2 lg:h-full">
         <MapComponent
           loading={loading}
           channelId={groupId}
@@ -77,7 +77,7 @@ const GroupChannelPage = () => {
       </div>
 
       {/* 채팅 컴포넌트 (1/4) */}
-      {mode ? (
+      {/* {mode ? (
         <div className="absolute top-0 right-0 z-20 h-full grid grid-rows-12">
           <div className="row-span-2 mb-10 mt-2 me-2">
             <ControllerComponent
@@ -99,7 +99,36 @@ const GroupChannelPage = () => {
             setMode={setMode}
           />
         </div>
-      )}
+      )} */}
+      <div className="flex-grow lg:w-1/4 h-1/2 lg:h-full flex flex-col">
+        <div className="mb-2">
+          <ControllerComponent
+            mode={mode}
+            setMode={setMode}
+            groupId={groupId}
+            onSelectUser={handleSelectUser}
+          />
+        </div>
+        <div className="flex-grow">
+          {mode ? (
+            <div className="h-full bg-white rounded-md">
+              <ChatComponent
+                mode={mode}
+                setMode={setMode}
+                channelId={groupId}
+              />
+            </div>
+          ) : (
+            <div div className="h-full overflow-auto bg-black">
+              <VideoChatFunction
+                channelId={groupId}
+                mode={mode}
+                setMode={setMode}
+              />
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
