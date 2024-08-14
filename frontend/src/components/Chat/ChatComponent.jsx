@@ -32,7 +32,7 @@ function ChatComponent(props) {
   };
 
   const getUserNickName = () => {
-    const userObjectString = localStorage.getItem("userStorage");
+    const userObjectString = sessionStorage.getItem("userStorage");
     const userObject = JSON.parse(userObjectString);
     setNickName(userObject.state.userInfo.nickName);
   };

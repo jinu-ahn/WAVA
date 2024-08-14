@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 import { login, logout } from "../api/userApi";
 import { httpStatusCode } from "../util/http-status";
 import Swal from "sweetalert2";
@@ -74,7 +74,7 @@ const useUserStore = create(
                 set(() => ({ isValidToken: false }));
                 sessionStorage.removeItem("accessToken");
                 sessionStorage.removeItem("refreshToken");
-                localStorage.removeItem("userStorage");
+                sessionStorage.removeItem("userStorage");
               } else {
                 console.error("로그인 정보 없음");
               }
@@ -86,7 +86,7 @@ const useUserStore = create(
               set(() => ({ isValidToken: false }));
               sessionStorage.removeItem("accessToken");
               sessionStorage.removeItem("refreshToken");
-              localStorage.removeItem("userStorage");
+              sessionStorage.removeItem("userStorage");
               console.log(error);
             }
           );
@@ -103,8 +103,9 @@ const useUserStore = create(
     }),
     {
       name: "userStorage",
-    }
-  )
+      storage: createJSONStorage(() => sessionStorage),
+    },
+  ),
 );
 
 export default useUserStore;

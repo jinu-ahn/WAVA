@@ -2,20 +2,22 @@ import React, { useEffect, useState } from "react";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import { ChannelUserComponent } from "./ChannelUserComponent";
 import { groupChannelAPI } from "../../../api/groupChannelAPI";
+import useChannelStore from "../../../store/channelStore";
 
 export default function ControllerComponent(props) {
   const { groupId, onSelectUser } = props;
-  const [userList, setUserList] = useState(null);
+  // const [userList, setUserList] = useState(null);
   const [userItems, setUserItems] = useState(null);
   const [showTooltip, setShowTooltip] = useState(false);
+  const userList = useChannelStore((state) => state.channelUserList);
+  const setUserListAndMyInfo = useChannelStore((state) => state.setUserListAndMyInfo);
 
   const getUserList = async () => {
-    setUserList(null);
     try {
       const userData = await groupChannelAPI.getChannelInfo(groupId);
       if (userData.status === "OK") {
         console.log(userData);
-        setUserList(userData.data.user);
+        setUserListAndMyInfo(userData.data.user);
       }
     } catch (error) {
       console.error("Error get channel userinfo: ", error);

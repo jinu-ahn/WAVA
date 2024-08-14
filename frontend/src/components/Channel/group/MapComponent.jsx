@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
+import ReactDOMServer from "react-dom/server";
 import Swal from "sweetalert2";
 import Cursors from "./cursor/Cursors";
 import { ChevronDown } from "lucide-react";
@@ -13,6 +14,9 @@ import Tooltip from "@mui/material/Tooltip";
 import { Stomp } from "@stomp/stompjs";
 import { groupChannelAPI } from "../../../api/groupChannelAPI";
 import { nanoid } from "nanoid";
+import useChannelStore from "../../../store/channelStore";
+import { MyPin } from "./pin/MyPin";
+import { CatchingPokemonSharp } from "@mui/icons-material";
 
 const MapComponent = (props) => {
   const mapContainer = useRef(null);
@@ -33,8 +37,8 @@ const MapComponent = (props) => {
   const userPinLat = useRef(null);
   const userPinLng = useRef(null);
   const [userPinList, setUserPinList] = useState([]);
-  // const [pinInputValue, setPinInputValue] = useState(null);
-  // const [userPinStatus, setUserPinStatus] = useState(null);
+
+  const myInfo = useChannelStore((state) => state.myInfo)
 
   useEffect(() => {
     if (selectedUserNickName && cursorsRef.current) {
@@ -269,20 +273,21 @@ const MapComponent = (props) => {
 
   const addMarkerEventListeners = useCallback((customMarker) => {
     const { marker } = customMarker;
+    console.log("marker: ", marker.a)
 
-    window.kakao.maps.event.addListener(marker, "click", () => {
+    window.kakao.maps.event.addListener(marker.a, "click", () => {
       displayCustomMarkerInfo(customMarker);
     });
 
-    window.kakao.maps.event.addListener(marker, "mouseover", () => {
+    window.kakao.maps.event.addListener(marker.a, "mouseover", () => {
       displayCustomMarkerInfoWindow(customMarker);
     });
 
-    window.kakao.maps.event.addListener(marker, "mouseout", () => {
+    window.kakao.maps.event.addListener(marker.a, "mouseout", () => {
       infowindow.current.close();
     });
 
-    window.kakao.maps.event.addListener(marker, "rightclick", () => {
+    window.kakao.maps.event.addListener(marker.a, "rightclick", () => {
       deleteCustomMarker(customMarker);
     });
   }, []);
@@ -545,9 +550,15 @@ const MapComponent = (props) => {
       console.log("들어왔음");
       if (!map) return;
       console.log("지도 있음");
-      const pin = new window.kakao.maps.Marker({
+      console.log("프로필 사진", myInfo)
+      const profileImgPin = ReactDOMServer.renderToString(
+        <MyPin profileImg={myInfo.profileImg} />
+      )
+      const pin = new window.kakao.maps.CustomOverlay({
         map: map,
         position: new window.kakao.maps.LatLng(pinData.lat, pinData.lng),
+        content: profileImgPin,
+        clickable: true
       });
 
       const customPin = {
@@ -649,7 +660,6 @@ const MapComponent = (props) => {
       <div ref={mapContainer} className="flex-grow h-screen">
         {map && <Cursors ref={cursorsRef} channelId={channelId} map={map} />}
       </div>
-      <div>{/* <Markers /> */}</div>
       <div className="absolute bottom-0 left-0 w-full p-4 bg-white bg-opacity-60 z-10 max-h-40 overflow-y-auto">
         <ul>
           {places.map((place, index) => (
