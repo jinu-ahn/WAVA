@@ -346,6 +346,12 @@ const MapComponent = (props) => {
     [drawingManager]
   );
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      searchPlaces();
+    }
+  };
+
   const searchPlaces = useCallback(() => {
     if (!map) return;
 
@@ -579,11 +585,12 @@ const MapComponent = (props) => {
 
   return (
     <div className="flex flex-col h-full relative ">
-      <div className="w-3/4 absolute top-0 left-0 p-2 bg-white bg-opacity-0 z-10">
-        <div className="flex justify-end space-x-2 mx-52 bg-white rounded-full shadow-md shadow-slate-300 hover:shadow-slate-400 focus:shadow-slate-400">
+      <div className=" absolute left-[calc(50%-150px)] -translate-x-1/2 w-2/5 p-2 bg-white bg-opacity-0 z-10">
+        <div className="flex justify-end space-x-2  bg-white rounded-full shadow-md shadow-slate-300 hover:shadow-slate-400 focus:shadow-slate-400">
           <input
             type="text"
             value={keyword}
+            onKeyDown={handleKeyDown}
             onChange={(e) => setKeyword(e.target.value)}
             placeholder="검색할 키워드를 입력하세요"
             className="ps-4 p-1 rounded-s-full w-full focus:outline-none"
