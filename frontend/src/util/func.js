@@ -17,17 +17,17 @@ export function validateEvent(event) {
   // 문자열 및 기타 필수 속성 확인
   if (!event.title || typeof event.title !== "string") {
     console.error("title");
-    return false;
+    return "할 일을";
   }
 
   if (!event.content || typeof event.content !== "string") {
     console.error("content");
-    return false;
+    return "내용을";
   }
 
   if (!event.className || typeof event.className !== "string") {
     console.error("className");
-    return false;
+    return "입력값을";
   }
 
   if (
@@ -37,27 +37,27 @@ export function validateEvent(event) {
       event.important !== "LOW")
   ) {
     console.error("important");
-    return false;
+    return "우선순위를";
   }
 
   if (!event.type || typeof event.type !== "string") {
     console.error("type");
-    return false;
+    return "분류를";
   }
 
   if (typeof event.isFinish !== "boolean") {
     console.error("isFinish");
-    return false;
+    return "완료 여부를";
   }
 
   // 날짜 유효성 확인
   if (!event.start || isNaN(Date.parse(event.start))) {
     console.error("startDate");
-    return false;
+    return "시작일을";
   }
   if (!event.end || isNaN(Date.parse(event.end))) {
     console.error("endDate");
-    return false;
+    return "종료일을";
   }
 
   // 시작 날짜와 종료 날짜 비교
@@ -67,10 +67,10 @@ export function validateEvent(event) {
     new Date(event.start) >= new Date(event.end)
   ) {
     console.error("sted value");
-    return false;
+    return "시작/종료일(시간)을";
   }
 
-  return true;
+  return false;
 }
 
 /**

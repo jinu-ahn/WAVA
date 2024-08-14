@@ -177,7 +177,8 @@ const Calendar = ({ calendarRef }) => {
       type,
     };
 
-    if (validateEvent(event)) {
+    const valid = validateEvent(event);
+    if (!valid) {
       try {
         const result = await updateEvent(event);
         if (result) {
@@ -203,7 +204,7 @@ const Calendar = ({ calendarRef }) => {
       Swal.fire({
         icon: "warning",
         title: "입력 오류",
-        text: "입력값을 확인해 주세요.",
+        text: valid + " 확인해 주세요.",
       });
     }
   };
@@ -221,11 +222,12 @@ const Calendar = ({ calendarRef }) => {
       isFinish,
     };
 
-    if (!validateEvent(newEvent)) {
+    const valid = validateEvent(newEvent);
+    if (valid) {
       await Swal.fire({
         icon: "warning",
         title: "입력 오류",
-        text: "입력값을 확인해 주세요.",
+        text: valid + " 확인해 주세요.",
       });
       return;
     }

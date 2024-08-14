@@ -13,6 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { Stomp } from "@stomp/stompjs";
 import { groupChannelAPI } from "../../../api/groupChannelAPI";
 import { nanoid } from "nanoid";
+import "./CustomAlert.css";
 
 const MapComponent = (props) => {
   const mapContainer = useRef(null);
@@ -224,13 +225,12 @@ const MapComponent = (props) => {
   const handleMarkerCreated = useCallback((marker) => {
     Swal.fire({
       title: "마커 정보 입력",
-      html:
-        '<label class="block mb-2 text-lg font-medium text-gray-900 dark:text-white">pin 장소</label>' +
-        '<input id="pin-place" class="swal2-input" placeholder="장소 입력">' +
-        '<label for="message" class="block mb-2 text-lg font-medium text-gray-900 dark:text-white">Pin </label>' +
-        '<textarea id="pin-info" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="메모할 내용을 입력해주세요."></textarea>',
-      // '<label>pin 설명</label>' +
-      // '<input id="swal-input2" class="swal2-input" placeholder="장소에 대한 메모">',
+      html: `
+      <div>
+        <input id="pin-place" class="custom-input" placeholder="장소를 입력해 주세요" />
+        <textarea id="pin-info" rows="4" class="custom-textarea" placeholder="메모할 내용을 입력해주세요."></textarea>
+      </div>
+    `,
       focusConfirm: false,
       preConfirm: () => {
         return {
