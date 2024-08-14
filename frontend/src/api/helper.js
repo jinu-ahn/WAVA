@@ -1,3 +1,5 @@
+import Swal from "sweetalert2";
+
 // try-catch 헬퍼함수
 export const handleRequest = async (requestFunction, type) => {
   try {
@@ -16,7 +18,15 @@ export const handleRequest = async (requestFunction, type) => {
     }
   } catch (error) {
     console.error(type + " : Error - " + error);
-    if (error.response?.data?.error) alert(error.response.data.error);
+    if (error.response?.data?.error) {
+      // window.alert 대신 Swal로 변경
+      Swal.fire({
+        icon: "error",
+        title: "오류 발생",
+        text: error.response.data.error,
+      });
+    }
+
     return false;
   }
 };
