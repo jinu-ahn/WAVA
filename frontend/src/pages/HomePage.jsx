@@ -3,6 +3,7 @@ import Carousel from "../components/Home/Carousel";
 import AnimatedDiv from "../components/Home/AnimatedDiv";
 import useDeviceStore from "../store/deviceStore";
 import { Link } from "react-router-dom";
+import ExpectationSection from "../components/Home/ExpectationSection";
 
 function HomePage() {
   const [animate, setAnimate] = useState(false);
@@ -204,68 +205,8 @@ function HomePage() {
           </h2>
           <Carousel />
         </section>
-
-        {/* 기대효과 Section */}
-        <section id="기대효과" className="py-4 bg-white text-center px-4">
-          <AnimatedDiv animation="animate-fade-in">
-            <div className="my-2">
-              <h2 className="text-3xl font-semibold">기대효과</h2>
-              <div className="aspect-w-4 aspect-h-3">
-                <img
-                  src="/assets/기대효과/기대효과.webp"
-                  alt="기대효과"
-                  className="object-cover w-full h-full p-2 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
-                />
-              </div>
-            </div>
-          </AnimatedDiv>
-        </section>
-        {/* 카드 섹션 */}
-        <section className="container mx-auto px-4 py-2">
-          <AnimatedDiv animation="animate-fade-in">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="aspect-w-4 aspect-h-3">
-                <img
-                  src="/assets/기대효과/도표/생산성 향상.webp"
-                  alt="생산성 향상"
-                  className="object-cover w-full h-full rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
-                />
-              </div>
-              <div className="aspect-w-4 aspect-h-3">
-                <img
-                  src="/assets/기대효과/도표/삶의 질 개선.webp"
-                  alt="삶의 질 개선"
-                  className="object-cover w-full h-full rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
-                />
-              </div>
-              <div className="aspect-w-4 aspect-h-3">
-                <img
-                  src="/assets/기대효과/도표/직무 만족도 증대.webp"
-                  alt="직무 만족도"
-                  className="object-cover w-full h-full rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
-                />
-              </div>
-              <div className="aspect-w-4 aspect-h-3">
-                <img
-                  src="/assets/기대효과/도표/직원 복지 향상.webp"
-                  alt="직원 복지 향상"
-                  className="object-cover w-full h-full rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
-                />
-              </div>
-            </div>
-          </AnimatedDiv>
-          <AnimatedDiv animation="animate-fade-in">
-            <div className="my-3">
-              <div className="aspect-w-4 aspect-h-3">
-                <img
-                  src="/assets/기대효과/도표/chart.webp"
-                  alt="재참여 및 이유"
-                  className="object-cover w-full h-full rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300"
-                />
-              </div>
-            </div>
-          </AnimatedDiv>
-        </section>
+        {/* 기대효과 섹션 */}
+        <ExpectationSection />
       </div>
 
       {/* 설치 권유창 */}
