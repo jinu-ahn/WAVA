@@ -226,7 +226,11 @@ const GroupChannelPage = () => {
   }, [groupId, navigate]);
 
   const [mode, setMode] = useState(true);
-
+  
+  useEffect(() => {
+    setMode(true)
+  }, [groupId])
+  
   if (loading) {
     return <LoadingSpinner message={"채널을 이동중입니다."} />; // 로딩 중 표시
   }
@@ -260,7 +264,7 @@ const GroupChannelPage = () => {
               onSelectUser={handleSelectUser}
             />
           </div>
-          <div className="row-span-11 -mt-8 me-2 mb-2 bg-white rounded-md">
+          <div className="row-span-10 -mt-6 me-2 mb-2 bg-white rounded-md">
             <ChatComponent mode={mode} setMode={setMode} channelId={groupId} />
           </div>
         </div>

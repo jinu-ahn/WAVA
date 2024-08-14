@@ -12,7 +12,7 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import { Stomp } from "@stomp/stompjs";
 import { groupChannelAPI } from "../../../api/groupChannelAPI";
-import { v4 as uuidv4 } from "uuid";
+import { nanoid } from "nanoid";
 
 const MapComponent = (props) => {
   const mapContainer = useRef(null);
@@ -243,7 +243,7 @@ const MapComponent = (props) => {
       },
     }).then((result) => {
       if (result.isConfirmed) {
-        const pinId = uuidv4();
+        const pinId = nanoid();
         const newUserPin = {
           marker: marker,
           content: result.value,
