@@ -8,6 +8,7 @@ import com.wava.worcation.domain.channel.dto.response.GroupDetailResponseDto;
 import com.wava.worcation.domain.channel.service.GroupChannelService;
 import com.wava.worcation.domain.user.domain.AuthUser;
 import com.wava.worcation.domain.user.domain.User;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +47,7 @@ public class GroupChannelController {
      * @return
      */
     @PostMapping("/create")
-    public ResponseEntity<ApiResponse<GroupChannelResponseDto>> createGroupChannel (@RequestBody GroupChannelRequestDto groupChannelRequestDto, @AuthUser User user) {
+    public ResponseEntity<ApiResponse<GroupChannelResponseDto>> createGroupChannel (@Valid @RequestBody GroupChannelRequestDto groupChannelRequestDto, @AuthUser User user) {
         return groupChannelServcice.createGroupChannel(groupChannelRequestDto,user);
 
     }
