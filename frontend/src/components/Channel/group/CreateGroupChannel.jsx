@@ -6,6 +6,7 @@ import useUserStore from "../../../store/userStore";
 import LoadingSpinner from "../LoadingSpinner";
 import { useNavigate } from "react-router-dom";
 import useChannelStore from "../../../store/channelStore";
+import Swal from "sweetalert2";
 
 function CreateGroupChannel({ onClose }) {
   const userInfo = useUserStore((state) => state.userInfo);
@@ -37,6 +38,19 @@ function CreateGroupChannel({ onClose }) {
       }
     } catch (error) {
       console.error("Error creating channel:", error);
+      if (error.response && error.response.status === 400) {
+        Swal.fire({
+          icon: "error",
+          title: "채널 생성 실패",
+          text: "채널 이름 또는 설명이 비어있거나, 256자를 초과했습니다.",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "오류 발생",
+          text: "채널 생성 중 문제가 발생했습니다. 다시 시도해 주세요.",
+        });
+      }
     } finally {
       setLoading(false);
     }

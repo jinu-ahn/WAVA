@@ -73,7 +73,12 @@ function ChannelRoomItem({ roomInfo, onClick }) {
       <div className="relative flex-grow overflow-y-auto mb-4 mt-4">
         <p className="text-slate-600">{roomInfo.channelDescription}</p>
       </div>
-      <div className="relative mt-auto flex justify-end">
+
+      <div className="relative mt-auto flex justify-between items-center">
+        <div className="text-gray-500">
+          {`@${roomInfo?.channelSido}`} {roomInfo?.channelSigungu}
+        </div>
+
         <button
           onClick={clickFunction}
           className={`${btnColor} text-white px-4 py-2 rounded transition-colors`}
