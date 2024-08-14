@@ -40,6 +40,7 @@
     "react-multi-carousel": "^2.8.5",
     "react-router-dom": "^6.25.1",
     "react-scripts": "^5.0.1",
+    "recharts": "^2.12.7",
     "remark-gfm": "^4.0.0",
     "sweetalert2": "^11.6.13",
     "sweetalert2-react-content": "^5.0.7",
