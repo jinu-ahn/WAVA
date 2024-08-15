@@ -629,7 +629,7 @@ const MapComponent = (props) => {
 
   return (
     <div className="flex flex-col h-full relative ">
-      <div className=" absolute left-[calc(50%-150px)] -translate-x-1/2 w-2/5 p-2 bg-white bg-opacity-0 z-10">
+      <div className=" absolute left-1/2 -translate-x-1/2  w-4/5 lg:w-3/5 p-2 bg-white bg-opacity-0 z-10">
         <div className="flex justify-end space-x-2  bg-white rounded-full shadow-md shadow-slate-300 hover:shadow-slate-400 focus:shadow-slate-400">
           <input
             type="text"
@@ -643,14 +643,14 @@ const MapComponent = (props) => {
           <Tooltip title="검색" placement="bottom" arrow>
             <button
               onClick={searchPlaces}
-              className="p-2 rounded hover: shadow-sm"
+              className="sm:p-2 p-1 rounded hover: shadow-sm"
             >
               {/* <MagnifyingGlassCircleIcon className="w-10"/> */}
               <SearchOutlinedIcon fontSize="large" />
             </button>
           </Tooltip>
           <Tooltip title="검색 결과 초기화" placement="bottom" arrow>
-            <button onClick={resetMap} className="p-2 mb-0.5 ">
+            <button onClick={resetMap} className="sm:p-2 p-1 mb-0.5 ">
               <RestartAltOutlinedIcon fontSize="large" color="danger" />
             </button>
           </Tooltip>
@@ -661,7 +661,7 @@ const MapComponent = (props) => {
           >
             <button
               onClick={() => handleDrawingModeChange("MARKER")}
-              className="p-2 "
+              className="sm:p-2 p-1"
             >
               <AddLocationAltTwoToneIcon fontSize="large" color="primary" />
             </button>

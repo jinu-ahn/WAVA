@@ -5,7 +5,7 @@ import useUserStore from "../../store/userStore";
 import useGptStore from "../../store/gptStore";
 import dayjs from "dayjs";
 import ReactMarkdown from "react-markdown";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import mainLogic from "../../util/assistant-logic";
 import { ArrowPathIcon, PlayCircleIcon } from "@heroicons/react/24/outline";
 import useTodoStore from "../../store/todoStore";
@@ -24,8 +24,6 @@ const DashboardContent = () => {
   const handleClick = () => {
     navigate("/worcation");
   };
-
-  const [showTooltip, setShowTooltip] = useState(false);
 
   const [answer, setAnswer] = useState(null);
   const [isComment, setIsComment] = useState(false);
@@ -54,6 +52,11 @@ const DashboardContent = () => {
     }
   };
 
+  // 페이지 로드 시 자동으로 AI 코멘트 실행
+  useEffect(() => {
+    setAIComment();
+  }, []);
+
   return (
     <>
       <div
@@ -79,6 +82,7 @@ const DashboardContent = () => {
                     <Weather />
                   </div>
                 </div>
+
                 <div className="flex-1 flex flex-col justify-between">
                   <div className="bg-[#3d5893] p-0.5 rounded-lg shadow-md flex-1 flex items-center justify-center">
                     <div className="text-center">
@@ -118,27 +122,17 @@ const DashboardContent = () => {
         </div>
 
         <div className="w-full text-wrap flex-col items-center shadow-md rounded-lg me-3 ms-0.5 mb-1 flex-grow overflow-auto min-h-[100px] break-all">
-          <div className="flex justify-between shadow-md sticky top-0 bg-[#4aa2ee]">
-            <button
-              type="button"
-              onClick={setAIComment}
-              className="rounded-full drop-shadow-md text-[#ffe9ae]"
-            >
-              <PlayCircleIcon className="w-8" />
-            </button>
-
+          <div className="flex justify-between items-center shadow-md sticky top-0 bg-[#4aa2ee] p-2">
             <p
-              className="self-center text-white relative tooltip tooltip-bottom"
-              data-tip="좌상단 플레이버튼을 클릭하면 WAVA AI 어시스턴트가 일정에 대한 브리핑을 진행합니다.
-              우상단 새로고침 버튼을 클릭하면 브리핑을 새로 진행합니다."
+              className="text-center flex-grow text-white relative tooltip tooltip-bottom text-xl ms-12"
+              data-tip="새로고침 버튼을 클릭하면 WAVA's AI ASISTANT의 내용을 새로 받을 수 있습니다."
             >
               WAVA'S AI ASISTANT
             </p>
-
             <button
               type="button"
               onClick={setAIComment}
-              className="rounded-full drop-shadow-md text-[#ffe9ae]"
+              className="rounded-full drop-shadow-md text-[#ffe9ae] ml-4"
             >
               <ArrowPathIcon className="w-8" />
             </button>

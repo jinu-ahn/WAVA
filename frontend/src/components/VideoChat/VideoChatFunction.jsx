@@ -20,10 +20,19 @@ const VideoChatFunction = ({ channelId, mode, setMode }) => {
   const OV = useRef(null);
 
   useEffect(() => {
-    return () => {
+    const handleBeforeUnload = (event) => {
       if (session) {
         leaveSession();
       }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      if (session) {
+        leaveSession();
+      }
+      // 둘 다 있어야 한다...
     };
   }, [session]);
 
@@ -186,28 +195,24 @@ const VideoChatFunction = ({ channelId, mode, setMode }) => {
               <div
                 className="stream-container relative group"
                 onClick={() => handleMainVideoStream(publisher)}
+                style={{ maxWidth: "600px" }}
               >
-                <UserVideoComponent streamManager={publisher} />
-                <div className="absolute top-0 right-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <button
-                    className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-2 rounded-md inline-flex items-center"
-                    onClick={() => {
-                      leaveSession();
-                      setMode(!mode);
-                    }}
-                    id="buttonLeaveSession"
-                  >
-                    <PhoneXMarkIcon className="h-5 w-5 mr-2" />
-                    통화 종료
-                  </button>
-                </div>
+                <UserVideoComponent
+                  streamManager={publisher}
+                  isPublisher={true}
+                  leaveSession={() => {
+                    leaveSession();
+                    setMode(!mode);
+                  }}
+                />
               </div>
             ) : null}
             {subscribers.map((sub) => (
               <div
                 key={sub.id}
-                className="stream-container col-md-6 col-xs-6"
+                className="stream-container flex-1 bg-black relative group"
                 onClick={() => handleMainVideoStream(sub)}
+                style={{ maxWidth: "600px" }}
               >
                 <UserVideoComponent streamManager={sub} />
               </div>
