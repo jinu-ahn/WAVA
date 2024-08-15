@@ -77,32 +77,9 @@ const GroupChannelPage = () => {
       </div>
 
       {/* 채팅 컴포넌트 (1/4) */}
-      {/* {mode ? (
-        <div className="absolute top-0 right-0 z-20 h-full grid grid-rows-12">
-          <div className="row-span-2 mb-10 mt-2 me-2">
-            <ControllerComponent
-              mode={mode}
-              setMode={setMode}
-              groupId={groupId}
-              onSelectUser={handleSelectUser}
-            />
-          </div>
-          <div className="row-span-10 -mt-6 me-2 mb-2 bg-white rounded-md">
-            <ChatComponent mode={mode} setMode={setMode} channelId={groupId} />
-          </div>
-        </div>
-      ) : (
-        <div className="absolute top-0 right-0 z-20 w-2/12 overflow-auto bg-transparent">
-          <VideoChatFunction
-            channelId={groupId}
-            mode={mode}
-            setMode={setMode}
-          />
-        </div>
-      )} */}
 
-      <div className="absolute top-0 right-0 z-20 h-full grid grid-rows-12">
-        <div className="row-span-2 mb-10 mt-2 me-2 w-[300px]">
+      <div className="flex-grow h-1/2 flex flex-col lg:absolute lg:top-0 lg:right-0 z-20 lg:h-full lg:grid grid-rows-12">
+        <div className="row-span-2 lg:mb-10 lg:mt-2 lg:me-2 lg:w-[300px]">
           <ControllerComponent
             mode={mode}
             setMode={setMode}
@@ -111,11 +88,11 @@ const GroupChannelPage = () => {
           />
         </div>
         {mode ? (
-          <div className="row-span-10 -mt-6 me-2 mb-2 bg-white rounded-md">
+          <div className="h-full lg:row-span-10 overflow-y-auto lg:-mt-6 lg:me-2 lg:mb-2 bg-white rounded-md">
             <ChatComponent mode={mode} setMode={setMode} channelId={groupId} />
           </div>
         ) : (
-          <div className="row-span-10 -mt-6 me-2 mb-2 w-[300px] overflow-auto bg-transparent">
+          <div className="h-full lg:row-span-10 lg:-mt-6 lg:me-2 lg:mb-2 lg:w-[300px] overflow-auto bg-transparent">
             <VideoChatFunction
               channelId={groupId}
               mode={mode}

@@ -40,7 +40,7 @@ const MapComponent = (props) => {
   const [userPinList, setUserPinList] = useState([]);
   const [userOverLayList, setUserOverLayList] = useState([]);
 
-  const myInfo = useChannelStore((state) => state.myInfo)
+  const myInfo = useChannelStore((state) => state.myInfo);
 
   useEffect(() => {
     if (selectedUserNickName && cursorsRef.current) {
@@ -227,52 +227,55 @@ const MapComponent = (props) => {
     }
   }, [map, myInfo]);
 
-  const handleMarkerCreated = useCallback((marker) => {
-    if (!myInfo) return;
-    Swal.fire({
-      title: "마커 정보 입력",
-      html: `
+  const handleMarkerCreated = useCallback(
+    (marker) => {
+      if (!myInfo) return;
+      Swal.fire({
+        title: "마커 정보 입력",
+        html: `
       <div>
         <input id="pin-place" class="custom-input" placeholder="장소를 입력해 주세요" />
         <textarea id="pin-info" rows="4" class="custom-textarea" placeholder="메모할 내용을 입력해주세요."></textarea>
       </div>
     `,
-      focusConfirm: false,
-      preConfirm: () => {
-        return {
-          title: document.getElementById("pin-place").value,
-          description: document.getElementById("pin-info").value,
-        };
-      },
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const pinId = nanoid();
-        const newUserPin = {
-          marker: marker,
-          content: result.value,
-          lat: userPinLat.current,
-          lng: userPinLng.current,
-          pinId: pinId,
-          profileImg: myInfo.profileImg
-        };
-        console.log("생성: ");
-        console.log(newUserPin.marker);
-        console.log(newUserPin.content);
-        console.log(newUserPin.lat);
-        console.log(newUserPin.lng);
-        console.log(newUserPin.pinId);
-        // setUserPinList((prev) => [...prev, newUserPin]);
-        console.log("생성 후: " + userPinList);
-        sendPin(newUserPin, "ADD");
-        // 마커 이벤트 리스너 추가
-        // addMarkerEventListeners(newUserPin);
-        marker.setMap(null);
-      } else {
-        // 사용자가 취소한 경우 마커 제거
-        marker.setMap(null);
-      }
-    });
-  }, [myInfo]);
+        focusConfirm: false,
+        preConfirm: () => {
+          return {
+            title: document.getElementById("pin-place").value,
+            description: document.getElementById("pin-info").value,
+          };
+        },
+      }).then((result) => {
+        if (result.isConfirmed) {
+          const pinId = nanoid();
+          const newUserPin = {
+            marker: marker,
+            content: result.value,
+            lat: userPinLat.current,
+            lng: userPinLng.current,
+            pinId: pinId,
+            profileImg: myInfo.profileImg,
+          };
+          console.log("생성: ");
+          console.log(newUserPin.marker);
+          console.log(newUserPin.content);
+          console.log(newUserPin.lat);
+          console.log(newUserPin.lng);
+          console.log(newUserPin.pinId);
+          // setUserPinList((prev) => [...prev, newUserPin]);
+          console.log("생성 후: " + userPinList);
+          sendPin(newUserPin, "ADD");
+          // 마커 이벤트 리스너 추가
+          // addMarkerEventListeners(newUserPin);
+          marker.setMap(null);
+        } else {
+          // 사용자가 취소한 경우 마커 제거
+          marker.setMap(null);
+        }
+      });
+    },
+    [myInfo]
+  );
 
   const addMarkerEventListeners = useCallback((customMarker) => {
     const { marker } = customMarker;
@@ -313,7 +316,7 @@ const MapComponent = (props) => {
           lat: customMarker.lat,
           lng: customMarker.lng,
           pinId: customMarker.pinId,
-          profileImg: myInfo.profileImg
+          profileImg: myInfo.profileImg,
         };
         sendPin(deleteUserPin, "DELETE");
 
@@ -568,10 +571,10 @@ const MapComponent = (props) => {
       console.log("들어왔음");
       if (!map) return;
       console.log("지도 있음");
-      console.log("프로필 사진", myInfo)
+      console.log("프로필 사진", myInfo);
       const profileImgPin = ReactDOMServer.renderToString(
         <MyPin profileImg={pinData.profileImg} />
-      )
+      );
       const overlay = new window.kakao.maps.CustomOverlay({
         map: map,
         position: new window.kakao.maps.LatLng(pinData.lat, pinData.lng),
@@ -606,8 +609,8 @@ const MapComponent = (props) => {
 
       const customOverLay = {
         overlay: overlay,
-        pinId: pinData.pinId
-      }
+        pinId: pinData.pinId,
+      };
 
       console.log("fetch: ");
       console.log(customPin.marker);
@@ -620,7 +623,7 @@ const MapComponent = (props) => {
       addMarkerEventListeners(customPin);
       console.log("등록 성공");
       console.log("추가 후: " + userPinList);
-      console.log("추가 후 오버레이: " + userOverLayList)
+      console.log("추가 후 오버레이: " + userOverLayList);
     },
     [map, addMarkerEventListeners, userPinList, myInfo, userOverLayList]
   );
@@ -629,7 +632,7 @@ const MapComponent = (props) => {
 
   return (
     <div className="flex flex-col h-full relative ">
-      <div className=" absolute left-1/2 -translate-x-1/2  w-4/5 lg:w-3/5 p-2 bg-white bg-opacity-0 z-10">
+      <div className="absolute lg:left-[calc(50%-150px)] left-1/2 -translate-x-1/2  w-4/5 lg:w-3/5 p-2 bg-white bg-opacity-0 z-10">
         <div className="flex justify-end space-x-2  bg-white rounded-full shadow-md shadow-slate-300 hover:shadow-slate-400 focus:shadow-slate-400">
           <input
             type="text"
