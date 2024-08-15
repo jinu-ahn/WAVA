@@ -7,9 +7,10 @@ git clone https://lab.ssafy.com/s11-webmobile1-sub2/S11P12C204.git
 
 ### Intellij 환경변수 설정
 ```
-AWS_ACCESS_KEY_ID=AKIAYS2NQJX3RYCARFUQ; AWS_SECRET_ACCESS_KEY=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;
+AWS_ACCESS_KEY_ID= aws access key 입력해주세요; 
+AWS_SECRET_ACCESS_KEY= aws secret key 입력해주세요;
 DB_PASSWORD=1Q2W3E4R!!;DB_URL=jdbc:mysql://i11c204.p.ssafy.io/wava;DB_USER=work;
-S3_BUCKET=worqbucket;
+S3_BUCKET= 버킷 이름 입력해주세요;
 SECRET=uw5YoYHImqUhahQfNWU7VZpPrZ2pQx4kyN6hQkztIiJN/CMfhjnBwcVW3ccDud2e3Dq/xzeCvF4kQ2YUt5Ncpg==;
 SERVER_URL=i11c204.p.ssafy.io;
 OPENVIDU_SECRET=1Q2W3E4R
