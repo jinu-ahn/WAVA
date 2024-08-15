@@ -119,7 +119,7 @@ const Cursors = forwardRef((props, ref) => {
 
           const { x, y } = users[key];
           const position = new window.kakao.maps.LatLng(x, y);
-          console.log("상대 커서 위치 !!! position: " + position);
+          // console.log("상대 커서 위치 !!! position: " + position);
 
           // 기존 마커가 없으면 새로 생성
           if (!cursorMarkers.current[key]) {

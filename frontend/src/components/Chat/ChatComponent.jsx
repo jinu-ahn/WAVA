@@ -80,7 +80,7 @@ function ChatComponent(props) {
   const connect = () => {
     const socket = new WebSocket(process.env.REACT_APP_WEBSOCKET_ADDRESS);
     stompClient.current = Stomp.over(socket);
-    console.log(sessionStorage.getItem("accessToken"));
+    // console.log(sessionStorage.getItem("accessToken"));
     stompClient.current.connect(
       { Authorization: `Bearer ${sessionStorage.getItem("accessToken")}` },
       () => {
@@ -95,7 +95,7 @@ function ChatComponent(props) {
       },
       (error) => {}
     );
-    console.log("방 번호", channelId);
+    // console.log("방 번호", channelId);
   };
 
   // 웹소켓 연결 해제
@@ -111,8 +111,8 @@ function ChatComponent(props) {
     fetchChat(
       channelId,
       (response) => {
-        console.log("response", response);
-        console.log("메시지 목록", response.data);
+        // console.log("response", response);
+        // console.log("메시지 목록", response.data);
         const fetchedMessages = response.data.data;
         setMessages(fetchedMessages);
       },
@@ -152,7 +152,7 @@ function ChatComponent(props) {
       );
       setInputValue("");
     }
-    console.log(nickName);
+    // console.log(nickName);
   };
 
   const handleKeyDown = (e) => {

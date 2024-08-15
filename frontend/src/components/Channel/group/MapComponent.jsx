@@ -201,7 +201,7 @@ const MapComponent = (props) => {
               userPinLat.current = latlng.getLat();
               userPinLng.current = latlng.getLng();
 
-              console.log(message);
+              // console.log(message);
             }
           );
         };
@@ -256,14 +256,14 @@ const MapComponent = (props) => {
             pinId: pinId,
             profileImg: myInfo.profileImg,
           };
-          console.log("생성: ");
-          console.log(newUserPin.marker);
-          console.log(newUserPin.content);
-          console.log(newUserPin.lat);
-          console.log(newUserPin.lng);
-          console.log(newUserPin.pinId);
+          // console.log("생성: ");
+          // console.log(newUserPin.marker);
+          // console.log(newUserPin.content);
+          // console.log(newUserPin.lat);
+          // console.log(newUserPin.lng);
+          // console.log(newUserPin.pinId);
           // setUserPinList((prev) => [...prev, newUserPin]);
-          console.log("생성 후: " + userPinList);
+          // console.log("생성 후: " + userPinList);
           sendPin(newUserPin, "ADD");
           // 마커 이벤트 리스너 추가
           // addMarkerEventListeners(newUserPin);
@@ -487,9 +487,9 @@ const MapComponent = (props) => {
           `/sub/map/${channelId}`,
           (userPin) => {
             const newPin = JSON.parse(userPin.body);
-            console.log("newPin: ", newPin);
+            // console.log("newPin: ", newPin);
             if (newPin.status === "ADD") {
-              console.log("들어가요?");
+              // console.log("들어가요?");
               displayFetchedPin(newPin);
             } else if (newPin.status === "DELETE") {
               setUserPinList((prevUserPinList) =>
@@ -528,10 +528,10 @@ const MapComponent = (props) => {
     try {
       const userPinData = await groupChannelAPI.getMapPinRequest(channelId);
       if (userPinData.status === "OK") {
-        console.log(userPinData);
+        // console.log(userPinData);
         userPinData.data.map((pin) => {
           displayFetchedPin(pin);
-          console.log(pin);
+          // console.log(pin);
         });
         // setUserPinList(userPinData.data)
       }
@@ -568,10 +568,10 @@ const MapComponent = (props) => {
 
   const displayFetchedPin = useCallback(
     (pinData) => {
-      console.log("들어왔음");
+      // console.log("들어왔음");
       if (!map) return;
-      console.log("지도 있음");
-      console.log("프로필 사진", myInfo);
+      // console.log("지도 있음");
+      // console.log("프로필 사진", myInfo);
       const profileImgPin = ReactDOMServer.renderToString(
         <MyPin profileImg={pinData.profileImg} />
       );
@@ -612,23 +612,23 @@ const MapComponent = (props) => {
         pinId: pinData.pinId,
       };
 
-      console.log("fetch: ");
-      console.log(customPin.marker);
-      console.log(customPin.content);
-      console.log(customPin.lat);
-      console.log(customPin.lng);
-      console.log(customPin.pinId);
+      // console.log("fetch: ");
+      // console.log(customPin.marker);
+      // console.log(customPin.content);
+      // console.log(customPin.lat);
+      // console.log(customPin.lng);
+      // console.log(customPin.pinId);
       setUserPinList((prev) => [...prev, customPin]);
       setUserOverLayList((prevList) => [...prevList, customOverLay]);
       addMarkerEventListeners(customPin);
-      console.log("등록 성공");
-      console.log("추가 후: " + userPinList);
-      console.log("추가 후 오버레이: " + userOverLayList);
+      // console.log("등록 성공");
+      // console.log("추가 후: " + userPinList);
+      // console.log("추가 후 오버레이: " + userOverLayList);
     },
     [map, addMarkerEventListeners, userPinList, myInfo, userOverLayList]
   );
 
-  console.log(userPinList);
+  // console.log(userPinList);
 
   return (
     <div className="flex flex-col h-full relative ">

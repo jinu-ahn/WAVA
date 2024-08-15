@@ -88,7 +88,7 @@ const GroupChannelPage = () => {
           />
         </div>
         {mode ? (
-          <div className="h-full lg:row-span-10 overflow-y-auto lg:-mt-6 lg:me-2 lg:mb-2 bg-white rounded-md">
+          <div className="h-full lg:row-span-10 overflow-y-auto lg:-mt-6 lg:w-[300px] lg:me-2 lg:mb-2 bg-white rounded-md">
             <ChatComponent mode={mode} setMode={setMode} channelId={groupId} />
           </div>
         ) : (

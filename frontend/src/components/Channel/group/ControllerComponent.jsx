@@ -16,7 +16,7 @@ export default function ControllerComponent(props) {
     try {
       const userData = await groupChannelAPI.getChannelInfo(groupId);
       if (userData.status === "OK") {
-        console.log(userData);
+        // console.log(userData);
         setUserListAndMyInfo(userData.data.user);
       }
     } catch (error) {
