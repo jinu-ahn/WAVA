@@ -41,17 +41,17 @@ public class UserController {
         return userService.reissue(request,response);
     }
 
-    @PostMapping("/nickname/check/{nickName}")
+    @PostMapping("/check/nickname/{nickName}")
     public ResponseEntity<ApiResponse<String>> nickNameCheck(@PathVariable(name="nickName") String nickName) {
         return userService.nickNameCheck(nickName);
     }
 
-    @PostMapping("/email/check/{email}")
+    @PostMapping("/check/email/{email}")
     public ResponseEntity<ApiResponse<String>> emailCheck(@PathVariable(name="email") String email) {
         return userService.emailCheck(email);
     }
 
-    @PostMapping("/phoneNumber/check/{phoneNumber}")
+    @PostMapping("/check/phone/{phoneNumber}")
     public ResponseEntity<ApiResponse<String>> phoneNumberCheck(@PathVariable(name="phoneNumber") String phoneNumber) {
         return userService.phoneNumberCheck(phoneNumber);
     }

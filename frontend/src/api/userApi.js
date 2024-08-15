@@ -20,16 +20,16 @@ async function tokenRegeneration(user, success, fail) {
 }
 
 async function checkNicknameAvailability(nickname, success, fail) {
-  await local.post(`user/nickname/check/${nickname}`).then(success).catch(fail);
+  await local.post(`user/check/nickname/${nickname}`).then(success).catch(fail);
 }
 
 async function checkEmailAvailability(email, success, fail) {
-  await local.post(`user/email/check/${email}`).then(success).catch(fail);
+  await local.post(`user/check/email/${email}`).then(success).catch(fail);
 }
 
 async function checkNumberAvailability(phoneNumber, success, fail) {
   await local
-    .post(`user/phoneNumber/check/${phoneNumber}`)
+    .post(`user/check/phoneNumber/${phoneNumber}`)
     .then(success)
     .catch(fail);
 }
