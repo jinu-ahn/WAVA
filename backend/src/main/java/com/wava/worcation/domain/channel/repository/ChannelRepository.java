@@ -25,16 +25,16 @@ public interface ChannelRepository extends JpaRepository<Channel, Long> {
 
     @Query("SELECT c FROM Channel c " +
             "WHERE c.channelType = :channelType " +
+            "AND (LOWER(c.channelTitle) LIKE LOWER(CONCAT('%', :content, '%')) OR LOWER(c.channelDescription) LIKE LOWER(CONCAT('%', :content, '%'))) " +
             "ORDER BY CASE " +
-            "    WHEN c.channelSido = :sido AND (LOWER(c.channelTitle) LIKE LOWER(CONCAT('%', :content, '%')) OR LOWER(c.channelDescription) LIKE LOWER(CONCAT('%', :content, '%'))) THEN 0 " +
-            "    WHEN LOWER(c.channelTitle) LIKE LOWER(CONCAT('%', :content, '%')) OR LOWER(c.channelDescription) LIKE LOWER(CONCAT('%', :content, '%')) THEN 1 " +
-            "    WHEN c.channelSido = :sido THEN 2 " +
-            "    ELSE 3 " +
+            "    WHEN c.channelSido = :sido THEN 0 " +
+            "    ELSE 1 " +
             "END, c.channelTitle ASC")
     List<Channel> searchChannelByInsert(
             @Param("content") String content,
             @Param("channelType") String channelType,
             @Param("sido") String sido);
+
 
     Optional<Channel> findByUserAndChannelType(User user, String channelType);
 }
