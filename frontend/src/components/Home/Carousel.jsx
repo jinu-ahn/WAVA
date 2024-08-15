@@ -32,9 +32,14 @@ const carouselItems = [
     url: "https://thehyuil.co.kr/",
   },
   {
+    title: "농촌체험",
+    image: "/assets/팜플렛/농촌체험.webp",
+    url: "https://ncwocation.modoo.at/",
+  },
+  {
     title: "데스커",
     image: "/assets/팜플렛/데스커 팜플렛.webp",
-    url: "https://www.deskerworcation.com/",
+    url: "https://www.deskerworkation.com/",
   },
   {
     title: "부산",
@@ -59,12 +64,17 @@ const carouselItems = [
   {
     title: "제주도",
     image: "/assets/팜플렛/제주 팜플렛.webp",
-    url: "https://jejuworcation.or.kr/",
+    url: "https://jejuworkation.or.kr/",
+  },
+  {
+    title: "경상북도",
+    image: "/assets/팜플렛/경상북도.webp",
+    url: "https://www.tour054.co.kr/goods/goods_list.php?cateCd=019",
   },
   {
     title: "충청남도",
     image: "/assets/팜플렛/충남 팜플렛.webp",
-    url: "https://cnctf.or.kr/site/worcation/main.php",
+    url: "https://cnctf.or.kr/site/workation/main.php",
   },
 ];
 
