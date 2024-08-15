@@ -96,18 +96,19 @@ function SignupComponent() {
     const currentPassword = e.target.value;
     setPassword(currentPassword);
 
-    const passwordRegExp = /^[A-Za-z0-9]{8,20}$/;
-    const hasSpecialCharacter = /[^A-Za-z0-9]/.test(currentPassword);
+    const passwordRegExp = /^(?=.*[A-Za-z])(?=.*[0-9])[A-Za-z0-9]{8,20}$/; // 영문자와 숫자를 포함한 8~20자 사이의 문자열
+    const isOnlyNumbers = /^[0-9]{8,20}$/.test(currentPassword); // 숫자만 있는 경우
+    const isOnlyLetters = /^[A-Za-z]{8,20}$/.test(currentPassword); // 영문자만 있는 경우
 
-    if (hasSpecialCharacter) {
-      setIsPassword(false);
-      setPasswordMessage("특수문자는 지원하지 않습니다.");
-    } else if (!passwordRegExp.test(currentPassword)) {
+    if (isOnlyNumbers || isOnlyLetters) {
       setIsPassword(false);
       setPasswordMessage("8~20자 사이의 숫자 + 영문자로 입력해주세요.");
-    } else {
+    } else if (passwordRegExp.test(currentPassword)) {
       setIsPassword(true);
       setPasswordMessage("안전한 비밀번호 입니다.");
+    } else {
+      setIsPassword(false);
+      setPasswordMessage("8~20자 사이의 숫자 + 영문자로 입력해주세요.");
     }
 
     onChangeFormVaild();
@@ -117,18 +118,7 @@ function SignupComponent() {
     const currentPasswordConfirm = e.target.value;
     setPasswordConfirm(currentPasswordConfirm);
 
-    const passwordRegExp = /^[A-Za-z0-9]{8,20}$/;
-    const hasSpecialCharacter = /[^A-Za-z0-9]/.test(currentPasswordConfirm);
-
-    if (hasSpecialCharacter) {
-      setIsPasswordConfirm(false);
-      setPasswordConfirmMessage("특수문자는 지원하지 않습니다.");
-    } else if (!passwordRegExp.test(currentPasswordConfirm)) {
-      setIsPasswordConfirm(false);
-      setPasswordConfirmMessage(
-        "형식에 맞지 않습니다. 특수문자는 지원하지 않습니다."
-      );
-    } else if (password !== currentPasswordConfirm) {
+    if (password !== currentPasswordConfirm) {
       setIsPasswordConfirm(false);
       setPasswordConfirmMessage("비밀번호가 일치하지 않습니다.");
     } else {
