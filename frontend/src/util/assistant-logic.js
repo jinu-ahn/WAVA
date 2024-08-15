@@ -1,6 +1,7 @@
 import callAssistant from "./gpt";
 import datas from "./test-data";
 import useTodoStore from "../store/todoStore";
+import { getTodayTodoList } from "../api/todoApi";
 
 // const dataString = "사용자의 하루 일정 정보는 " + JSON.stringify(datas) + " 입니다.";
 
@@ -33,7 +34,7 @@ import useTodoStore from "../store/todoStore";
 // }
 
 async function mainLogic() {
-    const todayEvents = useTodoStore.getState().todayEvents
+        const todayEvents = await getTodayTodoList();
 
         const prompts = {
         "allDayTasks": "사용자의 하루 일정 정보와 아래의 문장을 참고해서 오늘 할 일을 브리핑 하세요. 할 일을 오전과 오후 나눠서 간단히 브리핑을 하고, 그 뒤에 중요도가 높은 업무들을 content 내용을 요약한 것도 포함해서 한 번 더 요약해서 제공하세요. 중요 일정들은 content를 요약한 내용과 중요도를 포함해서 작성하세요.",
