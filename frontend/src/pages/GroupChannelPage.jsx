@@ -109,25 +109,21 @@ const GroupChannelPage = () => {
             onSelectUser={handleSelectUser}
           />
         </div>
-        <div className="flex-grow">
-          {mode ? (
-            <div className="h-full bg-white rounded-md">
-              <ChatComponent
-                mode={mode}
-                setMode={setMode}
-                channelId={groupId}
-              />
-            </div>
-          ) : (
-            <div div className="h-full overflow-auto bg-black">
-              <VideoChatFunction
-                channelId={groupId}
-                mode={mode}
-                setMode={setMode}
-              />
-            </div>
-          )}
-        </div>
+        {/* <div className="flex-grow relative"> */}
+        {mode ? (
+          <div className="h-full bg-white rounded-md overflow-y-auto">
+            <ChatComponent mode={mode} setMode={setMode} channelId={groupId} />
+          </div>
+        ) : (
+          <div div className="h-full overflow-auto bg-black">
+            <VideoChatFunction
+              channelId={groupId}
+              mode={mode}
+              setMode={setMode}
+            />
+          </div>
+        )}
+        {/* </div> */}
       </div>
     </div>
   );
