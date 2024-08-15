@@ -15,14 +15,14 @@ const Cursors = forwardRef((props, ref) => {
   const channelId = props.channelId;
   const map = props.map;
   const [users, setUsers] = useState({});
-  const socketUrl = process.env.REACT_APP_CURSOR_WEBSOCKET_ADDRESS;
+  const socketUrl = process.env.REACT_APP//_CURSOR_WEBSOCKET_ADDRESS;
   const [isConnected, setIsConnected] = useState(false);
   const [nickName, setNickName] = useState("");
   const stompClient = useRef(null);
   const cursorMarkers = useRef({});
 
   const getUserNickName = () => {
-    const userObjectString = localStorage.getItem("userStorage");
+    const userObjectString = sessionStorage.getItem("userStorage");
     const userObject = JSON.parse(userObjectString);
     setNickName(userObject.state.userInfo.nickName);
   };
@@ -85,13 +85,6 @@ const Cursors = forwardRef((props, ref) => {
       // stomp clinet의 connect 객체가 생성되면 send
       if (stompClient.current?.connected && isConnected && nickName && map) {
         const latlng = mouseEvent.latLng;
-        // const latlng = map.getProjection().coordsFromContainerPoint(new window.kakao.maps.Point(e.clientX, e.clientY));
-        // console.log(
-        //   "나의 위치 !!!! 위도: " +
-        //     latlng.getLat() +
-        //     " 경도: " +
-        //     latlng.getLng()
-        // );
         const cursorPosition = {
           channelId,
           nickName,

@@ -23,8 +23,8 @@ function App() {
 
   useEffect(() => {
     if (!sessionStorage.getItem("accessToken")) {
-      if (JSON.parse(localStorage.getItem("userStorage"))?.state?.isLogin) {
-        localStorage.removeItem("userStorage");
+      if (JSON.parse(sessionStorage.getItem("userStorage"))?.state?.isLogin) {
+        sessionStorage.removeItem("userStorage");
         console.log("세션 만료로 로그아웃되었습니다.");
       }
     }

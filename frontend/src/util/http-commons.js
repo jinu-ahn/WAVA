@@ -84,7 +84,7 @@ function refreshToken() {
       return accessToken;
     })
     .catch((e) => {
-      localStorage.removeItem("userStorage");
+      sessionStorage.removeItem("userStorage");
       sessionStorage.removeItem("accessToken");
       sessionStorage.removeItem("refreshToken");
       console.error(e + " 장시간 미사용으로 로그아웃되었습니다");

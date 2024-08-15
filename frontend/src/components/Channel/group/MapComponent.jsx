@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from "react";
+import ReactDOMServer from "react-dom/server";
 import Swal from "sweetalert2";
 import Cursors from "./cursor/Cursors";
 import { ChevronDown } from "lucide-react";
@@ -14,6 +15,9 @@ import { Stomp } from "@stomp/stompjs";
 import { groupChannelAPI } from "../../../api/groupChannelAPI";
 import { nanoid } from "nanoid";
 import "./CustomAlert.css";
+import useChannelStore from "../../../store/channelStore";
+import { MyPin } from "./pin/MyPin";
+import { CatchingPokemonSharp } from "@mui/icons-material";
 
 const MapComponent = (props) => {
   const mapContainer = useRef(null);
@@ -34,8 +38,9 @@ const MapComponent = (props) => {
   const userPinLat = useRef(null);
   const userPinLng = useRef(null);
   const [userPinList, setUserPinList] = useState([]);
-  // const [pinInputValue, setPinInputValue] = useState(null);
-  // const [userPinStatus, setUserPinStatus] = useState(null);
+  const [userOverLayList, setUserOverLayList] = useState([]);
+
+  const myInfo = useChannelStore((state) => state.myInfo)
 
   useEffect(() => {
     if (selectedUserNickName && cursorsRef.current) {
@@ -216,13 +221,14 @@ const MapComponent = (props) => {
   }, [channelId]);
 
   useEffect(() => {
-    if (map) {
+    if (map && myInfo) {
       connect();
       fetchPins();
     }
-  }, [map]);
+  }, [map, myInfo]);
 
   const handleMarkerCreated = useCallback((marker) => {
+    if (!myInfo) return;
     Swal.fire({
       title: "마커 정보 입력",
       html: `
@@ -247,6 +253,7 @@ const MapComponent = (props) => {
           lat: userPinLat.current,
           lng: userPinLng.current,
           pinId: pinId,
+          profileImg: myInfo.profileImg
         };
         console.log("생성: ");
         console.log(newUserPin.marker);
@@ -265,7 +272,7 @@ const MapComponent = (props) => {
         marker.setMap(null);
       }
     });
-  }, []);
+  }, [myInfo]);
 
   const addMarkerEventListeners = useCallback((customMarker) => {
     const { marker } = customMarker;
@@ -306,6 +313,7 @@ const MapComponent = (props) => {
           lat: customMarker.lat,
           lng: customMarker.lng,
           pinId: customMarker.pinId,
+          profileImg: myInfo.profileImg
         };
         sendPin(deleteUserPin, "DELETE");
 
@@ -489,7 +497,15 @@ const MapComponent = (props) => {
                   return marker.pinId !== newPin.pinId;
                 })
               );
-              newPin.marker.setMap(null);
+              setUserOverLayList((prevUserOverLayList) =>
+                prevUserOverLayList.filter((marker) => {
+                  if (marker.pinId === newPin.pinId) {
+                    marker.overlay.setMap(null);
+                  }
+                  return marker.pinId !== newPin.pinId;
+                })
+              );
+              // newPin.marker.setMap(null);
             }
           },
           {}
@@ -534,6 +550,7 @@ const MapComponent = (props) => {
         lng: newUserPin.lng,
         placeName: newUserPin.content.title,
         info: newUserPin.content.description,
+        profileImg: newUserPin.profileImg,
         status: status,
       };
       await userPinStompClient.current.send(
@@ -551,9 +568,29 @@ const MapComponent = (props) => {
       console.log("들어왔음");
       if (!map) return;
       console.log("지도 있음");
+      console.log("프로필 사진", myInfo)
+      const profileImgPin = ReactDOMServer.renderToString(
+        <MyPin profileImg={pinData.profileImg} />
+      )
+      const overlay = new window.kakao.maps.CustomOverlay({
+        map: map,
+        position: new window.kakao.maps.LatLng(pinData.lat, pinData.lng),
+        content: profileImgPin,
+        // clickable: true
+      });
+
+      // let imageSrc = myInfo?.profileImg || 'https://raw.githubusercontent.com/tailwindlabs/heroicons/56c073c2c9a66d2e51adb93d8e87e2e941d5b6db/src/20/solid/user-circle.svg';
+      // // if (pinData.profileImg)
+      // let imageSize = new window.kakao.maps.Size(64, 69);
+      // let imageOption = { offset: new window.kakao.maps.Point(27, 69) };
+
+      // console.log("profile: ", imageSrc)
+      // const markerImage = new window.kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+
       const pin = new window.kakao.maps.Marker({
         map: map,
         position: new window.kakao.maps.LatLng(pinData.lat, pinData.lng),
+        // image: markerImage
       });
 
       const customPin = {
@@ -567,6 +604,11 @@ const MapComponent = (props) => {
         pinId: pinData.pinId,
       };
 
+      const customOverLay = {
+        overlay: overlay,
+        pinId: pinData.pinId
+      }
+
       console.log("fetch: ");
       console.log(customPin.marker);
       console.log(customPin.content);
@@ -574,11 +616,13 @@ const MapComponent = (props) => {
       console.log(customPin.lng);
       console.log(customPin.pinId);
       setUserPinList((prev) => [...prev, customPin]);
+      setUserOverLayList((prevList) => [...prevList, customOverLay]);
       addMarkerEventListeners(customPin);
       console.log("등록 성공");
       console.log("추가 후: " + userPinList);
+      console.log("추가 후 오버레이: " + userOverLayList)
     },
-    [map, addMarkerEventListeners, userPinList]
+    [map, addMarkerEventListeners, userPinList, myInfo, userOverLayList]
   );
 
   console.log(userPinList);
@@ -660,7 +704,6 @@ const MapComponent = (props) => {
       <div ref={mapContainer} className="flex-grow h-screen">
         {map && <Cursors ref={cursorsRef} channelId={channelId} map={map} />}
       </div>
-      <div>{/* <Markers /> */}</div>
       <div className="absolute bottom-0 left-0 w-full p-4 bg-white bg-opacity-60 z-10 max-h-40 overflow-y-auto">
         <ul>
           {places.map((place, index) => (
