@@ -178,13 +178,13 @@ const VideoChatFunction = ({ channelId, mode, setMode }) => {
   );
 
   return (
-    <div className="container">
+    <div className="">
       {session !== undefined ? (
-        <div id="session" className="bg-black">
-          <div id="video-container" className="col-lg-12 p-1">
+        <div id="session" className="bg-transparent">
+          <div id="video-container" className="p-1">
             {publisher !== undefined ? (
               <div
-                className="stream-container col-md-6 col-xs-6 relative group"
+                className="stream-container relative group"
                 onClick={() => handleMainVideoStream(publisher)}
               >
                 <UserVideoComponent streamManager={publisher} />

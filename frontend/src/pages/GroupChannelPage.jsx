@@ -77,7 +77,7 @@ const GroupChannelPage = () => {
       </div>
 
       {/* 채팅 컴포넌트 (1/4) */}
-      {mode ? (
+      {/* {mode ? (
         <div className="absolute top-0 right-0 z-20 h-full grid grid-rows-12">
           <div className="row-span-2 mb-10 mt-2 me-2">
             <ControllerComponent
@@ -92,14 +92,39 @@ const GroupChannelPage = () => {
           </div>
         </div>
       ) : (
-        <div className="absolute top-0 right-0 z-20 w-2/12 overflow-auto bg-black">
+        <div className="absolute top-0 right-0 z-20 w-2/12 overflow-auto bg-transparent">
           <VideoChatFunction
             channelId={groupId}
             mode={mode}
             setMode={setMode}
           />
         </div>
-      )}
+      )} */}
+
+        <div className="absolute top-0 right-0 z-20 h-full grid grid-rows-12">
+          <div className="row-span-2 mb-10 mt-2 me-2 w-[300px]">
+            <ControllerComponent
+              mode={mode}
+              setMode={setMode}
+              groupId={groupId}
+              onSelectUser={handleSelectUser}
+            />
+        </div>
+        {mode ? (
+          <div className="row-span-10 -mt-6 me-2 mb-2 bg-white rounded-md">
+            <ChatComponent mode={mode} setMode={setMode} channelId={groupId} />
+          </div>
+        ) : ( 
+          <div className="row-span-10 -mt-6 me-2 mb-2 w-[300px] overflow-auto bg-transparent">
+            <VideoChatFunction
+              channelId={groupId}
+              mode={mode}
+              setMode={setMode}
+              />
+          </div>
+        )}
+        </div>
+
     </div>
   );
 };
