@@ -189,7 +189,7 @@ const VideoChatFunction = ({ channelId, mode, setMode }) => {
               <div
                 className="stream-container flex-1 bg-black relative group"
                 onClick={() => handleMainVideoStream(publisher)}
-                style={{ minWidth: "300px", maxWidth: "600px" }}
+                style={{ maxWidth: "600px" }}
               >
                 <UserVideoComponent
                   streamManager={publisher}
@@ -206,7 +206,7 @@ const VideoChatFunction = ({ channelId, mode, setMode }) => {
                 key={sub.id}
                 className="stream-container flex-1 bg-black relative group"
                 onClick={() => handleMainVideoStream(sub)}
-                style={{ minWidth: "300px", maxWidth: "600px" }}
+                style={{ maxWidth: "600px" }}
               >
                 <UserVideoComponent streamManager={sub} />
               </div>

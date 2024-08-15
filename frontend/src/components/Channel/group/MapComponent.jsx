@@ -585,7 +585,7 @@ const MapComponent = (props) => {
 
   return (
     <div className="flex flex-col h-full relative ">
-      <div className=" absolute left-[calc(50%-150px)] -translate-x-1/2 w-2/5 p-2 bg-white bg-opacity-0 z-10">
+      <div className=" absolute left-[calc(75%/2)] -translate-x-12  w-2/5 p-2 bg-white bg-opacity-0 z-10">
         <div className="flex justify-end space-x-2  bg-white rounded-full shadow-md shadow-slate-300 hover:shadow-slate-400 focus:shadow-slate-400">
           <input
             type="text"

@@ -19,11 +19,11 @@ export default class UserVideoComponent extends Component {
             style={{ margin: "-4px" }}
           >
             <OpenViduVideoComponent streamManager={this.props.streamManager} />
-            <div className="absolute top-0 left-8 bg-black bg-opacity-50 text-white text-start p-2 text-sm font-bold">
+            <div className="absolute top-0 left-0 bg-black bg-opacity-50 text-white text-start p-2 text-sm font-bold">
               <p>{this.getNicknameTag()}</p>
             </div>
             {this.props.isPublisher && (
-              <div className="absolute top-0 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+              <div className="absolute top-0 right-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <button
                   className="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-2 rounded-md inline-flex items-center"
                   onClick={this.props.leaveSession}
