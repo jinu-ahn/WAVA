@@ -132,6 +132,8 @@ public class MapPinServiceImpl implements MapPinService {
                             .lng(pins.getLng())
                             .placeName(pins.getPlaceName())
                             .info(pins.getInfo())
+                            .profileImg(pins.getUser().getProfileImg())
+                            .nickName(pins.getUser().getNickName())
                             .build()
                 ).toList();
 
