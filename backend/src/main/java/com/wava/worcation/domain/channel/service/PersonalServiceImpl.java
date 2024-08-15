@@ -142,7 +142,7 @@ public class PersonalServiceImpl implements PersonalService {
     @Override
     public String changeDescription(DescriptionRequestDto description, User user) {
 
-        Channel channel = channelRepository.findByUser(user).orElseThrow(()->new CustomException(ErrorCode.CHANNEL_NOT_FOUND));
+        Channel channel = channelRepository.findByUserAndChannelType(user,"C002").orElseThrow(()->new CustomException(ErrorCode.CHANNEL_NOT_FOUND));
         channel.updateDescription(description.getDescription());
         return description.getDescription();
     }

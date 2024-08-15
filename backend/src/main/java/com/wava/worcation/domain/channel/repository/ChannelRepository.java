@@ -36,5 +36,5 @@ public interface ChannelRepository extends JpaRepository<Channel, Long> {
             @Param("channelType") String channelType,
             @Param("sido") String sido);
 
-    Optional<Channel> findByUser(User user);
+    Optional<Channel> findByUserAndChannelType(User user, String channelType);
 }
