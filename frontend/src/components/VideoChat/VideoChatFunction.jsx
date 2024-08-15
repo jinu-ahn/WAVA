@@ -20,10 +20,19 @@ const VideoChatFunction = ({ channelId, mode, setMode }) => {
   const OV = useRef(null);
 
   useEffect(() => {
-    return () => {
+    const handleBeforeUnload = (event) => {
       if (session) {
         leaveSession();
       }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+      if (session) {
+        leaveSession();
+      }
+      // 둘 다 있어야 한다...
     };
   }, [session]);
 
