@@ -15,6 +15,8 @@ import Weather from "./Weather";
 import CalendarMonthTwoToneIcon from "@mui/icons-material/CalendarMonthTwoTone";
 import FmdGoodOutlinedIcon from "@mui/icons-material/FmdGoodOutlined";
 import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
+import { getTodayTodoList } from "../../api/todoApi";
+
 
 const DashboardContent = () => {
   const navigate = useNavigate();
@@ -29,6 +31,8 @@ const DashboardContent = () => {
   const [isComment, setIsComment] = useState(false);
 
   const { setComments, comment } = useGptStore();
+
+  // const [todayEvents, setTodayEvents] = useState("")
 
   const ai_test = async () => {
     const comment = await mainLogic();
