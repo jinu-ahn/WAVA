@@ -1,0 +1,181 @@
+/* FullCalendar CSS는 직접 조작이 안 되고 여기서 선택자로 때려부숴야됨 */
+/*
+for css vars only.
+these values are automatically known in all stylesheets.
+the :root statement itself is only included in the common stylesheet.
+this file is not processed by postcss when imported into the postcss-custom-properties plugin,
+so only write standard css!
+
+NOTE: for old browsers, will need to restart watcher after changing a variable
+*/
+
+/* 이게 공통 설정 */
+:root {
+  --fc-small-font-size: 0.85em;
+  --fc-page-bg-color: #fff;
+  --fc-neutral-bg-color: rgba(208, 208, 208, 0.3);
+  --fc-neutral-text-color: #808080;
+  --fc-border-color: #000000b7;
+
+  --fc-event-bg-color: rgb(47, 102, 144);
+  --fc-event-border-color: rgb(47, 102, 144);
+  --fc-event-text-color: black;
+  --fc-event-selected-overlay-color: rgba(0, 0, 0, 0.25);
+
+  --fc-more-link-bg-color: #d0d0d0;
+  --fc-more-link-text-color: inherit;
+
+  --fc-event-resizer-thickness: 8px;
+  --fc-event-resizer-dot-total-width: 8px;
+  --fc-event-resizer-dot-border-width: 1px;
+
+  --fc-non-business-color: rgba(215, 215, 215, 0.3);
+  --fc-bg-event-color: rgb(143, 223, 130);
+  --fc-bg-event-opacity: 0.3;
+  --fc-highlight-color: rgba(188, 232, 241, 0.3);
+  --fc-today-bg-color: rgba(140, 171, 194, 0.6);
+  --fc-now-indicator-color: black;
+
+  /* 버튼들 */
+  --fc-button-text-color: #fff;
+
+  --fc-button-bg-color: rgb(74, 162, 238);
+  --fc-button-border-color: rgb(74, 162, 238);
+  /* --fc-button-hover-bg-color: #1e2b37; */
+  --fc-button-hover-bg-color: rgb(75, 115, 210);
+  /* --fc-button-hover-border-color: #1a252f; */
+  --fc-button-hover-border-color: rgb(75, 115, 210);
+  /* --fc-button-active-bg-color: #1a252f; */
+  --fc-button-active-bg-color: rgb(255, 183, 197);
+  /* --fc-button-active-border-color: #151e27; */
+  --fc-button-active-border-color: rgb(255, 183, 197);
+  /* 끝 */
+
+  /* daygrid 전용 */
+  --fc-daygrid-event-dot-width: 8px;
+  /* 끝 */
+}
+.fc {
+  font-family: "Soyodanpoongche";
+}
+
+.fc-event-title,
+.fc-daygrid-day-number,
+.fc-header-toolbar {
+  font-family: "Soyodanpoongche";
+}
+
+.fc-col-header-cell {
+  background-color: rgb(237, 248, 255);
+}
+
+.fc-button {
+  box-shadow: none !important;
+}
+.fc-today-button {
+  /* background-color: magenta !important; */
+  opacity: 0.65 !important;
+}
+.todo-item-container {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/*----------------------- */
+/* 모바일, 사이즈만 줄였음 */
+@media (max-width: 450px) {
+  .fc {
+    font-size: 0.75rem; /* 전체 폰트 사이즈를 줄입니다 */
+  }
+
+  .fc-header-toolbar {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .fc-button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+  }
+
+  .fc-toolbar-chunk {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .fc-view-harness {
+    padding: 0.5rem;
+  }
+
+  .fc-daygrid-event {
+    font-size: 0.75rem;
+    padding: 0.2rem;
+  }
+
+  .fc-timegrid-event {
+    font-size: 0.75rem;
+    padding: 0.2rem;
+  }
+
+  .fc-col-header-cell {
+    font-size: 0.75rem;
+  }
+
+  .fc-timegrid-axis-cushion {
+    font-size: 0.75rem;
+  }
+
+  .fc-daygrid-day-number {
+    font-size: 0.75rem;
+  }
+
+  .fc-daygrid-day-top {
+    display: flex;
+    justify-content: center;
+  }
+
+  .fc-scroller-harness,
+  .fc-scroller-harness-liquid {
+    overflow-y: auto !important; /* 수직 스크롤을 활성화 */
+    -webkit-overflow-scrolling: touch; /* iOS에서 부드러운 스크롤을 지원 */
+    max-height: 300px;
+  }
+}
+/* 모바일 끝 */
+
+.HIGH {
+  background-color: #4b6eaf;
+  border: 0px;
+}
+
+.MID {
+  border: 0px;
+  background-color: #74c1b4;
+}
+
+.LOW {
+  border: 0px;
+  background-color: #f3d3d3;
+}
+
+.todo-finish {
+  opacity: 0.5;
+  text-decoration: line-through;
+}
+
+/* FullCalendar의 스크롤바 숨기기 */
+.fc-scroller::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* 기본 스크롤바 숨기기 */
+*::-webkit-scrollbar {
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Firefox를 위한 추가 스타일 */
+* {
+  scrollbar-width: none !important; /* Firefox */
+}
