@@ -28,10 +28,7 @@ async function checkEmailAvailability(email, success, fail) {
 }
 
 async function checkNumberAvailability(phoneNumber, success, fail) {
-  await local
-    .post(`user/check/phoneNumber/${phoneNumber}`)
-    .then(success)
-    .catch(fail);
+  await local.post(`user/check/phone/${phoneNumber}`).then(success).catch(fail);
 }
 
 // async function checkNicknameAvailability(nickname, success, fail) {
