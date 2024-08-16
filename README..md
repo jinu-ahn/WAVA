@@ -16,9 +16,9 @@ C204의 역작!
 
 5. **지속 가능성**: 워케이션은 일시적인 트렌드가 아니라 지속적으로 성장할 가능성이 높은 분야이다. (이를 통해 안정적인 수익원과 지속 가능한 비즈니스 모델을 구축할 수 있다.)
 
-## UCC
 
-<video controls src="./exec/11기 공통프로젝트 4조 팀 WAVA UCC .mp4" title="Title"></video>
+## UCC
+![Watch the demo video](./exec/11기 공통프로젝트 4조 팀 WAVA UCC .mp4)
 
 ## WAVA 팀원 소개
 
