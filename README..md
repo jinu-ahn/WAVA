@@ -230,7 +230,7 @@ https://www.figma.com/design/4VeKdIA1s5z5f5RznnS6yE/C204_WireFrame?node-id=15-12
 
 ​ ✔️ 공유 지도 검색
 
-![모임채널 핵심기술.gif](./exec//시연_과정/gifs/search.gif)
+![모임채널 핵심기술.gif](./exec/시연_과정/gifs/search.gif)
 
 ### 8. 모임 채널 - 채팅 및 영상 통화
 
@@ -238,4 +238,4 @@ https://www.figma.com/design/4VeKdIA1s5z5f5RznnS6yE/C204_WireFrame?node-id=15-12
 
 ​ ✔️ 채팅 및 영상 통화
 
-![모임채널 핵심기술.gif](./exec//시연_과정/gifs/rtc.gif)
+![모임채널 핵심기술.gif](./exec/시연_과정/gifs/rtc.gif)
